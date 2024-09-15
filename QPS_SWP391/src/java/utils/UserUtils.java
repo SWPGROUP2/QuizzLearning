@@ -1,5 +1,5 @@
 
-package util;
+package utils;
 
 public class UserUtils {
     public static String getRoleName(int id) {
