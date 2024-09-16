@@ -1,6 +1,6 @@
 package controller;
 
-import DAO.UserDAO;
+import dal.UserDAO;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.ParseException;

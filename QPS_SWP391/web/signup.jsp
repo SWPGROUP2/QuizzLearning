@@ -121,7 +121,7 @@
                 <input type="submit" value="Sign up">
             </div>
             <div>
-                <h5>Back to <a href="/quiz/login" class="text-decoration-none">Login</a></h5>
+                <h5>Back to <a href="/login.jsp" class="text-decoration-none">Login</a></h5>
             </div>
 
             <c:if test="${mess!=null}">
