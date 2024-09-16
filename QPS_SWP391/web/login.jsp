@@ -107,7 +107,7 @@
 
                     <row> 
                         <div>
-                            <h5>Don't have an account? <a href="/quiz/signup" class="text-decoration-none">Sign up</a></h5>
+                            <h5>Don't have an account? <a href="" class="text-decoration-none">Sign up</a></h5>
                         </div>
                     </row>
 
