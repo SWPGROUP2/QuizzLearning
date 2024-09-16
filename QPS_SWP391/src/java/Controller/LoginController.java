@@ -1,8 +1,5 @@
 package Controller;
 
-import dal.ClassDAO;
-import dal.TermDAO;
-import dal.TermSetDAO;
 import dal.UserDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -15,8 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import models.Classes;
-import models.TermSet;
+
 
 public class LoginController extends HttpServlet {
 
@@ -50,16 +46,7 @@ public class LoginController extends HttpServlet {
                 
                 } else if (role.equalsIgnoreCase("admin")) {
                     response.sendRedirect("admin/admin-user-list");
-                } else {
-                    TermSetDAO tDao = new TermSetDAO();                   
-                    ClassDAO classDao = new ClassDAO();
-                    List<Classes> c = classDao.getTop3ClassesByUserID(id);
-                    session.setAttribute("classList", c);
-                    List<TermSet> listTermSet = tDao.getTop3TermSets(id);
-
-                    session.setAttribute("listTermSet", listTermSet);
-                    response.sendRedirect("homes");
-                }
+                } 
             } else {
                 String error = "Wrong email or password!!!";
                 request.setAttribute("error", error);
