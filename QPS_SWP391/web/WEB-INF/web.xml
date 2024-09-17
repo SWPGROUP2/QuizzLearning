@@ -4,11 +4,11 @@
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
     <servlet>
-        <servlet-name>HomeController</servlet-name>
-        <servlet-class>controllers.HomeController</servlet-class>
+        <servlet-name>TeacherHomePageController</servlet-name>
+        <servlet-class>controllers.TeacherHomePageController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>HomeController</servlet-name>
+        <servlet-name>TeacherHomePageController</servlet-name>
         <url-pattern>/home</url-pattern>
     </servlet-mapping>
 </web-app>

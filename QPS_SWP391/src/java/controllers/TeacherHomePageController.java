@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-public class HomeController extends HttpServlet {
+public class TeacherHomePageController extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -49,7 +49,7 @@ public class HomeController extends HttpServlet {
         int user_id= (int) session.getAttribute("user_id");
         session.setAttribute("account", userDao.getUserById(user_id));
    
-        request.getRequestDispatcher("Home.jsp").forward(request, response);
+        request.getRequestDispatcher("teacherhomepage.jsp").forward(request, response);
     } 
     /** 
      * Handles the HTTP <code>POST</code> method.
