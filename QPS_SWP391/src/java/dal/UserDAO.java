@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import models.User;
+import model.User;
 
 public class UserDAO extends DBContext {
 
