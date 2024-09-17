@@ -3,6 +3,7 @@ package controllers;
 import dal.UserDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+@WebServlet(name="LoginController", urlPatterns={"/login"})
 
 
 public class LoginController extends HttpServlet {
@@ -39,11 +42,9 @@ public class LoginController extends HttpServlet {
                 int id = userDao.getUser(email, password).getUserId();
                 session.setAttribute("account", userDao.getUser(email, password));
                 session.setAttribute("user_id", id);
-
                 if (role.equalsIgnoreCase("teacher")) {
-                    response.sendRedirect("teacherhome");
+                    response.sendRedirect("home"); 
 //                    response.sendRedirect("teacher/teacher-home-page.jsp");
-                
                 } else if (role.equalsIgnoreCase("admin")) {
                     response.sendRedirect("admin/admin-user-list");
                 } 
