@@ -12,16 +12,12 @@
 
     <ul class="list-unstyled components">
         <p>Quiz Practicing System</p>
-        <li class="active">
+        <li>
             <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Subjects</a>
             <ul class="collapse list-unstyled" id="homeSubmenu">
                 <li>
                     <a href="subject-list">Subject list</a>
                 </li>
-                <li>
-                    <a href="my-registration">My Subject</a>
-                </li>
-
             </ul>
         </li>
 

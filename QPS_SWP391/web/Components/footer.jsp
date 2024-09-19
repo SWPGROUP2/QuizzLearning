@@ -14,7 +14,7 @@
     </head>
     <body>
         <footer class="footer">
-            <div class="container">
+            <div class="">
                 <div class="row">
                     <div class="col-md-4">
                         <h3>About Us</h3>

@@ -43,10 +43,10 @@ public class LoginController extends HttpServlet {
                 session.setAttribute("account", userDao.getUser(email, password));
                 session.setAttribute("user_id", id);
                 if (role.equalsIgnoreCase("teacher")) {
-                    response.sendRedirect("teacherhomepage.jsp"); 
+                    response.sendRedirect("teacherhomepage"); 
 //                    response.sendRedirect("teacher/teacher-home-page.jsp");
                 } else if (role.equalsIgnoreCase("admin")) {
-                    response.sendRedirect("admin/admin-user-list");
+                    response.sendRedirect("adminhome");
                 } 
             } else {
                 String error = "Wrong email or password!!!";
