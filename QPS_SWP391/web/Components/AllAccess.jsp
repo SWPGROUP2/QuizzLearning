@@ -14,6 +14,4 @@
       integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" 
       crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<link rel="stylesheet" href="css/NavbarStyle.css">
-<link rel="stylesheet" href="css/SignInStyle.css">
-<link rel="stylesheet" href="css/SignUpStyle.css">
+<link rel="stylesheet" href="css/NavbarStyle2.css">

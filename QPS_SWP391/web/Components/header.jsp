@@ -32,7 +32,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
 
-                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                <button type="button" id="sidebarCollapse" class="btn">
                     <i class="fas fa-align-left"></i>
                     <a href="Home.jsp">
                         <span>Home Page</span></a>
@@ -50,7 +50,7 @@
                         <li class="nav-item">
                             <div class="dropdown">
                                 <a href="profile.jsp" class="avatar dropdown-toggle" id="avatarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <img src="./img/roll.jpg" alt="Avatar">
+                                    <img src="assets/img/roll.jpg" alt="Avatar">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="avatarDropdown">
                                     <a class="dropdown-item" href="login.jsp">Login</a>
