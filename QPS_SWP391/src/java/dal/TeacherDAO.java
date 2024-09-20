@@ -33,6 +33,10 @@ public class TeacherDAO extends DBContext {
         }
     }
      
+      public void changepassword(User user) {
+        String query = "Update ";
+    }
+     
       public void AcceptStudentInClass (int uid, int cid) throws Exception {
         try {   
             String sql ="UPDATE ClassMembers SET isApproved = 1 where ClassID = ? and UserID = ?;";
