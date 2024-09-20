@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+@WebServlet(name="TeacherHomePageController", urlPatterns={"/teacherhome"})
+
 public class TeacherHomePageController extends HttpServlet {
    
     /** 
@@ -35,7 +37,7 @@ public class TeacherHomePageController extends HttpServlet {
             out.println("<title>Servlet TeacherHomePageController</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomePageController at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet TeacherHomePageController at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }

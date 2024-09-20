@@ -34,7 +34,7 @@
 
                 <button type="button" id="sidebarCollapse" class="btn">
                     <i class="fas fa-align-left"></i>
-                    <a href="Home.jsp">
+                    <a href="teacherhomepage.jsp">
                         <span>Home Page</span></a>
                 </button>
                 <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" 
@@ -53,8 +53,8 @@
                                     <img src="assets/img/roll.jpg" alt="Avatar">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="avatarDropdown">
-                                    <a class="dropdown-item" href="login.jsp">Login</a>
-                                    <a class="dropdown-item" href="signup.jsp">Sign up</a>
+                                    <a class="dropdown-item" href="user-profile.jsp">Profile</a>
+                                    <a class="dropdown-item" href="login.jsp">Sign out</a>
                                 </div>
                             </div>
 
