@@ -19,10 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.User;
 
-/**
- *
- * @author ACER
- */
+
 public class UpdateUserProfile extends HttpServlet { 
 
     @Override

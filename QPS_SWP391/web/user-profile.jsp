@@ -30,7 +30,7 @@
             <div class="popup" id="imagePopup">
                 <h2 style="margin-bottom: 20px;">Choose your new avatar:</h2>
 
-                <form id="avatarForm" action="processAvatarSelection" method="post">
+                <form id="avatarForm" action="ProcessAvatarSelection" method="post">
 
                     <%
                     // Đường dẫn đến thư mục chứa ảnh
@@ -59,7 +59,7 @@
             </div>
 
 
-            <form action="updateuser" method="post">
+            <form action="Updateuser" method="post">
 
 
 
