@@ -3,22 +3,27 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/login.jsp</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/conf/MANIFEST.MF</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/css/home.css</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/Components/footer.jsp</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/teacherhomepage.jsp</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/controllers/TeacherHomePageController.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/META-INF/context.xml</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/models/User.java</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/META-INF/context.xml</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/assets/css/user-profile.css</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/dal/DBContext.java</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/controllers/UpdateUserProfile.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/Components/header.jsp</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/controllers/LoginController.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/nbproject/build-impl.xml</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/dal/AdminDAO.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/WEB-INF/web.xml</file>
-            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/utils/UserUtils.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/utils/ParseUtils.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/filters/Authentication.java</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/controllers/ProcessAvatarSelection.java</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/dal/TeacherDAO.java</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/Components/Sidebar.jsp</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/dal/UserDAO.java</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/user-profile.jsp</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/controllers/SignUpController.java</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/Components/AllAccess.jsp</file>
         </group>
     </open-files>
 </project-private>

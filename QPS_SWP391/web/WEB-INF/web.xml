@@ -19,6 +19,17 @@
         <servlet-name>SignUpController</servlet-name>
         <url-pattern>/signup</url-pattern>
     </servlet-mapping>
-    
+    <servlet>
+        <servlet-name>UpdateUserProfile</servlet-name>
+        <servlet-class>controller.UpdateUserProfile</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProcessAvatarSelection</servlet-name>
+        <servlet-class>controller.ProcessAvatarSelection</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>controller.HomeServlet</servlet-class>
+    </servlet>
 </web-app>
 
