@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/conf/MANIFEST.MF</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/css/home.css</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/Components/footer.jsp</file>
@@ -24,6 +25,14 @@
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/user-profile.jsp</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/src/java/controllers/SignUpController.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QPS_SWP391/web/Components/AllAccess.jsp</file>
+=======
+            <file>file:/D:/SWP/hoclai/SWP391/QuizzLearning/QPS_SWP391/web/Components/header.jsp</file>
+            <file>file:/D:/SWP/hoclai/SWP391/QuizzLearning/QPS_SWP391/web/Components/footer.jsp</file>
+            <file>file:/D:/SWP/hoclai/SWP391/QuizzLearning/QPS_SWP391/web/teacherhomepage.jsp</file>
+            <file>file:/D:/SWP/hoclai/SWP391/QuizzLearning/QPS_SWP391/web/Components/Sidebar.jsp</file>
+            <file>file:/D:/SWP/hoclai/SWP391/QuizzLearning/QPS_SWP391/web/css/home.css</file>
+            <file>file:/D:/SWP/hoclai/SWP391/QuizzLearning/QPS_SWP391/web/login.jsp</file>
+>>>>>>> a61e3a074470ec576ad56a2571e75a7f9014d5f7
         </group>
     </open-files>
 </project-private>

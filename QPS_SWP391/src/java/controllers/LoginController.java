@@ -46,7 +46,7 @@ public class LoginController extends HttpServlet {
                     response.sendRedirect("teacherhomepage"); 
 //                    response.sendRedirect("teacher/teacher-home-page.jsp");
                 } else if (role.equalsIgnoreCase("admin")) {
-                    response.sendRedirect("admin/admin-user-list");
+                    response.sendRedirect("adminhome");
                 } 
             } else {
                 String error = "Wrong email or password!!!";
