@@ -15,5 +15,5 @@
       crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <link rel="stylesheet" href="css/NavbarStyle.css">
-<link rel="stylesheet" href="css/SignInStyle.css">
+<link rel="stylesheet" href="changepassword">
 <link rel="stylesheet" href="css/SignUpStyle.css">

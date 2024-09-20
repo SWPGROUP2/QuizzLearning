@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controllers;
 
 import dal.UserDAO;
@@ -12,42 +11,47 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
-import models.User;
+import jakarta.servlet.http.HttpSession;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Admin
  */
-public class SignUpController extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+public class ChangePasswordController extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SignUpController</title>");  
+            out.println("<title>Servlet ChangePasswordController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SignUpController at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet ChangePasswordController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -55,12 +59,14 @@ public class SignUpController extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        request.getRequestDispatcher("signup.jsp").forward(request, response);
-    } 
+            throws ServletException, IOException {
+        request.getRequestDispatcher("changepassword.jsp").forward(request, response);
 
-    /** 
+    }
+
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -68,49 +74,51 @@ public class SignUpController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String fullname = request.getParameter("fullname");
-        String phonenumber = request.getParameter("phonenumber");
-        String usercode = request.getParameter("usercode");
-        String place = request.getParameter("place");
-        String dobStr = request.getParameter("date");
-        String role = request.getParameter("role");
-        String mess;
+            throws ServletException, IOException {
+        String currentpass = request.getParameter("currentpass");
+        String newpass = request.getParameter("newpass");
+        String confirmpass = request.getParameter("confirmpass");
+        String mess = null;
 
-        int roleID;
-        if (role.equals("student")) {
-            roleID = 1;
-        } else {
-            roleID = 3;
-        }
+        HttpSession session = request.getSession();
+        int userId = (int) session.getAttribute("user_id"); 
 
-        java.sql.Date dob = null;
-        try {
-            java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(dobStr);
-            dob = new java.sql.Date(utilDate.getTime());
-        } catch (Exception e) {
-
+        if (!newpass.equals(confirmpass)) {
+            mess = "New password does not match with the confirm password";
+            request.setAttribute("mess", mess);
+            request.getRequestDispatcher("changepassword.jsp").forward(request, response);
+            return;
         }
 
         UserDAO dao = new UserDAO();
-        if (dao.checkEmailExists(email)) {
-            mess = "Email is already exist! Try other email";
+        try {
+            if (!dao.verifyPassword(userId, currentpass)) {
+                mess = "Current password is incorrect!";
+                request.setAttribute("mess", mess);
+                request.getRequestDispatcher("changepassword.jsp").forward(request, response);
+                return;
+            }
+
+            if (dao.updatePassword(userId, newpass)) {
+                mess = "Update successful";
+            } else {
+                mess = "Update failed. Please try again.";
+            }
             request.setAttribute("mess", mess);
-            request.getRequestDispatcher("signup.jsp").forward(request, response);
-        } else {
-            mess = "Sign Up Successful!";
+            request.getRequestDispatcher("changepassword.jsp").forward(request, response);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ChangePasswordController.class.getName()).log(Level.SEVERE, null, ex);
+            mess = "An error occurred while verifying the password. Please try again.";
             request.setAttribute("mess", mess);
-            User user = new User(roleID, usercode, roleID, email, password, role, phonenumber, dobStr, fullname, dob, place, usercode);
-            dao.signup(user);
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("changepassword.jsp").forward(request, response);
+            
         }
-    
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

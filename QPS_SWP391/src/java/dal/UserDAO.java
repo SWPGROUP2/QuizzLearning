@@ -1,5 +1,6 @@
 package dal;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,22 +18,39 @@ public class UserDAO extends DBContext {
     private PreparedStatement ps;
     private ResultSet rs;
 
-    public void addUser(User user) throws Exception {
+    public void signup(User user) {
+        String query = "INSERT INTO Users(Email, Password, FullName, PhoneNumber, UserCode, PlaceWork, DoB, UserName, RoleID) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
-            ps = connection.prepareStatement("INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, DoB, PlaceWork, UserCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
-            ps.setString(1, user.getUserName());
-            ps.setInt(2, user.getRoleId());
-            ps.setString(3, user.getEmail());
-            ps.setString(4, user.getPassword());
-            ps.setString(5, user.getPhoneNumber());
-            ps.setDate(6, user.getDob());
-            ps.setString(7, user.getPlace());
-            ps.setString(8, user.getUserCode());
+            ps = connection.prepareStatement(query);
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getFullName());
+            ps.setString(4, user.getPhoneNumber());
+            ps.setString(5, user.getUserCode());
+            ps.setString(6, user.getPlace());
+            ps.setDate(7, new Date(user.getDob().getTime()));
+            ps.setString(8, user.getUserName());
+            ps.setInt(9, user.getRoleId());
             ps.executeUpdate();
         } catch (Exception e) {
-            throw e;
+
         }
     }
+    
+    public boolean checkEmailExists(String email) {
+        String query = "SELECT * FROM Users WHERE Email = ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
 
     public List<User> getUser() throws Exception {
         List<User> user = new ArrayList<>();
@@ -180,20 +198,6 @@ public class UserDAO extends DBContext {
         return null;
     }
 
-    public void changeUserPassword(String newPassword, int userId) {
-        try {
-
-            String query = "UPDATE [Users] SET [Password] = ? WHERE [UserID] = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-
-            statement.setString(1, newPassword);
-            statement.setInt(2, userId);
-
-            statement.executeUpdate();
-        } catch (Exception ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     public User getUser(String email, String password) throws Exception {
         String sql = "SELECT u.UserID,  u.UserName, u.RoleID , u.Email, u.Password,r.Role\n"
@@ -216,13 +220,11 @@ public class UserDAO extends DBContext {
         return null;
     }
 
-
     public void updateUserById(String fullName, String userName, String phoneNumber, String dob, int id, String placeWork, String userCode) {
         String sql = "update Users\n"
                 + "set FullName=?,\n"
                 + "UserName=?,\n"
                 + "PhoneNumber=?,\n"
-                
                 + "DoB=?,\n"
                 + "PlaceWork=?,\n"
                 + "UserCode=?\n"
@@ -233,8 +235,8 @@ public class UserDAO extends DBContext {
             stm.setString(2, userName);
             stm.setString(3, phoneNumber);
             stm.setString(4, dob);
-            stm.setString(5,placeWork);
-            stm.setString(6,userCode);
+            stm.setString(5, placeWork);
+            stm.setString(6, userCode);
             stm.setInt(7, id);
 
             stm.executeUpdate();
@@ -272,27 +274,40 @@ public class UserDAO extends DBContext {
             System.out.println(e);
         }
     }
-    
 
+    public boolean updatePassword(int userId, String newPassword) throws SQLException {
+        String sql = "UPDATE Users SET Password = ? WHERE UserID = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, newPassword);
+        statement.setInt(2, userId);
+        return rs.next();
+    }
+
+    public boolean verifyPassword(int userId, String currentPassword) throws SQLException {
+        String sql = "SELECT Password FROM Users WHERE UserID = ? AND Password = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, userId);
+        statement.setString(2, currentPassword);
+        ResultSet rs = statement.executeQuery();
+        return rs.next();
+    }
 
     public static void main(String[] args) {
-        LocalDateTime time= LocalDateTime.now();
+        LocalDateTime time = LocalDateTime.now();
         System.out.println(time);
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        
-        String formatted= time.format(myFormatObj);
+
+        String formatted = time.format(myFormatObj);
         System.out.println(formatted);
-        
-        UserDAO u= new UserDAO();
-        User user= u.getUserById(15);
+
+        UserDAO u = new UserDAO();
+        User user = u.getUserById(15);
         System.out.println(user.toString());
-        
-        
-        
-        String str2= "                       abc                          ";
-        String str1= "abc";
-        System.out.println("["+str2.trim()+"]");
+
+        String str2 = "                       abc                          ";
+        String str1 = "abc";
+        System.out.println("[" + str2.trim() + "]");
         System.out.println(str1.equals(str2.trim()));
     }
-}
 
+}

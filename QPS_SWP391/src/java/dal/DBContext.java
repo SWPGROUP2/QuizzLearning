@@ -10,10 +10,10 @@ public class DBContext {
 
     private static final Logger LOGGER = Logger.getLogger(DBContext.class.getName());
     private static final String SERVER_NAME = "localhost";
-    private static final String DATABASE_NAME = "SWPQuiz";
+    private static final String DATABASE_NAME = "SWP_Quiz";
     private static final String PORT_NUMBER = "1433";
     private static final String USER_ID = "sa";
-    private static final String PASSWORD = "12345";
+    private static final String PASSWORD = "123";
     protected Connection connection;
 
     public DBContext() {

@@ -20,59 +20,6 @@ public class User {
     public User() {
     }
 
-    public User(String userName, int roleID, String email, String password, String role) {
-        this.userName = userName;
-        this.roleId = roleID;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
-
-    public User(int userId, String userName, int roleID, String email, String password, String role) {
-        this.userId = userId;
-        this.userName = userName;
-        this.roleId = roleID;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
-
-    public User(int userId, String userName, int roleId, String email, String password, String role, String phoneNumber, String avatar, String fullName, Date Dob) {
-        this.userId = userId;
-        this.userName = userName;
-        this.roleId = roleId;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.phoneNumber = phoneNumber;
-        this.avatar = avatar;
-        this.fullName = fullName;
-        this.Dob = Dob;
-    }
-
-    public User(String userName, int roleId, String email, String password, String role, String phoneNumber, Date Dob, String place) {
-        this.userName = userName;
-        this.roleId = roleId;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.phoneNumber = phoneNumber;
-        this.Dob = Dob;
-        this.place = place;
-    }
-
-    public User(String userName, int roleId, String email, String password, String role, String phoneNumber, Date Dob, String place, String userCode) {
-        this.userName = userName;
-        this.roleId = roleId;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.phoneNumber = phoneNumber;
-        this.Dob = Dob;
-        this.place = place;
-        this.userCode = userCode;
-    }
-
     public User(int userId, String userName, int roleId, String email, String password, String role, String phoneNumber, String avatar, String fullName, Date Dob, String place, String userCode) {
         this.userId = userId;
         this.userName = userName;
@@ -87,6 +34,12 @@ public class User {
         this.place = place;
         this.userCode = userCode;
     }
+
+    public User(int aInt, String string, int aInt0, String email, String string0, String string1) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    
 
     public String getPlace() {
         return place;

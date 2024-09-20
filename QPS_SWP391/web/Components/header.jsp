@@ -53,7 +53,7 @@
                                     <img src="./img/roll.jpg" alt="Avatar">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="avatarDropdown">
-                                    <a class="dropdown-item" href="login.jsp">Login</a>
+                                    <a class="dropdown-item" href="changepassword.jsp">Change Password</a>
                                     <a class="dropdown-item" href="signup.jsp">Sign up</a>
                                 </div>
                             </div>
