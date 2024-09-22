@@ -17,7 +17,7 @@
         <div class="container">
             
             
-            <a href="${sessionScope.account.roleId == 1 ? 'homes' : 'teacherhomepage'}" class="atag">Go back</a>
+            <a href="${sessionScope.account.roleId == 1 ? 'homes' : 'teacherhome'}" class="atag">Go back</a>
             
             
             
@@ -102,6 +102,9 @@
                     <%
                         User user= (User) session.getAttribute("account");
                         String place = user.getPlace().trim();
+                        if (user != null && user.getPlace() != null) {
+                        place = user.getPlace().trim();
+                        }
                     %>
 
                     <div style="margin: 5px 0px;">
