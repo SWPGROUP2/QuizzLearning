@@ -51,7 +51,7 @@ public class TeacherHomePageController extends HttpServlet {
         int user_id= (int) session.getAttribute("user_id");
         session.setAttribute("account", userDao.getUserById(user_id));
    
-        request.getRequestDispatcher("teacherhomepage.jsp").forward(request, response);
+        request.getRequestDispatcher("teacher/teacher-home-page.jsp").forward(request, response);
     } 
     /** 
      * Handles the HTTP <code>POST</code> method.

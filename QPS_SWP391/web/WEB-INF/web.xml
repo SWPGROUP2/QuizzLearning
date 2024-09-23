@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-     <welcome-file-list>
+    <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
+    <servlet>
+        <servlet-name>ChangePasswordControllers</servlet-name>
+        <servlet-class>controllers.ChangePasswordController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateUserProfile</servlet-name>
+        <servlet-class>controllers.UpdateUserProfile</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProcessAvatarSelection</servlet-name>
+        <servlet-class>controllers.ProcessAvatarSelection</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LogOutController</servlet-name>
+        <servlet-class>controllers.LogOutController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminHomePageController</servlet-name>
         <url-pattern>/adminhome</url-pattern>
@@ -17,9 +33,9 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>TeacherHomePageController</servlet-name>
-        <url-pattern>/teacherhomepage</url-pattern>
+        <url-pattern>/teacherhome</url-pattern>
     </servlet-mapping>
-     <servlet>
+    <servlet>
         <servlet-name>SignUpController</servlet-name>
         <servlet-class>controllers.SignUpController</servlet-class>
     </servlet>
@@ -28,37 +44,28 @@
         <url-pattern>/signup</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>UpdateUserProfile</servlet-name>
-        <servlet-class>controller.UpdateUserProfile</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>UpdateUserProfile</servlet-name>
-          <url-pattern>/updateuser</url-pattern>
-    </servlet>
-    <servlet>
-        <servlet-name>ProcessAvatarSelection</servlet-name>
-        <servlet-class>controller.ProcessAvatarSelection</servlet-class>
-    </servlet>
-     <servlet>
-        <servlet-name>ProcessAvatarSelection</servlet-name>
-         <url-pattern>/processAvatarSelection</url-pattern>
-    </servlet>
-     <servlet>
-        <servlet-name>ChangePasswordController</servlet-name>
-        <servlet-class>controller.ChangePasswordController</servlet-class>
-    </servlet>
-     <servlet>
-        <servlet-name>ChangePasswordController</servlet-name>
-         <url-pattern>/changepassword</url-pattern>
-    </servlet>
-    <servlet>
         <servlet-name>HomeServlet</servlet-name>
         <servlet-class>controller.HomeServlet</servlet-class>
     </servlet>
-        <session-config>
+    <servlet-mapping>
+        <servlet-name>ChangePasswordControllers</servlet-name>
+        <url-pattern>/changepassword</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateUserProfile</servlet-name>
+        <url-pattern>/Updateuser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProcessAvatarSelection</servlet-name>
+        <url-pattern>/ProcessAvatarSelection</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogOutController</servlet-name>
+        <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+    <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
 </web-app>
-

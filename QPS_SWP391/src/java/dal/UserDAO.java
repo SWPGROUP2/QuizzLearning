@@ -17,6 +17,8 @@ public class UserDAO extends DBContext {
     private PreparedStatement ps;
     private ResultSet rs;
 
+
+    
     public void addUser(User user) throws Exception {
         try {
             ps = connection.prepareStatement("INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, DoB, PlaceWork, UserCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
@@ -180,21 +182,31 @@ public class UserDAO extends DBContext {
         return null;
     }
 
-    public void changeUserPassword(String newPassword, int userId) {
-        try {
 
-            String query = "UPDATE [Users] SET [Password] = ? WHERE [UserID] = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
 
-            statement.setString(1, newPassword);
-            statement.setInt(2, userId);
-
-            statement.executeUpdate();
-        } catch (Exception ex) {
+    
+        public boolean updatePassword(int userId, String newPassword) throws SQLException {
+       try { String sql = "UPDATE Users SET Password = ? WHERE UserID = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, newPassword);
+        statement.setInt(2, userId);
+         int rowsAffected = statement.executeUpdate(); // Execute the update
+        return rowsAffected > 0;
+    }  catch (Exception ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+        return false;
+        }
 
+    public boolean verifyPassword(int userId, String currentPassword) throws SQLException {
+        String sql = "SELECT Password FROM Users WHERE UserID = ? AND Password = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, userId);
+        statement.setString(2, currentPassword);
+        ResultSet rs = statement.executeQuery();
+        return rs.next();
+    }
+    
     public User getUser(String email, String password) throws Exception {
         String sql = "SELECT u.UserID,  u.UserName, u.RoleID , u.Email, u.Password,r.Role\n"
                 + "FROM Users u, Roles r\n"

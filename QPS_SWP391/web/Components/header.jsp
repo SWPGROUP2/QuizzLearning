@@ -54,6 +54,7 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="avatarDropdown">
                                     <a class="dropdown-item" href="user-profile.jsp">Profile</a>
+                                    <a class="dropdown-item" href="changepassword.jsp">Change password</a>
                                     <a class="dropdown-item" href="login.jsp">Sign out</a>
                                 </div>
                             </div>
