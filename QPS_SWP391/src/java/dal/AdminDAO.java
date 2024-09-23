@@ -56,32 +56,7 @@ public class AdminDAO extends DBContext {
         }
         return user;
     }
-    public void updateUserById(String fullName, String userName, String email, String phoneNumber, Date dob, String placework, String usercode, int id) {
-        String sql = "update Users\n"
-                + "set FullName=?,\n"
-                + "UserName=?,\n"
-                + "Email=?,\n"
-                + "PhoneNumber=?,\n"
-                + "DoB=?,\n"
-                + "PlaceWork=?\n,"
-                + "UserCode=?\n"
-                + "where UserID=?";
-        try {
-            PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, fullName);
-            stm.setString(2, userName);
-            stm.setString(3, email);
-            stm.setString(4, phoneNumber);
-            stm.setDate(5, dob);
-            stm.setString(6, placework);
-            stm.setString(7, usercode);
-            stm.setInt(8, id);
-            stm.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-    }
+    
     public List<User> getListByPage(ArrayList<User> list,
             int start, int end) {
         ArrayList<User> arr = new ArrayList<>();
