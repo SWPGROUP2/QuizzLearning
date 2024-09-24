@@ -2,10 +2,14 @@ body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background: linear-gradient(to right, #fbc2eb, #a6c0fe);
+    background-size: cover;
+    background-position: center;
+    
 }
 
 .container {
+    background: linear-gradient(to right, #fbc2eb, #a6c0fe);
     max-width: 600px;
     margin: 20px auto;
     background-color: #fff;
@@ -15,6 +19,7 @@ body {
 }
 
 .profile-form {
+    background: linear-gradient(to right, #fbc2eb, #a6c0fe);
     display: flex;
     flex-direction: column;
     align-items: center;
