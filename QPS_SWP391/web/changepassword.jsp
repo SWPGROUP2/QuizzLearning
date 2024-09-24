@@ -22,6 +22,7 @@
                 width: 100%;
             }
             .card {
+                background: linear-gradient(to right, #fbc2eb, #a6c0fe);
                 border-radius: 15px;
                 box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
                 padding: 20px;

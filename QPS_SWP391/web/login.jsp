@@ -4,19 +4,17 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Log in</title>
-        <link rel="stylesheet" href="./assets/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <title>Log in</title>  
         <link rel="stylesheet" href="./assets/css/common.css">
         <style>
             body {
-                background-image: url('assets/img/loginbackground.png');
+                background: linear-gradient(to right, #fbc2eb, #a6c0fe);
                 background-size: cover;
                 background-position: center;
                 font-family: Arial, sans-serif;
                 margin: 0;
                 padding: 0;
-                background-color: #f0f0f0;
+              
                 display: flex;
                 justify-content: center;
                 align-items: center;
