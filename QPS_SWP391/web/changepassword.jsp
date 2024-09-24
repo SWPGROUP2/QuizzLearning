@@ -75,6 +75,7 @@
                         <input type="password" class="form-control" id="confirmPassword" name="confirmpass" placeholder="Confirm your new password" required>
                     </div>
                     <button type="submit" class="btn btn-custom w-100">Change Password</button>
+                    <a href="teacherhome" class="btn btn-home w-100">Return to Home</a> <!-- Nút quay lại trang chủ -->
                 </form>
                 <c:if test="${not empty mess}">
                     <div class="alert alert-info">${mess}</div>
