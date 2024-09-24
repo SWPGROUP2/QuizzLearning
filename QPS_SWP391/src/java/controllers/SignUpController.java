@@ -30,14 +30,23 @@ public class SignUpController extends HttpServlet {
         try {
             UserDAO dao = new UserDAO();
 
-            String username = request.getParameter("username");
+            String fullname = request.getParameter("fullname");
             String email = request.getParameter("email");
             String password = request.getParameter("password");
-            String role = request.getParameter("role");
-            String phoneNumber = request.getParameter("phoneNumber");
+            String phoneNumber = request.getParameter("phonenumber");
             String place = request.getParameter("place");
             String dateString = request.getParameter("date");
             String userCode = request.getParameter("usercode");
+
+            //check blank space
+            if (isBlank(fullname) || isBlank(email) || isBlank(password)
+                    || isBlank(phoneNumber) || isBlank(place) || isBlank(userCode)
+                    || isBlank(dateString)) {
+                mess = "All fields are required and cannot be blank or spaces.";
+                request.setAttribute("mess", mess);
+                request.getRequestDispatcher("/signup.jsp").forward(request, response);
+                return;
+            }
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date utilDate;
@@ -51,17 +60,40 @@ public class SignUpController extends HttpServlet {
                 return;
             }
 
+            //check user age
             Date sqlDate = new Date(utilDate.getTime());
-            int roleId = "student".equals(role) ? 1 : 3;
+            int age = new java.util.Date().getYear() - utilDate.getYear();
+            if (age < 10) {
+                mess = "You must be at least 10 years old to sign up.";
+                request.setAttribute("mess", mess);
+                request.getRequestDispatcher("/signup.jsp").forward(request, response);
+                return;
+            }
 
-            // Check if email already exists
+            int roleId = 1;
+            String userName = "student";
+
+            // Check email exists
             if (dao.getUserByEmail(email) != null) {
                 mess = "Email is already in use. Please try another email.";
                 request.setAttribute("mess", mess);
                 request.getRequestDispatcher("/signup.jsp").forward(request, response);
+            }
+            // Check phone number exists
+            if (dao.isPhoneNumberExists(phoneNumber)) {
+                mess = "Phone number is already in use. Please try another number.";
+                request.setAttribute("mess", mess);
+                request.getRequestDispatcher("/signup.jsp").forward(request, response);
+                return;
+            }
+
+            // Check usercode exists
+            if (dao.isUserCodeExists(userCode)) {
+                mess = "User code is already in use. Please try another code.";
+                request.setAttribute("mess", mess);
+                request.getRequestDispatcher("/signup.jsp").forward(request, response);
             } else {
-                // Create and add the user
-                User user = new User(username, roleId, email, password, role, phoneNumber, sqlDate, place, userCode);
+                User user = new User(roleId, userName, roleId, email, password, place, phoneNumber, place, fullname, sqlDate, place, userCode);
                 dao.addUser(user);
                 mess = "Sign Up Successful! You can now log in.";
                 request.setAttribute("mess", mess);
@@ -74,8 +106,12 @@ public class SignUpController extends HttpServlet {
         }
     }
 
+    private boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
+    }
+
     @Override
     public String getServletInfo() {
-        return "Handles user sign up.";
-    }
+        return "Short description";
+    }//
 }
