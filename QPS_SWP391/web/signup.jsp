@@ -92,13 +92,13 @@
             </div>
 
             <div>
-                <input maxlength="30" type="text" id="username" name="username" placeholder="Display Name" required>
+                <input maxlength="30" type="text" id="fullname" name="fullname" placeholder="Full Name" required>
             </div>
             <div>
-                <input min="8" max="13" placeholder="Phone Number" type="text" id="phoneNumber" name="phoneNumber" required>
+                <input min="8" max="13" placeholder="Phone Number" type="text" id="phoneNumber" name="phonenumber" required>
             </div>
             <div>
-                <input maxlength="20" placeholder="Student/Teacher ID" type="text" id="usercode" name="UserCode" required>
+                <input maxlength="20" placeholder="Student ID" type="text" id="usercode" name="usercode" required>
             </div>
             <div style="margin: 5px 0px;">
                 Select Campus:    <select name = "place" > 
@@ -112,10 +112,10 @@
             <div style="margin: 5px 0px;">
                 Date of birth:    <input type="date" id="date" name="date"  required>
             </div>
-            <div style="justify-content: space-around; padding: auto; margin-bottom: 10px">
+<!--            <div style="justify-content: space-around; padding: auto; margin-bottom: 10px">
                 <input type="radio" name="role" value="student" required> Student
                 <input type="radio" name="role" value="teacher" style="margin-left: 30px" required> Teacher
-            </div>
+            </div>-->
 
             <div>
                 <input type="submit" value="Sign up">
