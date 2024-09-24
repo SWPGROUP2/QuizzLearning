@@ -19,9 +19,33 @@ public class UserDAO extends DBContext {
 
 
     
+    public boolean isPhoneNumberExists(String phoneNumber) throws SQLException {
+        String sql = "SELECT * FROM Users WHERE phoneNumber = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, phoneNumber);
+            ResultSet rs = statement.executeQuery();
+            return rs.next(); 
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error checking phone number existence", e);
+            throw e; 
+        }
+    }
+
+    public boolean isUserCodeExists(String userCode) throws SQLException {
+        String sql = "SELECT * FROM Users WHERE userCode = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, userCode);
+            ResultSet rs = statement.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error checking user code existence", e);
+            throw e; 
+        }
+    }
+    
     public void addUser(User user) throws Exception {
         try {
-            ps = connection.prepareStatement("INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, DoB, PlaceWork, UserCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+            ps = connection.prepareStatement("INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, DoB, PlaceWork, UserCode, FullName) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
             ps.setString(1, user.getUserName());
             ps.setInt(2, user.getRoleId());
             ps.setString(3, user.getEmail());
@@ -30,6 +54,7 @@ public class UserDAO extends DBContext {
             ps.setDate(6, user.getDob());
             ps.setString(7, user.getPlace());
             ps.setString(8, user.getUserCode());
+            ps.setString(9, user.getFullName());
             ps.executeUpdate();
         } catch (Exception e) {
             throw e;
