@@ -34,19 +34,20 @@
             background-color: #A162FD;
         }
     </style>
-    <body>
-
-        <div class="main-content">
-            <main>
-                <div class="page-header">
+    <body class="container-fluid">
+        <div class="row">
+            <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
+                <%@include file="/Components/Sidebar.jsp" %>
+            </div>
+            <main class="col-md-10 p-3">
+                <div class="">
                     <h1>User manager</h1>
                     <small>Home / User manager</small>
                 </div>
-                <div class="page-content">
-                    <div class="records table-responsive">
-
-                        <div class="record-header">
-                            <div class="add">
+                <div class="">
+                    <div class="">
+                        <div>
+                            <div>
                                 <form>
                                     Role:  
                                     <select value="${empty param.role ? -1 : param.role}" onchange="applyFilter('role', event.target.value)">
@@ -95,9 +96,9 @@
                                         <tr>
                                             <td>${user.userId}</td>
                                             <td>
-                                                <div class="client">
-                                                    <div class="client-img bg-img" style="background-image: url(../${user.avatar})"></div>
-                                                    <div class="client-info">
+                                                <div class="">
+                                                    <div class="" style="background-image: url(../${user.avatar})"></div>
+                                                    <div class="">
                                                         <h4>${user.userName}</h4>
                                                         <small>${user.email}</small>
                                                     </div>

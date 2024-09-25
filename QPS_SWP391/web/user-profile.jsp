@@ -13,7 +13,7 @@
     </head>
     <body>
         <div class="container">
-            <a href="${sessionScope.account.roleId == 1 ? 'homes' : 'teacherhome'}" class="atag">Go back</a>
+            <a href="${sessionScope.account.roleId == 1 ? 'studenthome' : 'teacherhome'}" class="atag">Go back</a>
             
             <h2>Edit Profile</h2>
             <div class="profile-picture" onclick="openPopup()">

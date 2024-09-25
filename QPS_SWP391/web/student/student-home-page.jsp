@@ -54,33 +54,6 @@
             .learn-more-btn:hover {
                 background-color: #e55065; /* Thay đổi màu khi hover */
             }
-            /* Dropdown Menu */
-            .dropdown {
-                position: relative;
-                display: inline-block;
-            }
-            .dropdown-content {
-                display: none;
-                position: absolute;
-                background-color: #f9f9f9;
-                min-width: 160px;
-                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                z-index: 1;
-            }
-            .dropdown-content a {
-                color: black;
-                padding: 12px 16px;
-                text-decoration: none;
-                display: block;
-                text-align: left;
-            }
-            .dropdown-content a:hover {background-color: #f1f1f1}
-            .dropdown:hover .dropdown-content {
-                display: block;
-            }
-            .dropdown:hover .dropbtn {
-                background-color: #3e8e41;
-            }
         </style>
     </head>
     <body class="container-fluid">
@@ -97,16 +70,6 @@
                         <h1>EDUCATION</h1>
                         <h2>QUIZ MANAGEMENT SYSTEM</h2>
                         <p href="#" class="learn-more-btn">Quiz History</p>
-
-                        <!-- Dropdown Menu -->
-                        <div class="dropdown">
-                            <button class="dropbtn">User</button>
-                            <div class="dropdown-content">
-                                <a href="user-profile.jsp">Profile</a>
-                                <a href="login.jsp">Logout</a>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
