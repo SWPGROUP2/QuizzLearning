@@ -24,17 +24,13 @@
         <url-pattern>/adminhome</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>TeacherHomePageController</servlet-name>
-        <servlet-class>controllers.TeacherHomePageController</servlet-class>
+        <servlet-name>StudentHomePageController</servlet-name>
+        <servlet-class>controllers.StudentHomePageController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AdminHomePageController</servlet-name>
         <servlet-class>controllers.AdminHomePageController</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>TeacherHomePageController</servlet-name>
-        <url-pattern>/teacherhome</url-pattern>
-    </servlet-mapping>
     <servlet>
         <servlet-name>SignUpController</servlet-name>
         <servlet-class>controllers.SignUpController</servlet-class>

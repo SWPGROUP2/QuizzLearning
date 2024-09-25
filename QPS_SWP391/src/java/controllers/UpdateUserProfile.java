@@ -60,7 +60,7 @@ public class UpdateUserProfile extends HttpServlet {
                 userDAO.updateUserById(fullName, userName, phoneNumber, dob, Integer.parseInt(id),placeWork,schoolId);              
             }
     if(userDAO.getUserById(Integer.parseInt(id)).getRoleId()==1){
-            response.sendRedirect("homes");
+            response.sendRedirect("studenthome");
     } else if(userDAO.getUserById(Integer.parseInt(id)).getRoleId()==3){
         response.sendRedirect("teacherhome");
     }
