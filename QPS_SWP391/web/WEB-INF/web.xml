@@ -19,6 +19,10 @@
         <servlet-name>LogOutController</servlet-name>
         <servlet-class>controllers.LogOutController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TeacherHomePageController</servlet-name>
+        <servlet-class>controllers.TeacherHomePageController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminHomePageController</servlet-name>
         <url-pattern>/adminhome</url-pattern>
@@ -58,6 +62,10 @@
     <servlet-mapping>
         <servlet-name>LogOutController</servlet-name>
         <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TeacherHomePageController</servlet-name>
+        <url-pattern>/teacherhome</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
