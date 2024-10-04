@@ -39,6 +39,5 @@ CREATE TABLE Subject (
     status BIT,
     tagLine INT,
     title VARCHAR(255) CHARACTER SET utf8mb4,
-    thumbnail VARCHAR(255) CHARACTER SET utf8mb4,
     description VARCHAR(255) CHARACTER SET utf8mb4
 );
