@@ -66,10 +66,6 @@
             <div class="text-center mb-4 dropdown">
                 <h3>QPS04</h3>
                 <img class="dropbtn" src="assets/img/roll.jpg" alt="User Image">
-                <div class="dropdown-content">
-                    <a href="user-profile.jsp">Profile</a>
-                    <a href="login.jsp">Logout</a>
-                </div>
             </div>
 
             <ul class="list-unstyled">
@@ -77,22 +73,10 @@
                     <p>HomePage</p>
                 </li>
                 <li class="nav-item">
-                    <button class="btn">Mathematics</button>
+                    <a class="btn" href="user-profile.jsp">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <button class="btn">Science</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn">History</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn">Literature</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn">Geography</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn">English</button>
+                    <a class="btn" href="login.jsp">Logout</a>
                 </li>
             </ul>
         </nav>
