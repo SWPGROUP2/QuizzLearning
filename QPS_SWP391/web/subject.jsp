@@ -16,39 +16,46 @@
         <title>JSP Page</title>
         <!-- Custom scripts -->
         <%@include file="Components/AllAccess.jsp"%>
-      
-     
+
+
     </head>
 
-    <body class="sb-sidenav-toggled">
-        <div>
-            <div>
-                <div id="layoutSidenav" class="mb-4">
-                    <div id="layoutSidenav_content">
-                        <div class="container-fluid px-4 px-lg-5 mb-5 row" style="margin-top: 91px">
+    <body class="container-fluid">
+        <div class="row">
+            <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
+                <%@include file="Components/Sidebar.jsp" %>
+            </div>
+            <div class="col-md-10 px-0">
+                <div id="" class="mb-4">
+                    <div id="">
+                        <div class="container-fluid px-4 px-lg-5 row" style="margin-top: 10px">
                             <h1>Subject List</h1>
-                            <div class="col-6">
-                              
-                            </div>
 
-                            <div class ="row mt-5 col-md-12">
+                            <div class="mt-3 col-md-12">
                                 <c:forEach var="s" items="${listSubjectsByPagging}">
-                                    <div class="col-md-4 mb-3 mx-auto d-block shadow p-3  bg-white rounded border" style="padding: 10px 0px 10px 10px; border-radius: 8px; width: 32%; margin-left: 10px">
+                                    <div class="col-md-12 mb-3 shadow bg-white rounded border" style="border-radius: 8px; width: 100%">
                                         <form action="subject-list" method="POST">
-                                            <img class=" d-block" src="${s.getThumbnail()}" />
-                                            <h2 class="text-center"> ${s.getSubjectName()} </h2>
-                                            <ul style="margin-left: 8%">
-                                                <li><b>title: </b>${s.getTitle()}</li>
-                                                <li><b>price  :</b>3200</li>
-                                            </ul>
-                                            <div class="text-center">
-                                                <a href="subject-detail?id=${s.getSubjectId()}" class="btn btn-primary">Detail</a>
-                                            </div>
+                                            <div class="row align-items-center">
+                                                <div class="col-md-3 text-center">
+                                                    <img class="align-items-center" src="${s.getThumbnail()}" style="width: 50%; height: auto;" />
+                                                </div>
 
+                                                <div class="col-md-3" style="margin-left: -20px">
+                                                    <h2 class="">${s.getSubjectName()}</h2>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <li>${s.getTitle()}</li>
+                                                </div>
+
+                                                <!-- Cột 3: Nút Detail -->
+                                                <div class="col-md-3 text-center">
+                                                    <a href="subject-detail?id=${s.getSubjectId()}" class="btn btn-primary btn-lg">View List Question</a>
+                                                </div>
+                                            </div>
                                         </form>
                                     </div>
                                 </c:forEach>
-
                             </div>
                         </div>
                     </div>
@@ -102,8 +109,5 @@
 
         </div>
     </body>
-
-
-
 </html>
 
