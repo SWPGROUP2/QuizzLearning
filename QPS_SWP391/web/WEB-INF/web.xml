@@ -23,6 +23,10 @@
         <servlet-name>TeacherHomePageController</servlet-name>
         <servlet-class>controllers.TeacherHomePageController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SubjectList</servlet-name>
+        <servlet-class>controllers.SubjectList</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminHomePageController</servlet-name>
         <url-pattern>/adminhome</url-pattern>
@@ -66,6 +70,10 @@
     <servlet-mapping>
         <servlet-name>TeacherHomePageController</servlet-name>
         <url-pattern>/teacherhome</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubjectList</servlet-name>
+        <url-pattern>/subject-list</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
