@@ -32,6 +32,14 @@
                             <h1>Subject List</h1>
 
                             <div class="mt-3 col-md-12">
+                                <form class="form-inline mb-4" action="search-subject" method="GET">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="keyword" placeholder="Search by subject name" value="${param.search}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="submit">Search</button>
+                                        </div>
+                                    </div>
+                                </form>
                                 <c:forEach var="s" items="${listSubjectsByPagging}">
                                     <div class="col-md-12 mb-3 shadow bg-white rounded border" style="border-radius: 8px; width: 100%">
                                         <form action="subject-list" method="POST">
@@ -50,7 +58,7 @@
 
                                                 <!-- Cột 3: Nút Detail -->
                                                 <div class="col-md-3 text-center">
-                                                    <a href="subject-detail?id=${s.getSubjectId()}" class="btn btn-primary btn-lg">View List Question</a>
+                                                    <a href="question?id=${s.getSubjectId()}" class="btn btn-primary btn-lg">View List Question</a>
                                                 </div>
                                             </div>
                                         </form>

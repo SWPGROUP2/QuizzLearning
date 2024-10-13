@@ -43,6 +43,14 @@ CREATE TABLE Subject (
     description VARCHAR(255) CHARACTER SET utf8mb4
 );
 
+CREATE TABLE Questions (
+    QuestionID INT AUTO_INCREMENT PRIMARY KEY,
+    subjectId INT,
+    Question VARCHAR(255) CHARACTER SET utf8mb4,
+    Definition VARCHAR(1000) CHARACTER SET utf8mb4,
+    FOREIGN KEY (subjectId) REFERENCES Subject(subjectId)
+);
+SELECT * FROM Questions WHERE subjectId = 1;
 INSERT INTO `Subject` (`subjectId`, `subjectName`, `categoryId`, `status`, `tagLine`, `title`, `thumbnail`, `description`) 
 VALUES 
 (1, 'Math', 1, 1, 20, 'Mathematics', 'https://cf.quizizz.com/img/course-assets/title_imgs/2%20-%20Mathematics.png', 'About this Specialization For a lot of higher level courses in Machine Learning and Data Science, you find you need to freshen up on the basics in mathematics - stuff you may have studied before in school or university.'),
@@ -54,3 +62,19 @@ VALUES
 (7, 'Career and Technical Education', 1, 1, 20, 'Career and Technical Education', 'https://cf.quizizz.com/img/course-assets/title_imgs/lifeskills_s.png', 'This course is the first of a series that aims to prepare you for a role as an entry-level IT Support Specialist. In this course, you’ll be introduced to the world of Information Technology, or IT.'),
 (8, 'Creative Arts', 1, 1, 20, 'Creative Arts', 'https://cf.quizizz.com/img/course-assets/title_imgs/6%20-%20Creative%20Arts.png', 'Graphic design is all around us, in a myriad of forms, both on screen and in print, yet it is always made up of images and words to create a communication goal.'),
 (9, 'Health and Physical Education', 1, 1, 20, 'Health and Physical Education', 'https://cf.quizizz.com/img/course-assets/title_imgs/7-%20PE%26Health.png', 'The vital signs – heart rate, blood pressure, body temperature, respiration rate, and pain – communicate important information about the physiological status of the human body.');
+
+INSERT INTO `Questions` (subjectId, Question, Definition)
+VALUES 
+(1, 'おはようございます', 'Chào buổi sáng!'),
+(1, 'こんにちは', 'Chào buổi trưa!'),
+(1, 'こんばんは', 'Chào buổi tối!'),
+(1, 'すみません', 'Xin lỗi'),
+(1, 'どうも', 'Rất, xin chào, cảm ơn,...'),
+(1, 'ありがとう', 'Cảm ơn'),
+(1, 'どうもありがとうございます', 'Cảm ơn rất nhiều.'),
+(1, 'おやすみなさい', 'Chúc ngủ ngon.'),
+(1, 'さようなら', 'Tạm biệt.'),
+(1, 'わかりますか', 'Có hiểu không?'),
+(1, 'はい、わかりました', 'Vâng, tôi hiểu rồi'),
+(1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
+(1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
