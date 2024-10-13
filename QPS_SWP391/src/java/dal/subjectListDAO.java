@@ -31,7 +31,7 @@ public class subjectListDAO extends MyDAO {
         String xsubjectName;
 
         boolean xstatus;
-        
+
         try {
             ps = con.prepareStatement(xSql);
             rs = ps.executeQuery();
@@ -104,104 +104,6 @@ public class subjectListDAO extends MyDAO {
             }
         }
         return list;
-    }
-
-    public List<subject> getListSubjectsByPaggingAndSort(int page, int pageSize, String sortBy) {
-        List<subject> list = new ArrayList<>();
-        int xsubjectId;
-        int xcategoryId;
-        String xthumbnail;
-        int xtagLine;
-        String xcontent;
-        String xdescription;
-        String xtitle;
-        String xsubjectName;
-        boolean xstatus;
-        Date xdate; // Thêm biến xdate kiểu Timestamp
-
-        try {
-            if (con != null) {
-                xSql = "  with t as (select ROW_NUMBER() over (order by S.createDate asc) as r, S.* from Subject AS S) \n"
-                        + " select * from t where r between  ? * ? - (?-1) and ? * ?";
-                ps = con.prepareStatement(xSql);
-                ps.setInt(1, page);
-                ps.setInt(2, pageSize);
-                ps.setInt(3, pageSize);
-                ps.setInt(4, page);
-                ps.setInt(5, pageSize);
-                rs = ps.executeQuery();
-                while (rs.next()) {
-                    xsubjectId = rs.getInt("subjectId");
-                    xsubjectName = rs.getString("subjectName");
-                    xcategoryId = rs.getInt("categoryId");
-                    xstatus = rs.getBoolean("status");
-                    xtagLine = rs.getInt("tagLine");
-                    xtitle = rs.getString("title");
-                    xthumbnail = rs.getString("thumbnail");
-                    xdescription = rs.getString("description");
-                    xdate = rs.getDate("createDate"); // Lấy giá trị thời gian của trường "date"
-
-                    list.add(new subject(xsubjectId, xsubjectName, xcategoryId, xstatus, xtagLine, xtitle, xthumbnail, xdescription, xdate)); // Thêm xdate vào constructor của Subject
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return list;
-    }
-
-    public List<subject> sortByDate() {
-        List<subject> sortedList = new ArrayList<>();
-        int xsubjectId;
-        int xcategoryId;
-        String xthumbnail;
-        int xtagLine;
-        String xcontent;
-        String xdescription;
-        String xtitle;
-        String xsubjectName;
-        boolean xstatus;
-        Date xdate;
-
-        try {
-            if (con != null) {
-                xSql = "SELECT * FROM Subject ORDER BY createDate ASC";
-                ps = con.prepareStatement(xSql);
-                rs = ps.executeQuery(xSql);
-                while (rs.next()) {
-                    xsubjectId = rs.getInt("subjectId");
-                    xsubjectName = rs.getString("subjectName");
-                    xcategoryId = rs.getInt("categoryId");
-                    xstatus = rs.getBoolean("status");
-                    xtagLine = rs.getInt("tagLine");
-                    xtitle = rs.getString("title");
-                    xthumbnail = rs.getString("thumbnail");
-                    xdescription = rs.getString("description");
-                    xdate = rs.getDate("createDate");
-
-                    sortedList.add(new subject(xsubjectId, xsubjectName, xcategoryId, xstatus, xtagLine, xtitle, xthumbnail, xdescription, xdate));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return sortedList;
     }
 
     public List<subject> getListSubjectsByPagging(int page, int PAGE_SIZE_3) {
@@ -296,7 +198,7 @@ public class subjectListDAO extends MyDAO {
         return 0;
     }
 
-    public List<subject> getListSubjectsByKeywordAndPagging(String keyword, int page, int PAGE_SIZE_3) {
+    public List<subject> searchSubjectsByNameWithPaging(String keyword, int page, int pageSize) {
         List<subject> list = new ArrayList<>();
         int xsubjectId;
         int xcategoryId;
@@ -307,18 +209,18 @@ public class subjectListDAO extends MyDAO {
         String xtitle;
         String xsubjectName;
         boolean xstatus;
+
         try {
             if (con != null) {
-                String sql = "with t as (select ROW_NUMBER() over (order by S.subjectId asc) as r,\n"
-                        + "                    S.*from Subject AS S \n"
-                        + "                    where S.subjectName like ?) select * from t where r between ?*?-(?-1) and ?*?";
+                String sql = "WITH Result AS (SELECT ROW_NUMBER() OVER (ORDER BY subjectId ASC) AS RowNum, * "
+                        + "FROM Subject WHERE subjectName LIKE ?) "
+                        + "SELECT * FROM Result WHERE RowNum BETWEEN ? AND ?";
+
                 ps = con.prepareStatement(sql);
                 ps.setString(1, "%" + keyword + "%");
-                ps.setInt(2, page);
-                ps.setInt(3, PAGE_SIZE_3);
-                ps.setInt(4, PAGE_SIZE_3);
-                ps.setInt(5, page);
-                ps.setInt(6, PAGE_SIZE_3);
+                ps.setInt(2, (page - 1) * pageSize + 1); // Tính toán bắt đầu của trang
+                ps.setInt(3, page * pageSize); // Tính toán kết thúc của trang
+
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     xsubjectId = rs.getInt("subjectId");
@@ -337,6 +239,12 @@ public class subjectListDAO extends MyDAO {
             e.printStackTrace();
         } finally {
             try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
                 if (con != null) {
                     con.close();
                 }
@@ -346,45 +254,4 @@ public class subjectListDAO extends MyDAO {
         }
         return list;
     }
-
-    public subject getSubjectById(int subjectId) {
-        String subjectName;
-        int categoryId;
-        boolean status;
-        int tagLine;
-        String title;
-        String thumbnail;
-        String description;
-
-        try {
-            if (con != null) {
-                xSql = "select distinct S.* from Subject AS S where S.subjectId = ?";
-                ps = con.prepareStatement(xSql);
-                ps.setInt(1, subjectId);
-                rs = ps.executeQuery();
-                while (rs.next()) {
-                    subjectId = rs.getInt(1);
-                    subjectName = rs.getString(2);
-                    categoryId = rs.getInt(3);
-                    status = rs.getBoolean(4);
-                    tagLine = rs.getInt(5);
-                    title = rs.getString(6);
-                    thumbnail = rs.getString(7);
-                    description = rs.getString(8);
-                    return new subject(subjectId, subjectName, categoryId, status, tagLine, title, thumbnail, description);
-                }
-            }
-        } catch (Exception ex) {
-
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (Exception e) {
-            }
-        }
-        return null;
-    }
-
 }

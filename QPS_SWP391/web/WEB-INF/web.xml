@@ -27,6 +27,14 @@
         <servlet-name>SubjectList</servlet-name>
         <servlet-class>controllers.SubjectList</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SearchSubject</servlet-name>
+        <servlet-class>controllers.SearchSubject</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>QuestionList</servlet-name>
+        <servlet-class>controllers.QuestionList</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminHomePageController</servlet-name>
         <url-pattern>/adminhome</url-pattern>
@@ -74,6 +82,14 @@
     <servlet-mapping>
         <servlet-name>SubjectList</servlet-name>
         <url-pattern>/subject-list</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchSubject</servlet-name>
+        <url-pattern>/search-subject</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>QuestionList</servlet-name>
+        <url-pattern>/question</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

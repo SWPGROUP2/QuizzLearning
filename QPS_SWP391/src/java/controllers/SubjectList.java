@@ -78,7 +78,6 @@ public class SubjectList extends HttpServlet {
 
         request.setAttribute("page", page);
         request.setAttribute("totalPage", totalPage);
-        request.setAttribute("search_url", "search_subject");
         request.setAttribute("pagination_url", "subject-list?");
         request.getRequestDispatcher("subject.jsp").forward(request, response);
     }
@@ -94,42 +93,7 @@ public class SubjectList extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
-        final int PAGE_SIZE = 3;
-        int page = 1;
-        String pageStr = request.getParameter("page");
-        if (pageStr != null) {
-            page = Integer.parseInt(pageStr);
-        }
-        int totalSearch = new subjectListDAO().getTotalSubject();
-        int totalPage = totalSearch / PAGE_SIZE;
-        if (totalSearch % PAGE_SIZE != 0) {
-            totalPage += 1;
-        }
-
-        subjectListDAO subjectListDAO = new subjectListDAO();
-        List<subject> listSubjects;
-        String sortBy = request.getParameter("sort");
-        if (sortBy != null && sortBy.equals("createDate")) {
-            listSubjects = subjectListDAO.sortByDate();
-        } else {
-            listSubjects = subjectListDAO.getAllSubject();
-        }
-        List<subject> listSubjectsByPagging;
-        if (sortBy != null && sortBy.equals("createDate")) {
-            listSubjectsByPagging = subjectListDAO.getListSubjectsByPaggingAndSort(page, PAGE_SIZE, "createDate");
-        } else {
-            listSubjectsByPagging = subjectListDAO.getListSubjectsByPagging(page, PAGE_SIZE);
-        }
-        request.setAttribute("listSubjects", listSubjects);
-
-        request.setAttribute("listSubjectsByPagging", listSubjectsByPagging);
-
-        request.setAttribute("page", page);
-        request.setAttribute("totalPage", totalPage);
-        request.setAttribute("search_url", "search_subject");
-        request.setAttribute("pagination_url", "subject-list?");
-        request.getRequestDispatcher("subject.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**
