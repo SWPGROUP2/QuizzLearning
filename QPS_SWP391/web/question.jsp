@@ -8,10 +8,23 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Question List</title>
-    <!-- Bootstrap CSS for grid layout -->
+    <!-- Bootstrap CSS for styling and button -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <style>
+        /* Position the edit button at the top-right corner of the webpage */
+        .top-right-edit-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+        }
+    </style>
 </head>
 <body>
+    <!-- Edit button at the top-right corner -->
+    <a href="editAllQuestions.jsp" class="btn btn-success top-right-edit-btn">Edit</a>
+    
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
