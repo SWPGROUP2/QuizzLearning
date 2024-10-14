@@ -12,19 +12,26 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     
     <style>
-        /* Position the edit button at the top-right corner of the webpage */
-        .top-right-edit-btn {
-            position: fixed;
+        /* Position the buttons at the top-right corner of the webpage */
+        .top-right-btns {
+            position: absolute;
             top: 20px;
             right: 20px;
-            z-index: 999;
+            z-index: 999; 
+        }
+        .top-right-btns a {
+            margin-left: 10px; /* Add some space between the buttons */
         }
     </style>
 </head>
 <body>
-    <!-- Edit button at the top-right corner -->
-    <a href="editAllQuestions.jsp" class="btn btn-success top-right-edit-btn">Edit</a>
-    
+    <!-- Container for the Add, Edit, and Delete buttons at the top-right -->
+    <div class="top-right-btns">
+        <a href="addQuestion.jsp" class="btn btn-primary">Add</a>
+        <a href="editAllQuestions.jsp" class="btn btn-success">Edit</a>
+        <a href="deleteQuestions.jsp" class="btn btn-danger">Delete</a>
+    </div>
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
