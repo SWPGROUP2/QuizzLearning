@@ -8,29 +8,36 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Question List</title>
-    <!-- Bootstrap CSS for styling and button -->
+    <!-- Bootstrap CSS for styling and buttons -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     
     <style>
-        /* Position the buttons at the top-right corner of the webpage */
-        .top-right-btns {
+        /* Position the Add button at the top-right corner of the webpage */
+        .top-right-add-btn {
             position: absolute;
             top: 20px;
             right: 20px;
-            z-index: 999; 
+            z-index: 999; /* Ensure the button appears above other content */
         }
-        .top-right-btns a {
-            margin-left: 10px; /* Add some space between the buttons */
+        
+        /* Style to position the buttons at the top-right of each card */
+        .card-btns {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1; /* Ensure the buttons appear above the card content */
+        }
+        .card-btns a {
+            margin-left: 5px; /* Add some space between the buttons */
+        }
+        .card {
+            position: relative; /* Ensure the buttons are positioned relative to the card */
         }
     </style>
 </head>
 <body>
-    <!-- Container for the Add, Edit, and Delete buttons at the top-right -->
-    <div class="top-right-btns">
-        <a href="addQuestion.jsp" class="btn btn-primary">Add</a>
-        <a href="editAllQuestions.jsp" class="btn btn-success">Edit</a>
-        <a href="deleteQuestions.jsp" class="btn btn-danger">Delete</a>
-    </div>
+    <!-- Add button at the top-right corner of the webpage -->
+    <a href="addQuestion.jsp" class="btn btn-primary top-right-add-btn">Add</a>
 
     <div class="container-fluid">
         <div class="row">
@@ -54,6 +61,12 @@
                                 <div class="col-md-4 mb-4">
                                     <!-- Card structure to hold question data -->
                                     <div class="card">
+                                        <!-- Buttons for Edit and Delete in the top-right corner of the card -->
+                                        <div class="card-btns">
+                                            <a href="editQuestion.jsp?id=${q.getQuestionID()}" class="btn btn-success btn-sm">Edit</a>
+                                            <a href="deleteQuestion.jsp?id=${q.getQuestionID()}" class="btn btn-danger btn-sm">Delete</a>
+                                        </div>
+                                        
                                         <div class="card-body">
                                             <h5 class="card-title">Question ${q.getQuestionID()}</h5>
                                             <p class="card-text"><strong>Question:</strong> ${q.getQuestion()}</p>
