@@ -3,6 +3,7 @@ package dal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import models.Question;
@@ -45,5 +46,19 @@ public class QuestionDAO extends MyDAO {
         }
 
         return qlist;
+    }
+    
+    public void addQuestion(int subjectId, String questionText, String definition) {
+        String sql = "INSERT INTO Questions (subjectId, Question, Definition) VALUES (?, ?, ?)";
+
+        // Using try-with-resources to ensure the resources are closed
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, subjectId);
+            stmt.setString(2, questionText);
+            stmt.setString(3, definition);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace(); 
+        }
     }
 }
