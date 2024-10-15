@@ -61,4 +61,17 @@ public class QuestionDAO extends MyDAO {
             e.printStackTrace(); 
         }
     }
+    
+    public boolean deleteQuestion(int questionID) {
+        String deleteQuery = "DELETE FROM questions WHERE questionID = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(deleteQuery)) {
+            pstmt.setInt(1, questionID);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;         
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

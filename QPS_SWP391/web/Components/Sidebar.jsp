@@ -4,7 +4,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Sidebar</title>
-        <!-- Include Bootstrap CSS -->
         <%@include file="/Components/AllAccess.jsp"%>
         <style>
             .sidebar {
@@ -77,6 +76,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="btn" href="login.jsp">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <button class="btn" onclick="history.back()">Back</button>
                 </li>
             </ul>
         </nav>
