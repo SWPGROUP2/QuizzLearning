@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import models.Question;
 
+
 public class QuestionDAO extends MyDAO {
 
     // Lấy danh sách câu hỏi dựa trên subjectId
@@ -61,17 +62,57 @@ public class QuestionDAO extends MyDAO {
             e.printStackTrace(); 
         }
     }
-    
     public boolean deleteQuestion(int questionID) {
         String deleteQuery = "DELETE FROM questions WHERE questionID = ?";
         
         try (PreparedStatement pstmt = connection.prepareStatement(deleteQuery)) {
+       
             pstmt.setInt(1, questionID);
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;         
+
+            int rowsAffected = pstmt.executeUpdate();          
+            return rowsAffected > 0;        
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
+    public Question getQuestionsWithCount(int subjectId, int currentPage, int pageSize) {
+        Question result = new Question();
+        List<Question> questions = new ArrayList<>();
+        
+        // Query to fetch the questions with pagination
+        String query = "SELECT * FROM questions WHERE subjectId = ? LIMIT ? OFFSET ?";
+        // Query to count total questions
+        String countQuery = "SELECT COUNT(*) FROM questions WHERE subjectId = ?";
+
+        try (
+             PreparedStatement countStmt = connection.prepareStatement(countQuery);
+             PreparedStatement queryStmt = connection.prepareStatement(query)) {
+            countStmt.setInt(1, subjectId);
+            ResultSet countRs = countStmt.executeQuery();
+            if (countRs.next()) {
+                result.setTotalCount(countRs.getInt(1));
+            }
+            int offset = (currentPage - 1) * pageSize;
+            queryStmt.setInt(1, subjectId); 
+            queryStmt.setInt(2, pageSize); 
+            queryStmt.setInt(3, offset); 
+            ResultSet rs = queryStmt.executeQuery();
+            
+            while (rs.next()) {
+                Question question = new Question( rs.getInt("questionID"),
+                                                  rs.getInt("subjectId"),
+                                                  rs.getString("question"),
+                                                  rs.getString("definition"));
+                questions.add(question); 
+            }
+            result.setQuestions(questions);
+        } catch (Exception e) {
+            e.printStackTrace(); 
+        }
+        
+        return result; 
+    }
+
+   
 }

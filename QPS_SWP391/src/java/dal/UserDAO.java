@@ -86,51 +86,9 @@ public class UserDAO extends DBContext {
         return user;
     }
 
-    public List<User> getUserByClassId(int classId) throws Exception {
-        List<User> user = new ArrayList<>();
-        try {
-            String sqlQuery = "select u.UserId, u.UserName, u.DoB, u.PhoneNumber, u.PlaceWork, u.UserCode from Users u, Classmembers c where u.UserID = c.UserID and c.isApproved = 1 and  c.ClassID = " + classId;
-            PreparedStatement stm = connection.prepareStatement(sqlQuery);
-            ResultSet rs = stm.executeQuery();
+    
 
-            while (rs.next()) {
-                User u = new User();
-                u.setUserId(rs.getInt("UserID"));
-                u.setUserName(rs.getString("UserName"));
-                u.setDob(rs.getDate("DoB"));
-                u.setPhoneNumber(rs.getString("PhoneNumber"));
-                u.setPlace(rs.getString("PlaceWork"));
-                u.setUserCode(rs.getString("UserCode"));
-                user.add(u);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return user;
-    }
-
-    public List<User> getStdWantToJoin(int classId) throws Exception {
-        List<User> user = new ArrayList<>();
-        try {
-            String sqlQuery = "select u.UserId, u.UserName, u.DoB, u.PhoneNumber, u.PlaceWork, u.UserCode from Users u, Classmembers c where u.UserID = c.UserID and c.isApproved = 0 and  c.ClassID = " + classId;
-            PreparedStatement stm = connection.prepareStatement(sqlQuery);
-            ResultSet rs = stm.executeQuery();
-
-            while (rs.next()) {
-                User u = new User();
-                u.setUserId(rs.getInt("UserID"));
-                u.setUserName(rs.getString("UserName"));
-                u.setDob(rs.getDate("DoB"));
-                u.setPhoneNumber(rs.getString("PhoneNumber"));
-                u.setPlace(rs.getString("PlaceWork"));
-                u.setUserCode(rs.getString("UserCode"));
-                user.add(u);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return user;
-    }
+   
 
     public List<User> getTop5NewestUser() throws Exception {
         List<User> top5UserList = new ArrayList<>();

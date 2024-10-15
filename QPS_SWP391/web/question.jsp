@@ -31,6 +31,7 @@
         </style>
     </head>
     <body>
+        
         <a href="addquestion?subjectId=${param.id}" class="btn btn-primary top-right-add-btn">Add</a>
         <div class="container-fluid">
             <div class="row">
@@ -46,6 +47,7 @@
                         </c:when>
                         <c:otherwise>                        
                             <div class="row">                           
+                                <c:set var="startIndex" value="${(currentPage - 1 ) * 15 + 2}" /> <!-- Calculate the starting index -->
                                 <c:forEach var="q" items="${questionList}" varStatus="status">                              
                                     <div class="col-md-4 mb-4">                                       
                                         <div class="card">                                        
@@ -58,7 +60,7 @@
                                                 </form>
                                             </div>
                                             <div class="card-body">
-                                                <h5 class="card-title">Question ${status.index + 1}</h5>
+                                                <h5 class="card-title">Question ${startIndex + status.index - 1}</h5> <!-- Display continuous number -->
                                                 <p class="card-text"><strong>Question:</strong> ${q.getQuestion()}</p>
                                                 <p class="card-text"><strong>Definition:</strong> ${q.getDefinition()}</p>
                                             </div>
@@ -72,6 +74,19 @@
                             </div>
                         </c:otherwise>
                     </c:choose>
+                    
+                    <!-- Pagination Controls -->
+                    <div class="pagination">
+                        <c:if test="${currentPage > 1}">
+                            <a href="?id=${param.id}&page=${currentPage - 1}" class="btn btn-secondary">Previous</a>
+                        </c:if>
+                        <c:forEach begin="1" end="${totalPages}" var="i">
+                            <a href="?id=${param.id}&page=${i}" class="btn btn-secondary">${i}</a>
+                        </c:forEach>
+                        <c:if test="${currentPage < totalPages}">
+                            <a href="?id=${param.id}&page=${currentPage + 1}" class="btn btn-secondary">Next</a>
+                        </c:if>
+                    </div>
                 </div>
             </div>
         </div>
