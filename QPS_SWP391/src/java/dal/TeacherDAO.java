@@ -21,33 +21,13 @@ public class TeacherDAO extends DBContext {
     private PreparedStatement ps;
     private ResultSet rs;
 
-     public void removeStudentInClass (int uid, int cid) throws Exception {
-        try {   
-            String sql ="delete from ClassMembers where ClassID = ? and UserID = ?";
-            ps = connection.prepareStatement(sql);
-            ps.setInt(1, cid);
-            ps.setInt(2, uid);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        }
-    }
+  
      
       public void changepassword(User user) {
         String query = "Update ";
     }
      
-      public void AcceptStudentInClass (int uid, int cid) throws Exception {
-        try {   
-            String sql ="UPDATE ClassMembers SET isApproved = 1 where ClassID = ? and UserID = ?;";
-            ps = connection.prepareStatement(sql);
-            ps.setInt(1, cid);
-            ps.setInt(2, uid);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        }
-    }
+
 
 }
 
