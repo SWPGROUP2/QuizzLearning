@@ -32,6 +32,7 @@ public class AddUserController extends HttpServlet {
 
             String fullname = request.getParameter("fullname");
             String email = request.getParameter("email");
+            String role = request.getParameter("role");
             String password = request.getParameter("password");
             String phoneNumber = request.getParameter("phonenumber");
             String place = request.getParameter("place");
@@ -69,9 +70,13 @@ public class AddUserController extends HttpServlet {
                 request.getRequestDispatcher("/adduser.jsp").forward(request, response);
                 return;
             }
-
-            int roleId = 1;
             String userName = "User";
+            int roleId;
+            if (role.equals("student")) {
+                roleId = 1;
+            } else {
+                roleId = 3;
+            }
 
             // Check email exists
             if (dao.getUserByEmail(email) != null) {
@@ -93,11 +98,11 @@ public class AddUserController extends HttpServlet {
                 request.setAttribute("mess", mess);
                 request.getRequestDispatcher("/adduser.jsp").forward(request, response);
             } else {
-                User user = new User(roleId, userName, roleId, email, password, place, phoneNumber, place, fullname, sqlDate, place, userCode);
+                User user = new User(roleId, userName, roleId, email, password, role, phoneNumber, place, fullname, sqlDate, place, userCode);
                 dao.addUser(user);
-                mess = "Sign Up Successful! You can now log in.";
+                mess = "Add User Successful! You can now back to list.";
                 request.setAttribute("mess", mess);
-                request.getRequestDispatcher("/adminhome").forward(request, response);
+                request.getRequestDispatcher("/adduser.jsp").forward(request, response);
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Add failed", ex);
