@@ -71,8 +71,7 @@ public class SubjectList extends HttpServlet {
         }
 
         subjectListDAO subjectListDAO = new subjectListDAO();
-        List<subject> listSubjects = subjectListDAO.getAllSubject();
-        request.setAttribute("listSubjects", listSubjects);
+
         List<subject> listSubjectsByPagging = subjectListDAO.getListSubjectsByPagging(page, PAGE_SIZE);
         request.setAttribute("listSubjectsByPagging", listSubjectsByPagging);
 

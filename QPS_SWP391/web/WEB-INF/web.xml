@@ -56,12 +56,12 @@
         <servlet-class>controllers.AdminHomePageController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>SignUpController</servlet-name>
-        <servlet-class>controllers.SignUpController</servlet-class>
+        <servlet-name>AddUserController</servlet-name>
+        <servlet-class>controllers.AddUserController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>SignUpController</servlet-name>
-        <url-pattern>/signup</url-pattern>
+        <servlet-name>AddUserController</servlet-name>
+        <url-pattern>/adduser</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>HomeServlet</servlet-name>

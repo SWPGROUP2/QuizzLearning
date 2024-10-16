@@ -78,3 +78,9 @@ VALUES
 (1, 'はい、わかりました', 'Vâng, tôi hiểu rồi'),
 (1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
+
+SELECT *
+FROM Subject
+WHERE subjectName LIKE '%Social%'
+ORDER BY subjectId ASC
+LIMIT 0 OFFSET 3;

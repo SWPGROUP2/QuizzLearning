@@ -177,7 +177,9 @@ public class subjectListDAO extends MyDAO {
     public int getTotalSubject(String keyword) {
         try {
             if (con != null) {
-                xSql = "select distinct count(S.subjectId)from Subject AS S where S.subjectName like ?";
+                xSql = "SELECT COUNT(*) \n"
+                        + "FROM Subject AS S \n"
+                        + "WHERE S.subjectName LIKE ?;";
                 ps = con.prepareStatement(xSql);
                 ps.setString(1, "%" + keyword + "%");
                 rs = ps.executeQuery();
@@ -213,15 +215,16 @@ public class subjectListDAO extends MyDAO {
 
         try {
             if (con != null) {
-                String sql = "WITH Result AS (SELECT ROW_NUMBER() OVER (ORDER BY subjectId ASC) AS RowNum, * "
-                        + "FROM Subject WHERE subjectName LIKE ?) "
-                        + "SELECT * FROM Result WHERE RowNum BETWEEN ? AND ?";
+                String sql = "SELECT * \n"
+                        + "FROM Subject \n"
+                        + "WHERE subjectName LIKE ? \n"
+                        + "ORDER BY subjectId ASC \n"
+                        + "LIMIT ? OFFSET ?;";
 
                 ps = con.prepareStatement(sql);
                 ps.setString(1, "%" + keyword + "%");
-                ps.setInt(2, (page - 1) * pageSize + 1); // Tính toán bắt đầu của trang
-                ps.setInt(3, page * pageSize); // Tính toán kết thúc của trang
-
+                ps.setInt(2, pageSize);  
+                ps.setInt(3, (page - 1) * pageSize);
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     xsubjectId = rs.getInt("subjectId");

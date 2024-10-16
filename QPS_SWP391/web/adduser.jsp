@@ -80,8 +80,8 @@
     </head>
     <body>
 
-        <form action="signup" method="post">
-            <h2>Sign up</h2>
+        <form action="adduser" method="post">
+            <h2>Add user</h2>
 
             <div>
                 <input maxlength="50" type="email" id="email" name="email" placeholder="Email Address" required>
@@ -112,16 +112,16 @@
             <div style="margin: 5px 0px;">
                 Date of birth:    <input type="date" id="date" name="date"  required>
             </div>
-<!--            <div style="justify-content: space-around; padding: auto; margin-bottom: 10px">
+            <div style="justify-content: space-around; padding: auto; margin-bottom: 10px">
                 <input type="radio" name="role" value="student" required> Student
                 <input type="radio" name="role" value="teacher" style="margin-left: 30px" required> Teacher
-            </div>-->
+            </div>
 
             <div>
-                <input type="submit" value="Sign up">
+                <input type="submit" value="Add">
             </div>
             <div>
-                <h5>Back to <a href="/login.jsp" class="text-decoration-none">Login</a></h5>
+                <h5>Back to <a href="adminhome" class="text-decoration-none">Home</a></h5>
             </div>
 
             <c:if test="${mess!=null}">
