@@ -1,5 +1,7 @@
 package models;
 
+import java.util.List;
+
 public class Question {
     private int questionID;
     private int subjectId;
@@ -50,5 +52,27 @@ public class Question {
 
     public void setDefinition(String definition) {
         this.definition = definition;
+    }
+      private List<Question> questions; // To hold the list of questions
+    private int totalCount; // To hold the total count of questions
+
+    // Getter for questions
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    // Setter for questions
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    // Getter for totalCount
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    // Setter for totalCount
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
     }
 }

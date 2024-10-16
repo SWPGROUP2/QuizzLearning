@@ -42,6 +42,8 @@
     <servlet>
         <servlet-name>EditQuestionController</servlet-name>
         <servlet-class>controllers.EditQuestionController</servlet-class>
+        <servlet-name>DeleteQuestion</servlet-name>
+        <servlet-class>controllers.DeleteQuestionServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AdminHomePageController</servlet-name>
@@ -56,12 +58,12 @@
         <servlet-class>controllers.AdminHomePageController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>SignUpController</servlet-name>
-        <servlet-class>controllers.SignUpController</servlet-class>
+        <servlet-name>AddUserController</servlet-name>
+        <servlet-class>controllers.AddUserController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>SignUpController</servlet-name>
-        <url-pattern>/signup</url-pattern>
+        <servlet-name>AddUserController</servlet-name>
+        <url-pattern>/adduser</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
@@ -104,8 +106,6 @@
         <url-pattern>/addquestion</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>EditQuestionController</servlet-name>
-        <url-pattern>/editquestion</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

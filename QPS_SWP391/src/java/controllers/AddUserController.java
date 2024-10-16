@@ -13,9 +13,9 @@ import models.User;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SignUpController extends HttpServlet {
+public class AddUserController extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(SignUpController.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AddUserController.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -32,6 +32,7 @@ public class SignUpController extends HttpServlet {
 
             String fullname = request.getParameter("fullname");
             String email = request.getParameter("email");
+            String role = request.getParameter("role");
             String password = request.getParameter("password");
             String phoneNumber = request.getParameter("phonenumber");
             String place = request.getParameter("place");
@@ -44,7 +45,7 @@ public class SignUpController extends HttpServlet {
                     || isBlank(dateString)) {
                 mess = "All fields are required and cannot be blank or spaces.";
                 request.setAttribute("mess", mess);
-                request.getRequestDispatcher("/signup.jsp").forward(request, response);
+                request.getRequestDispatcher("/adduser.jsp").forward(request, response);
                 return;
             }
 
@@ -56,7 +57,7 @@ public class SignUpController extends HttpServlet {
                 LOGGER.log(Level.SEVERE, "Date parsing failed", e);
                 mess = "Invalid date format.";
                 request.setAttribute("mess", mess);
-                request.getRequestDispatcher("/signup.jsp").forward(request, response);
+                request.getRequestDispatcher("/adduser.jsp").forward(request, response);
                 return;
             }
 
@@ -66,24 +67,28 @@ public class SignUpController extends HttpServlet {
             if (age < 10) {
                 mess = "You must be at least 10 years old to sign up.";
                 request.setAttribute("mess", mess);
-                request.getRequestDispatcher("/signup.jsp").forward(request, response);
+                request.getRequestDispatcher("/adduser.jsp").forward(request, response);
                 return;
             }
-
-            int roleId = 1;
-            String userName = "student";
+            String userName = "User";
+            int roleId;
+            if (role.equals("student")) {
+                roleId = 1;
+            } else {
+                roleId = 3;
+            }
 
             // Check email exists
             if (dao.getUserByEmail(email) != null) {
                 mess = "Email is already in use. Please try another email.";
                 request.setAttribute("mess", mess);
-                request.getRequestDispatcher("/signup.jsp").forward(request, response);
+                request.getRequestDispatcher("/adduser.jsp").forward(request, response);
             }
             // Check phone number exists
             if (dao.isPhoneNumberExists(phoneNumber)) {
                 mess = "Phone number is already in use. Please try another number.";
                 request.setAttribute("mess", mess);
-                request.getRequestDispatcher("/signup.jsp").forward(request, response);
+                request.getRequestDispatcher("/adduser.jsp").forward(request, response);
                 return;
             }
 
@@ -91,18 +96,18 @@ public class SignUpController extends HttpServlet {
             if (dao.isUserCodeExists(userCode)) {
                 mess = "User code is already in use. Please try another code.";
                 request.setAttribute("mess", mess);
-                request.getRequestDispatcher("/signup.jsp").forward(request, response);
+                request.getRequestDispatcher("/adduser.jsp").forward(request, response);
             } else {
-                User user = new User(roleId, userName, roleId, email, password, place, phoneNumber, place, fullname, sqlDate, place, userCode);
+                User user = new User(roleId, userName, roleId, email, password, role, phoneNumber, place, fullname, sqlDate, place, userCode);
                 dao.addUser(user);
-                mess = "Sign Up Successful! You can now log in.";
+                mess = "Add User Successful! You can now back to list.";
                 request.setAttribute("mess", mess);
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/adduser.jsp").forward(request, response);
             }
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Sign up failed", ex);
+            LOGGER.log(Level.SEVERE, "Add failed", ex);
             request.setAttribute("mess", "An error occurred during sign up. Please try again.");
-            request.getRequestDispatcher("/signup.jsp").forward(request, response);
+            request.getRequestDispatcher("/adduser.jsp").forward(request, response);
         }
     }
 
