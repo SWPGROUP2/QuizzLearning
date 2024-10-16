@@ -28,7 +28,14 @@ public class AddQuestionServlet extends HttpServlet {
         QuestionDAO dao = new QuestionDAO();
         dao.addQuestion(subjectId, questionText, definition);
 
-        response.sendRedirect("question?id=" + subjectId);
+        if (dao.questionExists(subjectId, questionText)) {
+            request.setAttribute("errorMessage", "This question already exists in this subject.");
+            request.setAttribute("subjectId", subjectIdStr);
+            request.getRequestDispatcher("addquestion.jsp").forward(request, response);
+        } else {
+            dao.addQuestion(subjectId, questionText, definition);
+            response.sendRedirect("question?id=" + subjectId);
+        }
     }
 
     @Override
