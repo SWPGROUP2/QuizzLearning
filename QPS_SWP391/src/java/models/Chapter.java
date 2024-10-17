@@ -9,25 +9,18 @@ import java.util.List;
  * @author LENOVO
  */
 public class Chapter {
-    private int chapterEntryId;
-    private int subjectId;
     private int chapterId;
+    private int subjectId;
     private String chapterName;
-    public Chapter(int chapterEntryId, int subjectId, int chapterId, String chapterName) {
-        this.chapterEntryId = chapterEntryId;
+    public Chapter(int chapterId, int subjectId, String chapterName) {
         this.subjectId = subjectId;
         this.chapterId = chapterId;
         this.chapterName = chapterName;
     }
 
-    public int getChapterEntryId() {
-        return chapterEntryId;
+       public Chapter() {
+        // No-argument constructor
     }
-
-    public void setChapterEntryId(int chapterEntryId) {
-        this.chapterEntryId = chapterEntryId;
-    }
-
     public int getSubjectId() {
         return subjectId;
     }
@@ -52,4 +45,16 @@ public class Chapter {
         this.chapterName = chapterName;
     }
     
+    private List<Chapter> chapters; // To hold the list of questions
+    private int totalCount; // To hold the total count of questions
+
+    public List<Chapter> getChapters() {
+        return chapters;
+    }
+        public void setChapters(List<Chapter> Chapters) {
+        this.chapters = chapters;
+    }
+          public int getTotalCount() {
+        return totalCount;
+    }
 }
