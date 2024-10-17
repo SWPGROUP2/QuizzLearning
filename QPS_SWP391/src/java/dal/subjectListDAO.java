@@ -23,11 +23,8 @@ public class subjectListDAO extends MyDAO {
         List<subject> slist = new ArrayList<>();
 
         int xsubjectId;
-        int xcategoryId;
         String xthumbnail;
-        int xtagLine;
         String xcontent;
-        String xdescription;
         String xtitle;
         String xsubjectName;
 
@@ -40,14 +37,10 @@ public class subjectListDAO extends MyDAO {
 
                 xsubjectId = rs.getInt("subjectId");
                 xsubjectName = rs.getString("subjectName");
-                xcategoryId = rs.getInt("categoryId");
-                xstatus = rs.getBoolean("status");
-                xtagLine = rs.getInt("tagLine");
                 xtitle = rs.getString("title");
                 xthumbnail = rs.getString("thumbnail");
-                xdescription = rs.getString("description");
 
-                slist.add(new subject(xsubjectId, xsubjectName, xcategoryId, xstatus, xtagLine, xtitle, xthumbnail, xdescription));
+                slist.add(new subject(xsubjectId, xsubjectName, xtitle, xthumbnail));
 
             }
             rs.close();
@@ -58,66 +51,14 @@ public class subjectListDAO extends MyDAO {
         return slist;
     }
 
-    public List<subject> getListSubjectBySubjectId(int subjectId) {
-        ArrayList<subject> list = new ArrayList<>();
-        int xsubjectId;
-        int xcategoryId;
-        String xthumbnail;
-        int xtagLine;
-        String xcontent;
-        String xdescription;
-        String xtitle;
-        String xsubjectName;
-        boolean xstatus;
-        float xsalePrice;
-        float xprice;
-        try {
-            if (con != null) {
-                xSql = "select s.*,p.price,p.salePrice from Subject s, PricePackage p, SubjectPrice sp\n"
-                        + "   where s.subjectId=sp.subjectId and p.priceId=sp.priceId and s.subjectId=?";
-                ps = con.prepareStatement(xSql);
-                ps.setInt(1, subjectId);
-                rs = ps.executeQuery();
-                while (rs.next()) {
-                    xsubjectId = rs.getInt("subjectId");
-                    xsubjectName = rs.getString("subjectName");
-                    xcategoryId = rs.getInt("categoryId");
-                    xstatus = rs.getBoolean("status");
-                    xtagLine = rs.getInt("tagLine");
-                    xtitle = rs.getString("title");
-                    xthumbnail = rs.getString("thumbnail");
-                    xdescription = rs.getString("description");
-                    xsalePrice = rs.getFloat("salePrice");
-                    xprice = rs.getFloat("price");
-
-                    list.add(new subject(xsubjectId, xsubjectName, xcategoryId, xstatus, xtagLine, xtitle, xthumbnail, xdescription, xsalePrice, xprice));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return list;
-    }
 
     public List<subject> getListSubjectsByPagging(int page, int PAGE_SIZE_3) {
         List<subject> list = new ArrayList<>();
         int xsubjectId;
-        int xcategoryId;
         String xthumbnail;
-        int xtagLine;
         String xcontent;
-        String xdescription;
         String xtitle;
         String xsubjectName;
-        boolean xstatus;
         int i = 0;
         try {
             if (con != null) {
@@ -134,14 +75,9 @@ public class subjectListDAO extends MyDAO {
                 while (rs.next()) {
                     xsubjectId = rs.getInt("subjectId");
                     xsubjectName = rs.getString("subjectName");
-                    xcategoryId = rs.getInt("categoryId");
-                    xstatus = rs.getBoolean("status");
-                    xtagLine = rs.getInt("tagLine");
                     xtitle = rs.getString("title");
                     xthumbnail = rs.getString("thumbnail");
-                    xdescription = rs.getString("description");
-
-                    list.add(new subject(xsubjectId, xsubjectName, xcategoryId, xstatus, xtagLine, xtitle, xthumbnail, xdescription));
+                    list.add(new subject(xsubjectId, xsubjectName, xtitle, xthumbnail));
                 }
             }
         } catch (Exception e) {
@@ -204,14 +140,10 @@ public class subjectListDAO extends MyDAO {
     public List<subject> searchSubjectsByNameWithPaging(String keyword, int page, int pageSize) {
         List<subject> list = new ArrayList<>();
         int xsubjectId;
-        int xcategoryId;
         String xthumbnail;
-        int xtagLine;
         String xcontent;
-        String xdescription;
         String xtitle;
         String xsubjectName;
-        boolean xstatus;
 
         try {
             if (con != null) {
@@ -229,14 +161,10 @@ public class subjectListDAO extends MyDAO {
                 while (rs.next()) {
                     xsubjectId = rs.getInt("subjectId");
                     xsubjectName = rs.getString("subjectName");
-                    xcategoryId = rs.getInt("categoryId");
-                    xstatus = rs.getBoolean("status");
-                    xtagLine = rs.getInt("tagLine");
                     xtitle = rs.getString("title");
                     xthumbnail = rs.getString("thumbnail");
-                    xdescription = rs.getString("description");
 
-                    list.add(new subject(xsubjectId, xsubjectName, xcategoryId, xstatus, xtagLine, xtitle, xthumbnail, xdescription));
+                    list.add(new subject(xsubjectId, xsubjectName, xtitle, xthumbnail));
                 }
             }
         } catch (Exception e) {

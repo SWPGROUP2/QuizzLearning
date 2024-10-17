@@ -91,7 +91,7 @@ public class QuestionDAO extends MyDAO {
     }
 
     public boolean questionExists(int subjectId, String questionText) {
-        String query = "SELECT COUNT(*) FROM questions WHERE subject_id = ? AND question_text = ?";
+        String query = "SELECT COUNT(*) FROM questions WHERE subjectId = ? AND question = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, subjectId);
             stmt.setString(2, questionText);

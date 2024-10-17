@@ -63,15 +63,10 @@
                                                     <input type="hidden" name="id" value="${q.getQuestionID()}">
                                                     <input type="hidden" name="subjectId" value="${param.id}">
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
-                                               <a href="editQuestion.jsp?id=${q.getQuestionID()}" class="btn btn-success btn-sm">Edit</a>
-                                                <form action="DeleteQuestionServlet" method="POST" style="display:inline;">
-                                                <input type="hidden" name="id" value="${q.getQuestionID()}">
-                                                <input type="hidden" name="subjectId" value="${param.id}">
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
                                                 </form>
                                             </div>
                                             <div class="card-body">
-                                                <h5 class="card-title">Question ${status.index + 1}</h5>
+                                               
                                                 <h5 class="card-title">Question ${startIndex + status.index - 1}</h5> <!-- Display continuous number -->
                                                 <p class="card-text"><strong>Question:</strong> ${q.getQuestion()}</p>
                                                 <p class="card-text"><strong>Definition:</strong> ${q.getDefinition()}</p>
