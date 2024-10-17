@@ -15,6 +15,7 @@
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/models/User.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/controllers/SearchSubject.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/web/assets/css/user-profile.css</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/controllers/AddUserController.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/controllers/DeleteQuestionServlet.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/web/assets/css/cmxform.css</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/controllers/LogOutController.java</file>
@@ -30,6 +31,7 @@
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/web/subject.jsp</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/web/WEB-INF/web.xml</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/controllers/QuestionService.java</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/controllers/EditQuestionController.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/models/subject.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/web/question.jsp</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/dal/QuestionDAO.java</file>

@@ -15,18 +15,20 @@ public class QuestionDAO extends MyDAO {
         xSql = "SELECT * FROM Questions WHERE subjectId = ?";
         List<Question> qlist = new ArrayList<>();
         int xQuestionID;
+        int xChapterId;
         String xQuestion;
         String xDefinition;
-
+     
         try {
             ps = con.prepareStatement(xSql);
             ps.setInt(1, subjectId);
             rs = ps.executeQuery();
             while (rs.next()) {
                 xQuestionID = rs.getInt("QuestionID");
+                xChapterId = rs.getInt("chapterId");
                 xQuestion = rs.getString("Question");
                 xDefinition = rs.getString("Definition");
-                qlist.add(new Question(xQuestionID, subjectId, xQuestion, xDefinition));
+                qlist.add(new Question(xQuestionID, subjectId,  xChapterId, xQuestion, xDefinition));
             }
 
             rs.close();
@@ -83,6 +85,7 @@ public class QuestionDAO extends MyDAO {
                 question = new Question();
                 question.setQuestionID(rs.getInt("QuestionID"));
                 question.setSubjectId(rs.getInt("subjectId"));
+                question.setChapterId(rs.getInt("chapterId"));
                 question.setQuestion(rs.getString("Question"));
                 question.setDefinition(rs.getString("Definition"));
             }
@@ -131,6 +134,7 @@ public class QuestionDAO extends MyDAO {
             while (rs.next()) {
                 Question question = new Question( rs.getInt("questionID"),
                                                   rs.getInt("subjectId"),
+                                                  rs.getInt("chapterId"),
                                                   rs.getString("question"),
                                                   rs.getString("definition"));
                 questions.add(question); 
