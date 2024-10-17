@@ -26,7 +26,6 @@ public class AddQuestionServlet extends HttpServlet {
 
         int subjectId = Integer.parseInt(subjectIdStr);
         QuestionDAO dao = new QuestionDAO();
-        dao.addQuestion(subjectId, questionText, definition);
 
         if (dao.questionExists(subjectId, questionText)) {
             request.setAttribute("errorMessage", "This question already exists in this subject.");
