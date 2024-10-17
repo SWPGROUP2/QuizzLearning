@@ -17,7 +17,7 @@ public class QuestionDAO extends MyDAO {
         int xQuestionID;
         int xChapterId;
         String xQuestion;
-        String xDefinition;
+        int xQuestionTypeId;
      
         try {
             ps = con.prepareStatement(xSql);
@@ -27,8 +27,8 @@ public class QuestionDAO extends MyDAO {
                 xQuestionID = rs.getInt("QuestionID");
                 xChapterId = rs.getInt("chapterId");
                 xQuestion = rs.getString("Question");
-                xDefinition = rs.getString("Definition");
-                qlist.add(new Question(xQuestionID, subjectId,  xChapterId, xQuestion, xDefinition));
+                xQuestionTypeId = rs.getInt("QuestionTypeId");
+                qlist.add(new Question(xQuestionID, subjectId,  xChapterId, xQuestion, xQuestionTypeId));
             }
 
             rs.close();
@@ -87,7 +87,7 @@ public class QuestionDAO extends MyDAO {
                 question.setSubjectId(rs.getInt("subjectId"));
                 question.setChapterId(rs.getInt("chapterId"));
                 question.setQuestion(rs.getString("Question"));
-                question.setDefinition(rs.getString("Definition"));
+                question.setQuestionTypeId(rs.getInt("QuestionTypeId"));
             }
         }
         return question;
@@ -136,7 +136,7 @@ public class QuestionDAO extends MyDAO {
                                                   rs.getInt("subjectId"),
                                                   rs.getInt("chapterId"),
                                                   rs.getString("question"),
-                                                  rs.getString("definition"));
+                                                  rs.getInt("questionTypeId"));
                 questions.add(question); 
             }
             result.setQuestions(questions);
