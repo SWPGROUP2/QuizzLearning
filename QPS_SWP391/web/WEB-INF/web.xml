@@ -47,6 +47,10 @@
         <servlet-name>DeleteQuestion</servlet-name>
         <servlet-class>controllers.DeleteQuestionServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ChapterListController</servlet-name>
+        <servlet-class>controllers.ChapterListController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminHomePageController</servlet-name>
         <url-pattern>/adminhome</url-pattern>
@@ -110,6 +114,10 @@
     <servlet-mapping>
         <servlet-name>EditQuestionController</servlet-name>
         <url-pattern>/editquestion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChapterListController</servlet-name>
+        <url-pattern>/chapterlist</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
