@@ -70,7 +70,7 @@
                                             <div class="card-body">
                                                 <h5 class="card-title">Question ${startIndex + status.index - 1}</h5> <!-- Display continuous number -->
                                                 <p class="card-text"><strong>Question:</strong> ${q.getQuestion()}</p>
-                                                <p class="card-text"><strong>Definition:</strong> ${q.getDefinition()}</p>
+                                                <p class="card-text"><strong>Chapter:</strong> ${q.getChapterId()}</p>
                                             </div>
                                         </div>
                                     </div>

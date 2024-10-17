@@ -32,6 +32,6 @@ public class QuestionList extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
 
         // Forward to JSP
-        request.getRequestDispatcher("question.jsp").forward(request, response);
+        request.getRequestDispatcher("questionlist.jsp").forward(request, response);
     }
 }
