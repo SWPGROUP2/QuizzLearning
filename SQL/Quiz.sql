@@ -36,14 +36,18 @@ CREATE TABLE Subject (
     subjectId INT AUTO_INCREMENT PRIMARY KEY,
     subjectName VARCHAR(255) CHARACTER SET utf8mb4,
     title VARCHAR(255) CHARACTER SET utf8mb4,
-    thumbnail VARCHAR(255) CHARACTER SET utf8mb4	
+    thumbnail VARCHAR(255) CHARACTER SET utf8mb4
 );
 CREATE TABLE Chapter (
-	chapterId INT auto_increment primary key,
-    chapterName varchar(255) character set utf8mb4,
-    subjectId int,
-	FOREIGN KEY (subjectId) REFERENCES Subject(subjectId)
+    chapterEntryId INT AUTO_INCREMENT PRIMARY KEY,
+    chapterId INT,
+    chapterName VARCHAR(255) CHARACTER SET utf8mb4,
+    subjectId INT,
+    FOREIGN KEY (subjectId) REFERENCES Subject(subjectId)
 );
+
+CREATE INDEX idx_chapterId ON Chapter (chapterId);
+
 CREATE TABLE Questions (
     QuestionID INT AUTO_INCREMENT PRIMARY KEY,
     subjectId INT,
@@ -64,8 +68,9 @@ VALUES
 INSERT INTO `Chapter` (subjectId, chapterId, chapterName)
 VALUES 
 (1, 1, 'JPT 1'),
-(1, 2, 'JPT 2');
-
+(1, 2, 'JPT 2'),
+(2, 1, 'IELTS 1'),
+(2, 2,'IELTS 2');
 
 INSERT INTO `Questions` (subjectId, chapterId, Question, Definition)
 VALUES 

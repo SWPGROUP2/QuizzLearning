@@ -5,13 +5,14 @@ import java.util.List;
 public class Question {
     private int questionID;
     private int subjectId;
+    private int chapterId;
     private String question;
     private String definition;
 
-    // Constructor có tham số
-    public Question(int questionID, int subjectId, String question, String definition) {
+    public Question(int questionID, int subjectId, int chapterId, String question, String definition) {
         this.questionID = questionID;
         this.subjectId = subjectId;
+        this.chapterId = chapterId;
         this.question = question;
         this.definition = definition;
     }
@@ -37,6 +38,14 @@ public class Question {
     public void setSubjectId(int subjectId) {
         this.subjectId = subjectId;
     }
+    
+    public int getChapterId() {
+        return chapterId;
+    }
+
+    public void setChapterId(int chapterId) {
+        this.chapterId = chapterId;
+    }
 
     public String getQuestion() {
         return question;
@@ -56,22 +65,18 @@ public class Question {
       private List<Question> questions; // To hold the list of questions
     private int totalCount; // To hold the total count of questions
 
-    // Getter for questions
     public List<Question> getQuestions() {
         return questions;
     }
 
-    // Setter for questions
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
 
-    // Getter for totalCount
     public int getTotalCount() {
         return totalCount;
     }
 
-    // Setter for totalCount
     public void setTotalCount(int totalCount) {
         this.totalCount = totalCount;
     }
