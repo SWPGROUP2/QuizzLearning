@@ -38,24 +38,31 @@ CREATE TABLE Subject (
     title VARCHAR(255) CHARACTER SET utf8mb4,
     thumbnail VARCHAR(255) CHARACTER SET utf8mb4
 );
-CREATE TABLE Chapter (
-    chapterEntryId INT AUTO_INCREMENT PRIMARY KEY,
-    chapterId INT,
-    chapterName VARCHAR(255) CHARACTER SET utf8mb4,
-    subjectId INT,
-    FOREIGN KEY (subjectId) REFERENCES Subject(subjectId)
+
+CREATE TABLE QuestionType (
+ QuestionTypeId INT AUTO_INCREMENT PRIMARY KEY,	
+ QuestionTypeName VARCHAR(255) CHARACTER SET utf8mb4
 );
 
-CREATE INDEX idx_chapterId ON Chapter (chapterId);
+INSERT INTO QuestionType (QuestionTypeName) VALUES ('single-choice');  -- id 1
+INSERT INTO QuestionType (QuestionTypeName) VALUES ('matching');    -- id 2
+INSERT INTO QuestionType (QuestionTypeName) VALUES ('order');  -- id 3
 
 CREATE TABLE Questions (
     QuestionID INT AUTO_INCREMENT PRIMARY KEY,
     subjectId INT,
     chapterId INT,
+    QuestionTypeId INT,
     Question VARCHAR(255) CHARACTER SET utf8mb4,
-    Definition VARCHAR(1000) CHARACTER SET utf8mb4,
-    FOREIGN KEY (subjectId) REFERENCES Subject(subjectId),
-	FOREIGN KEY (chapterId) REFERENCES Chapter(chapterId)
+    FOREIGN KEY (subjectId) REFERENCES Subject(subjectId)
+);
+
+CREATE TABLE Options (
+    OptionID INT AUTO_INCREMENT PRIMARY KEY,
+    QuestionID INT,
+    OptionText varchar(1000) CHARACTER SET utf8mb4,
+    IsCorrect BIT,
+    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID)
 );
 
 INSERT INTO `Subject` (subjectId, subjectName, title, thumbnail) 
@@ -65,27 +72,20 @@ VALUES
 (3, 'TOPIK', 'Korean', 'https://cf.quizizz.com/img/course-assets/title_imgs/3%20-%20Social%20Studies.png'),
 (4, 'Test', 'World Languages', 'https://cf.quizizz.com/img/course-assets/title_imgs/5-%20World%20Languages.png');
 
-INSERT INTO `Chapter` (subjectId, chapterId, chapterName)
+INSERT INTO `Questions` (subjectId, chapterId, QuestionTypeId, Question)
 VALUES 
-(1, 1, 'JPT 1'),
-(1, 2, 'JPT 2'),
-(2, 1, 'IELTS 1'),
-(2, 2,'IELTS 2');
+(1, 1, 2,  'おはようございます'),
+(1, 1, 2, 'こんにちは'),
+(1, 1, 2, 'こんばんは');
 
-INSERT INTO `Questions` (subjectId, chapterId, Question, Definition)
+INSERT INTO `Options` (QuestionID, OptionText, IsCorrect)
 VALUES 
-(1, 1, 'おはようございます', 'Chào buổi sáng!'),
-(1, 1, 'こんにちは', 'Chào buổi trưa!'),
-(1, 1, 'こんばんは', 'Chào buổi tối!'),
-(1, 2, 'すみません', 'Xin lỗi'),
-(1, 2, 'どうも', 'Rất, xin chào, cảm ơn,...'),
-(1, 2, 'ありがとう', 'Cảm ơn'),
-(1, 2, 'どうもありがとうございます', 'Cảm ơn rất nhiều.'),
-(1, 2, 'おやすみなさい', 'Chúc ngủ ngon.'),
-(1, 2, 'さようなら', 'Tạm biệt.'),
-(1, 2, 'わかりますか', 'Có hiểu không?'),
-(1, 2, 'はい、わかりました', 'Vâng, tôi hiểu rồi'),
-(1, 2, 'いただきます', 'Lời mời trước khi ăn, uống.'),
-(1, 2, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.'),
-(2, 1, 'What is the synonym for breakfast?', 'brunch'),
-(2, 2, 'What else is breakfast also called?', 'morgenmete');
+(1, 'Chào buổi sáng', 1),
+(2, 'Chào buổi trưa', 1),
+(2, 'Chào buổi chiều', 0),
+(2, 'Chào buổi đêm', 0),
+(2, 'i luv u', 0),
+(2, 'Chào buổi tối', 0);
+
+
+
