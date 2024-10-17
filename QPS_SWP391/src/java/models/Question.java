@@ -7,15 +7,16 @@ public class Question {
     private int questionID;
     private int subjectId;
     private int chapterId;
+    private int questionTypeId;
     private String question;
-    private String definition;
     private QuestionDAO questionDAO = new QuestionDAO();
-    public Question(int questionID, int subjectId, int chapterId, String question, String definition) {
+    
+    public Question(int questionID, int subjectId, int chapterId, String question, int questionTypeId) {
         this.questionID = questionID;
         this.subjectId = subjectId;
         this.chapterId = chapterId;
         this.question = question;
-        this.definition = definition;
+        this.questionTypeId = questionTypeId;
     }
 
     // Constructor mặc định (nếu cần)
@@ -56,15 +57,16 @@ public class Question {
         this.question = question;
     }
 
-    public String getDefinition() {
-        return definition;
+    public int getQuestionTypeId() {
+        return questionTypeId;
     }
 
-    public void setDefinition(String definition) {
-        this.definition = definition;
+    public void setQuestionTypeId(int questionTypeId) {
+        this.questionTypeId = questionTypeId;
     }
-      private List<Question> questions; // To hold the list of questions
-    private int totalCount; // To hold the total count of questions
+
+    private List<Question> questions; // To hold the list of questions
+        private int totalCount; // To hold the total count of questions
 
     public List<Question> getQuestions() {
         return questions;

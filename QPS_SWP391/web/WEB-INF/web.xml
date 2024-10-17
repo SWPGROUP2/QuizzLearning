@@ -105,7 +105,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>QuestionList</servlet-name>
-        <url-pattern>/question</url-pattern>
+        <url-pattern>/questionlist</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AddQuestionServlet</servlet-name>
