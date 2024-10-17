@@ -29,16 +29,14 @@
                 position: relative;
                 z-index: 1; 
             }
-            .card-btns a {
-                margin-left: 5px; 
-            }
-            .card {
-                position: relative; 
-            }
         </style>
     </head>
     <body>
-        <a href="addquestion?subjectId=${param.id}" class="btn btn-primary top-right-add-btn">Add</a>
+        <!-- Add button, visible only if the user's role is not 1 (student) -->
+        <c:if test="${sessionScope.account.roleId != 1}">
+            <a href="addquestion?subjectId=${param.id}" class="btn btn-primary top-right-add-btn">Add</a>
+        </c:if>
+        
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
@@ -56,17 +54,20 @@
                                 <c:set var="startIndex" value="${(currentPage - 1 ) * 15 + 2}" /> <!-- Calculate the starting index -->
                                 <c:forEach var="q" items="${questionList}" varStatus="status">                              
                                     <div class="col-md-4 mb-4">                                       
-                                        <div class="card">                                        
-                                            <div class="card-btns">
-                                                <a href="editquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-primary btn-sm">Edit</a>
-                                                <form action="DeleteQuestionServlet" method="POST" style="display:inline;">
-                                                    <input type="hidden" name="id" value="${q.getQuestionID()}">
-                                                    <input type="hidden" name="subjectId" value="${param.id}">
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
-                                                </form>
-                                            </div>
+                                        <div class="card">                                            
+                                            <!-- Buttons for edit and delete, visible only if the user's role is not 1 (student) -->
+                                            <c:if test="${sessionScope.account.roleId != 1}">
+                                                <div class="card-btns">
+                                                    <a href="editquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-primary btn-sm">Edit</a>
+                                                    <form action="DeleteQuestionServlet" method="POST" style="display:inline;">
+                                                        <input type="hidden" name="id" value="${q.getQuestionID()}">
+                                                        <input type="hidden" name="subjectId" value="${param.id}">
+                                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </c:if>
+                                            
                                             <div class="card-body">
-                                               
                                                 <h5 class="card-title">Question ${startIndex + status.index - 1}</h5> <!-- Display continuous number -->
                                                 <p class="card-text"><strong>Question:</strong> ${q.getQuestion()}</p>
                                                 <p class="card-text"><strong>Definition:</strong> ${q.getDefinition()}</p>

@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class QuestionList extends HttpServlet {
 
   
-   public QuestionService questionService = new QuestionService();
+   public Question question = new Question();
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -22,7 +22,7 @@ public class QuestionList extends HttpServlet {
         int pageSize = 15; 
         int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
 
-        Question result = questionService.getQuestionsWithCount(subjectid, currentPage, pageSize);
+        Question result = question.getQuestionsWithCount(subjectid, currentPage, pageSize);
         int totalQuestions = result.getTotalCount();
         int totalPages = (int) Math.ceil((double) totalQuestions / pageSize); // Calculate total pages
 

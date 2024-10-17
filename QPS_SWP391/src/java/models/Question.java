@@ -1,5 +1,6 @@
 package models;
 
+import dal.QuestionDAO;
 import java.util.List;
 
 public class Question {
@@ -8,7 +9,7 @@ public class Question {
     private int chapterId;
     private String question;
     private String definition;
-
+    private QuestionDAO questionDAO = new QuestionDAO();
     public Question(int questionID, int subjectId, int chapterId, String question, String definition) {
         this.questionID = questionID;
         this.subjectId = subjectId;
@@ -79,5 +80,8 @@ public class Question {
 
     public void setTotalCount(int totalCount) {
         this.totalCount = totalCount;
+    }
+    public Question getQuestionsWithCount(int subjectId, int currentPage, int pageSize) {
+        return questionDAO.getQuestionsWithCount(subjectId, currentPage, pageSize); // Call the DAO method
     }
 }
