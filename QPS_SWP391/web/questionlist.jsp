@@ -23,14 +23,11 @@
 
                 <div class="col-md-10">
                     <h1>Question List</h1>
-
-                    <!-- Chapter Filter Form -->
-                    <form action="QuestionListServlet" method="GET" class="form-inline mb-3">
-                        <input type="hidden" name="subjectId" value="${param.id}">
+                    <form action="questionlist" method="GET" class="form-inline mb-3">
+                        <input type="hidden" name="id" value="${param.id}"> <!-- Include subjectId as 'id' -->
                         <label for="chapterFilter" class="mr-2">Filter by Chapter:</label>
                         <select id="chapterFilter" name="chapterId" class="form-control mr-2">
                             <option value="">All Chapters</option>
-                            <!-- Iterate over unique chapterSet instead of questionList -->
                             <c:forEach var="chapter" items="${chapterSet}">
                                 <option value="${chapter}" 
                                     <c:if test="${param.chapterId == chapter}">selected</c:if>>Chapter ${chapter}</option>
@@ -62,6 +59,7 @@
                                             <td>${q.getChapterId()}</td>
                                             <td>${q.getQuestion()}</td>
                                             <td>${q.getQuestionTypeId()}</td>                                         
+
                                             <td>
                                                 <c:if test="${sessionScope.account.roleId != 1}">
                                                     <a href="editquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-primary btn-sm">Edit</a>
