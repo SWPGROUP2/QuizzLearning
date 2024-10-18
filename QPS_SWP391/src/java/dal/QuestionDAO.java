@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import models.Question;
 
 
@@ -62,11 +64,10 @@ public class QuestionDAO extends MyDAO {
         }
     }
 
-    public boolean deleteQuestion(int questionID) {
-        String deleteQuery = "DELETE FROM questions WHERE questionID = ?";
-
+    public boolean deleteQuestion(int QuestionID) {
+        String deleteQuery = "DELETE FROM Questions WHERE QuestionID = ?";
         try ( PreparedStatement pstmt = connection.prepareStatement(deleteQuery)) {
-            pstmt.setInt(1, questionID);
+            pstmt.setInt(1, QuestionID);
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -94,7 +95,7 @@ public class QuestionDAO extends MyDAO {
     }
 
     public boolean questionExists(int subjectId, String questionText) {
-        String query = "SELECT COUNT(*) FROM questions WHERE subjectId = ? AND question = ?";
+        String query = "SELECT COUNT(*) FROM Questions WHERE subjectId = ? AND question = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, subjectId);
             stmt.setString(2, questionText);
@@ -114,8 +115,8 @@ public class QuestionDAO extends MyDAO {
         Question result = new Question();
         List<Question> questions = new ArrayList<>();
        
-        String query = "SELECT * FROM questions WHERE subjectId = ? LIMIT ? OFFSET ?";
-        String countQuery = "SELECT COUNT(*) FROM questions WHERE subjectId = ?";
+        String query = "SELECT * FROM Questions WHERE subjectId = ? LIMIT ? OFFSET ?";
+        String countQuery = "SELECT COUNT(*) FROM Questions WHERE subjectId = ?";
 
         try (
              PreparedStatement countStmt = connection.prepareStatement(countQuery);
@@ -146,4 +147,27 @@ public class QuestionDAO extends MyDAO {
         
         return result; 
     }
+public Set<Integer> getUniqueChapters(int subjectId) {
+    Set<Integer> chapterSet = new HashSet<>();
+
+    // Correctly obtaining the database connection
+      // Use this.getConnection() to get the connection
+        String query = "SELECT DISTINCT chapterId FROM Questions WHERE subjectId = ?"; // Ensure table name is correct
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, subjectId);
+            ResultSet result = stmt.executeQuery();
+            
+            while (result.next()) {
+                chapterSet.add(result.getInt("chapterId")); // Add unique chapter IDs
+            }
+        }
+    catch (SQLException e) { // Catch SQLException instead of a general Exception
+        e.printStackTrace();
+    }
+
+    return chapterSet;
 }
+
+
+}
+
