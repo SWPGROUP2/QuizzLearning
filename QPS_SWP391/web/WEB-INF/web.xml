@@ -51,6 +51,10 @@
         <servlet-name>ChapterListController</servlet-name>
         <servlet-class>controllers.ChapterListController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TestList</servlet-name>
+        <servlet-class>controllers.TestList</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminHomePageController</servlet-name>
         <url-pattern>/adminhome</url-pattern>
@@ -118,6 +122,10 @@
     <servlet-mapping>
         <servlet-name>ChapterListController</servlet-name>
         <url-pattern>/chapterlist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TestList</servlet-name>
+        <url-pattern>/test-list</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
