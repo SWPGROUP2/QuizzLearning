@@ -58,7 +58,7 @@
 
                                                 <!-- Cột 3: Nút Detail -->
                                                 <div class="col-md-3 text-center">
-                                                    <a href="questionlist?id=${s.getSubjectId()}" class="btn btn-primary btn-lg">Subject detail</a>
+                                                    <a href="questionlist?id=${s.getSubjectId()}" class="btn btn-primary btn-lg">View List Question</a>
                                                 </div>
                                             </div>
                                         </form>
