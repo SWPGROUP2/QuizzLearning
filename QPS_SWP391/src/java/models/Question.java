@@ -64,8 +64,8 @@ public class Question {
         this.questionTypeId = questionTypeId;
     }
 
-    private List<Question> questions; // To hold the list of questions
-        private int totalCount; // To hold the total count of questions
+    private List<Question> questions;
+        private int totalCount; 
 
     public List<Question> getQuestions() {
         return questions;
@@ -83,9 +83,4 @@ public class Question {
         this.totalCount = totalCount;
     }
 
-    // Method to retrieve a list of questions for a given subjectId
-    public static Question getQuestionsWithCount(int subjectId, int currentPage, int pageSize) {
-        QuestionDAO questionDAO = new QuestionDAO(); // Create a new instance of QuestionDAO
-        return questionDAO.getQuestionsWithCount(subjectId, currentPage, pageSize); // Call the DAO method
-    }
 }

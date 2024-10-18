@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import models.Option;
 import models.Question;
 
@@ -179,5 +180,31 @@ public Set<Integer> getUniqueChapters(int subjectId) {
         }
         return 0;
     }
+    
+    public List<Question> getQuestionsByChapter(int subjectId, String chapterId) {
+    List<Question> questions = new ArrayList<>();
+    String sql = "SELECT * FROM Questions WHERE subjectId = ? AND chapterId = ?"; 
+
+    try (PreparedStatement stmt = con.prepareStatement(sql)) {
+        stmt.setInt(1, subjectId);
+        stmt.setString(2, chapterId);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+     
+            Question question = new Question();
+            question.setQuestionID(rs.getInt("questionID"));
+            question.setSubjectId(rs.getInt("subjectId"));
+            question.setChapterId(rs.getInt("chapterId"));
+            question.setQuestion(rs.getString("question"));
+            question.setQuestionTypeId(rs.getInt("questionTypeId"));
+            questions.add(question);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return questions;
+}
 }
 
