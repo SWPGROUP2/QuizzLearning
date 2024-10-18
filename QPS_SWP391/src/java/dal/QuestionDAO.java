@@ -102,7 +102,7 @@ public class QuestionDAO extends MyDAO {
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
-                return rs.getInt(1);  // Lấy questionId vừa được sinh
+                return rs.getInt(1);  
             }
         } catch (SQLException e) {
             e.printStackTrace();

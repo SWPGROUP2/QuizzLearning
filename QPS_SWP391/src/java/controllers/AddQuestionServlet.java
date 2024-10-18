@@ -22,7 +22,7 @@ public class AddQuestionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Lấy các tham số từ form và kiểm tra tính hợp lệ
+
         String subjectIdStr = request.getParameter("subjectId");
         String chapterIdStr = request.getParameter("chapterId");
         String questionText = request.getParameter("question");
