@@ -9,8 +9,12 @@ public class Question {
     private int chapterId;
     private int questionTypeId;
     private String question;
-    private QuestionDAO questionDAO = new QuestionDAO();
-    
+
+    // No-argument constructor if needed
+    public Question() {
+    }
+
+    // Parameterized constructor
     public Question(int questionID, int subjectId, int chapterId, String question, int questionTypeId) {
         this.questionID = questionID;
         this.subjectId = subjectId;
@@ -19,12 +23,7 @@ public class Question {
         this.questionTypeId = questionTypeId;
     }
 
-    // Constructor mặc định (nếu cần)
-    public Question() {
-        // No-argument constructor
-    }
-
-    // Các getter và setter cho các thuộc tính (nếu cần)
+    // Getters and Setters
     public int getQuestionID() {
         return questionID;
     }
@@ -40,7 +39,7 @@ public class Question {
     public void setSubjectId(int subjectId) {
         this.subjectId = subjectId;
     }
-    
+
     public int getChapterId() {
         return chapterId;
     }
@@ -83,7 +82,10 @@ public class Question {
     public void setTotalCount(int totalCount) {
         this.totalCount = totalCount;
     }
-    public Question getQuestionsWithCount(int subjectId, int currentPage, int pageSize) {
+
+    // Method to retrieve a list of questions for a given subjectId
+    public static Question getQuestionsWithCount(int subjectId, int currentPage, int pageSize) {
+        QuestionDAO questionDAO = new QuestionDAO(); // Create a new instance of QuestionDAO
         return questionDAO.getQuestionsWithCount(subjectId, currentPage, pageSize); // Call the DAO method
     }
 }

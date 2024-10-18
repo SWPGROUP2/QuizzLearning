@@ -1,3 +1,4 @@
+
 package models;
 
 public class Option {
@@ -48,9 +49,6 @@ public class Option {
     public void setIsCorrect(int isCorrect) {
         this.isCorrect = isCorrect;
     }
-    
-    
-    
-    
+      
 }
     
