@@ -44,7 +44,7 @@
         <servlet-class>controllers.EditQuestionController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>DeleteQuestion</servlet-name>
+        <servlet-name>DeleteQuestionServlet</servlet-name>
         <servlet-class>controllers.DeleteQuestionServlet</servlet-class>
     </servlet>
     <servlet>
