@@ -1,53 +1,54 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package models;
 
-/**
- *
- * @author LENOVO
- */
 public class Option {
-     private int OptionId;
-    private int QuestionId;
-    private String OptionText;
-    private Boolean IsCorrect;
+
+    private int questionID;
+    private int optionId;
+    private String optionText;
+    private int isCorrect;
+
+    public Option() {
+    }
+
+    public Option(int questionID, int optionId, String optionText, int isCorrect) {
+        this.questionID = questionID;
+        this.optionId = optionId;
+        this.optionText = optionText;
+        this.isCorrect = isCorrect;
+    }
+
+    public int getQuestionID() {
+        return questionID;
+    }
+
+    public void setQuestionID(int questionID) {
+        this.questionID = questionID;
+    }
 
     public int getOptionId() {
-        return OptionId;
+        return optionId;
     }
 
-    public void setOptionId(int OptionId) {
-        this.OptionId = OptionId;
-    }
-
-    public int getQuestionId() {
-        return QuestionId;
-    }
-
-    public void setQuestionId(int QuestionId) {
-        this.QuestionId = QuestionId;
+    public void setOptionId(int optionId) {
+        this.optionId = optionId;
     }
 
     public String getOptionText() {
-        return OptionText;
+        return optionText;
     }
 
-    public void setOptionText(String OptionText) {
-        this.OptionText = OptionText;
+    public void setOptionText(String optionText) {
+        this.optionText = optionText;
     }
 
-    public Boolean getIsCorrect() {
-        return IsCorrect;
+    public int getIsCorrect() {
+        return isCorrect;
     }
 
-    public void setIsCorrect(Boolean IsCorrect) {
-        this.IsCorrect = IsCorrect;
+    public void setIsCorrect(int isCorrect) {
+        this.isCorrect = isCorrect;
     }
-    
-    
-    
-    
+      
 }
-
+    
