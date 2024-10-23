@@ -17,32 +17,30 @@ public class UserDAO extends DBContext {
     private PreparedStatement ps;
     private ResultSet rs;
 
-
-    
     public boolean isPhoneNumberExists(String phoneNumber) throws SQLException {
         String sql = "SELECT * FROM Users WHERE phoneNumber = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, phoneNumber);
             ResultSet rs = statement.executeQuery();
-            return rs.next(); 
+            return rs.next();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error checking phone number existence", e);
-            throw e; 
+            throw e;
         }
     }
 
     public boolean isUserCodeExists(String userCode) throws SQLException {
         String sql = "SELECT * FROM Users WHERE userCode = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, userCode);
             ResultSet rs = statement.executeQuery();
             return rs.next();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error checking user code existence", e);
-            throw e; 
+            throw e;
         }
     }
-    
+
     public void addUser(User user) throws Exception {
         try {
             ps = connection.prepareStatement("INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, DoB, PlaceWork, UserCode, FullName) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
@@ -85,10 +83,6 @@ public class UserDAO extends DBContext {
         }
         return user;
     }
-
-    
-
-   
 
     public List<User> getTop5NewestUser() throws Exception {
         List<User> top5UserList = new ArrayList<>();
@@ -165,21 +159,19 @@ public class UserDAO extends DBContext {
         return null;
     }
 
-
-
-    
-        public boolean updatePassword(int userId, String newPassword) throws SQLException {
-       try { String sql = "UPDATE Users SET Password = ? WHERE UserID = ?";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setString(1, newPassword);
-        statement.setInt(2, userId);
-         int rowsAffected = statement.executeUpdate(); // Execute the update
-        return rowsAffected > 0;
-    }  catch (Exception ex) {
+    public boolean updatePassword(int userId, String newPassword) throws SQLException {
+        try {
+            String sql = "UPDATE Users SET Password = ? WHERE UserID = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, newPassword);
+            statement.setInt(2, userId);
+            int rowsAffected = statement.executeUpdate(); // Execute the update
+            return rowsAffected > 0;
+        } catch (Exception ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
-        }
+    }
 
     public boolean verifyPassword(int userId, String currentPassword) throws SQLException {
         String sql = "SELECT Password FROM Users WHERE UserID = ? AND Password = ?";
@@ -189,7 +181,7 @@ public class UserDAO extends DBContext {
         ResultSet rs = statement.executeQuery();
         return rs.next();
     }
-    
+
     public User getUser(String email, String password) throws Exception {
         String sql = "SELECT u.UserID,  u.UserName, u.RoleID , u.Email, u.Password,r.Role\n"
                 + "FROM Users u, Roles r\n"
@@ -211,13 +203,11 @@ public class UserDAO extends DBContext {
         return null;
     }
 
-
     public void updateUserById(String fullName, String userName, String phoneNumber, String dob, int id, String placeWork, String userCode) {
         String sql = "update Users\n"
                 + "set FullName=?,\n"
                 + "UserName=?,\n"
                 + "PhoneNumber=?,\n"
-                
                 + "DoB=?,\n"
                 + "PlaceWork=?,\n"
                 + "UserCode=?\n"
@@ -228,8 +218,8 @@ public class UserDAO extends DBContext {
             stm.setString(2, userName);
             stm.setString(3, phoneNumber);
             stm.setString(4, dob);
-            stm.setString(5,placeWork);
-            stm.setString(6,userCode);
+            stm.setString(5, placeWork);
+            stm.setString(6, userCode);
             stm.setInt(7, id);
 
             stm.executeUpdate();
@@ -267,27 +257,47 @@ public class UserDAO extends DBContext {
             System.out.println(e);
         }
     }
-    
 
+    public boolean deleteUser(int subjectId) {
+        String sql = "DELETE FROM Users WHERE UserID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, subjectId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
 
     public static void main(String[] args) {
-        LocalDateTime time= LocalDateTime.now();
+        LocalDateTime time = LocalDateTime.now();
         System.out.println(time);
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        
-        String formatted= time.format(myFormatObj);
+
+        String formatted = time.format(myFormatObj);
         System.out.println(formatted);
-        
-        UserDAO u= new UserDAO();
-        User user= u.getUserById(15);
+
+        UserDAO u = new UserDAO();
+        User user = u.getUserById(15);
         System.out.println(user.toString());
-        
-        
-        
-        String str2= "                       abc                          ";
-        String str1= "abc";
-        System.out.println("["+str2.trim()+"]");
+
+        String str2 = "                       abc                          ";
+        String str1 = "abc";
+        System.out.println("[" + str2.trim() + "]");
         System.out.println(str1.equals(str2.trim()));
     }
 }
-
