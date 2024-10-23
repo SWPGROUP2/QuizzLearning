@@ -80,7 +80,6 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <!-- Pagination -->
                     <div class="pagination">
                         <c:if test="${currentPage > 1}">
                             <a href="?id=${param.id}&chapterId=${param.chapterId}&page=${currentPage - 1}" class="btn btn-secondary">Previous</a>
