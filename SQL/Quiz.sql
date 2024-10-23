@@ -48,6 +48,7 @@ INSERT INTO QuestionType (QuestionTypeName) VALUES ('single-choice');  -- id 1
 INSERT INTO QuestionType (QuestionTypeName) VALUES ('matching');    -- id 2
 INSERT INTO QuestionType (QuestionTypeName) VALUES ('order');  -- id 3
 
+select * from QuestionType;
 CREATE TABLE Questions (
     QuestionID INT AUTO_INCREMENT PRIMARY KEY,
     subjectId INT,
@@ -87,5 +88,32 @@ VALUES
 (2, 'i luv u', 0),
 (2, 'Chào buổi tối', 0);
 
+CREATE TABLE Tests (
+    TestID INT AUTO_INCREMENT PRIMARY KEY,
+    subjectId INT,
+    testName VARCHAR(255) CHARACTER SET utf8mb4,
+    description TEXT CHARACTER SET utf8mb4,
+    FOREIGN KEY (subjectId) REFERENCES Subject(subjectId)
+);
+
+INSERT INTO `Tests` (subjectId, testName, description)
+VALUES 
+(1, 'Japanese Test 1', 'Bài kiểm tra tiếng Nhật cơ bản'),
+(2, 'English Test 1', 'Bài luyện thi IELTS'),
+(3, 'Korean Test 1', 'Bài luyện thi TOPIK');
+
+CREATE TABLE Test_Questions (
+    TestID INT,
+    QuestionID INT,
+    PRIMARY KEY (TestID, QuestionID),
+    FOREIGN KEY (TestID) REFERENCES Tests(TestID),
+    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID)
+);
+
+INSERT INTO Test_Questions (TestID, QuestionID) 
+VALUES 
+(1, 1),  -- Thêm câu hỏi 1 vào bài kiểm tra 1
+(1, 2),  -- Thêm câu hỏi 2 vào bài kiểm tra 1
+(2, 3);  -- Thêm câu hỏi 3 vào bài kiểm tra 2
 
 

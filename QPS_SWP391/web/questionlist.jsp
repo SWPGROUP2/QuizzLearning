@@ -11,10 +11,6 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     </head>
     <body>
-        <c:if test="${sessionScope.account.roleId != 1}">
-            <a href="addquestion?subjectId=${param.id}" class="btn btn-primary top-right-add-btn">Add</a>
-        </c:if>
-
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
@@ -22,7 +18,13 @@
                 </div>
 
                 <div class="col-md-10">
-                    <h1>Question List</h1>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h1>Question List</h1>
+                        <c:if test="${sessionScope.account.roleId != 1}">
+                            <a href="addquestion?subjectId=${param.id}" class="btn btn-primary">Add</a>
+                        </c:if>
+                    </div>
+
                     <form action="questionlist" method="GET" class="form-inline mb-3">
                         <input type="hidden" name="id" value="${param.id}"> <!-- Include subjectId as 'id' -->
                         <label for="chapterFilter" class="mr-2">Filter by Chapter:</label>
@@ -53,9 +55,9 @@
                                 </thead>
                                 <tbody>
                                     <c:set var="startIndex" value="${(currentPage - 1) * 15 + 1}" /> 
-                                    <c:forEach var="q" items="${questionList}">
+                                    <c:forEach var="q" items="${questionList}" varStatus="status">
                                         <tr>
-                                            <td>${q.getQuestionID()}</td> 
+                                            <td>${status.index + 1}</td> 
                                             <td>${q.getChapterId()}</td>
                                             <td>${q.getQuestion()}</td>
                                             <td>${q.getQuestionTypeId()}</td>                                         
@@ -77,7 +79,6 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <!-- Pagination -->
                     <div class="pagination">
                         <c:if test="${currentPage > 1}">
                             <a href="?id=${param.id}&chapterId=${param.chapterId}&page=${currentPage - 1}" class="btn btn-secondary">Previous</a>
