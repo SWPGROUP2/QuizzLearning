@@ -17,7 +17,6 @@ import models.subject;
  */
 public class subjectListDAO extends MyDAO {
 
-    
     public List<subject> getAllSubject() {
         xSql = "select * from [Subject]";
         List<subject> slist = new ArrayList<>();
@@ -50,7 +49,6 @@ public class subjectListDAO extends MyDAO {
         }
         return slist;
     }
-
 
     public List<subject> getListSubjectsByPagging(int page, int PAGE_SIZE_3) {
         List<subject> list = new ArrayList<>();
@@ -155,7 +153,7 @@ public class subjectListDAO extends MyDAO {
 
                 ps = con.prepareStatement(sql);
                 ps.setString(1, "%" + keyword + "%");
-                ps.setInt(2, pageSize);  
+                ps.setInt(2, pageSize);
                 ps.setInt(3, (page - 1) * pageSize);
                 rs = ps.executeQuery();
                 while (rs.next()) {
@@ -185,5 +183,63 @@ public class subjectListDAO extends MyDAO {
             }
         }
         return list;
+    }
+
+    public int addSubject(subject subject) {
+        String sql = "INSERT INTO Subject (subjectName, title, thumbnail) VALUES (?, ?, ?)";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1, subject.getSubjectName());
+            ps.setString(2, subject.getTitle());
+            ps.setString(3, subject.getThumbnail());
+
+            ps.executeUpdate();
+            rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);  // Trả về subjectId vừa được sinh
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
+    public boolean deleteSubject(int subjectId) {
+        String sql = "DELETE FROM Subject WHERE subjectId = ?";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, subjectId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 }

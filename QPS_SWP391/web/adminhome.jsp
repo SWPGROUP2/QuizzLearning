@@ -91,7 +91,7 @@
                     <small>Home / User Manager</small>
                 </div>
                 <a class="button" href = 'adduser.jsp'>Add User</a>
-                
+
                 <div class="search-bar" style="align-items: center; margin-top: 15px">
                     <!-- Role filter -->
                     <div class="col-md-6">
@@ -148,8 +148,7 @@
                                         <div class="d-flex align-items-center">
                                             <div class="" style="background-image: url(../${user.avatar}); width: 50px; height: 50px; background-size: cover; border-radius: 50%;"></div>
                                             <div class="ml-3">
-                                                <h4>${user.userName}</h4>
-                                                <small>${user.email}</small>
+                                                <h4>${user.email}</h4>
                                             </div>
                                         </div>
                                     </td>
@@ -160,9 +159,10 @@
                                     <td>${user.place}</td>
                                     <td>${user.userCode}</td>
                                     <td>
-                                        <button class="btn-primary" style="border-radius:10px">
-                                            <a class="btn-primary" href="/quiz/admin/admin-user-detail?id=${user.userId}">Detail</a>
-                                        </button>
+                                        <form action="delete-user" method="POST" style="display:inline;">
+                                            <input type="hidden" name="userId" value="${user.getUserId()}"/>
+                                            <button type="submit" class="btn btn-danger btn-lg">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                             </c:forEach>
