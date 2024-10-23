@@ -15,7 +15,6 @@ import models.Question;
 public class QuestionDAO extends MyDAO {
 
     public List<Question> getQuestionsBySubjectId(int subjectId) {
-        
         xSql = "SELECT * FROM Questions WHERE subjectId = ?";
         List<Question> qlist = new ArrayList<>();
         int xQuestionID;
@@ -68,27 +67,25 @@ public class QuestionDAO extends MyDAO {
         }
     }
 
-    public List<Option> getOptionsByQuestionId(int questionId) throws SQLException {
-    List<Option> options = new ArrayList<>();
-    String sql = "SELECT * FROM Options WHERE QuestionID = ?";
-    
-    ps = con.prepareStatement(sql);
-    ps.setInt(1, questionId);
-    rs = ps.executeQuery();
-    
-    while (rs.next()) {
-        int optionId = rs.getInt("OptionID");
-        String optionText = rs.getString("OptionText");
-        boolean isCorrect = rs.getBoolean("IsCorrect");
-        options.add(new Option(optionId, questionId, optionText, isCorrect));
+    public Question getQuestionById(int questionId) throws SQLException {
+        Question question = null;
+        String sql = "SELECT * FROM Questions WHERE QuestionID = ?";
+
+        try ( PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, questionId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                question = new Question();
+                question.setQuestionID(rs.getInt("QuestionID"));
+                question.setSubjectId(rs.getInt("subjectId"));
+                question.setChapterId(rs.getInt("chapterId"));
+                question.setQuestion(rs.getString("Question"));
+                question.setQuestionTypeId(rs.getInt("QuestionTypeId"));
+            }
+        }
+        return question;
     }
-    
-    rs.close();
-    ps.close();
-    
-    return options;
-}
-    
+
     public boolean questionExists(int subjectId, String questionText) {
         String query = "SELECT COUNT(*) FROM Questions WHERE subjectId = ? AND question = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -208,35 +205,6 @@ public Set<Integer> getUniqueChapters(int subjectId) {
     }
 
     return questions;
-}
-
-   public Question getQuestionById(int questionId) throws SQLException {
-    Question question = null;
-    String sql = "SELECT * FROM Questions WHERE QuestionID = ?";
-    
-    try {
-        ps = con.prepareStatement(sql);
-        ps.setInt(1, questionId);
-        rs = ps.executeQuery();
-        
-        if (rs.next()) {
-            int subjectId = rs.getInt("subjectId");
-            int chapterId = rs.getInt("chapterId");
-            int questionTypeId = rs.getInt("QuestionTypeId");
-            String questionText = rs.getString("Question");
-            
-       
-            List<Option> options = getOptionsByQuestionId(questionId);
-            
-            question = new Question(questionId, subjectId, chapterId, questionText, questionTypeId);
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
-        if (rs != null) rs.close();
-        if (ps != null) ps.close();
-    }
-    return question;
 }
 }
 
