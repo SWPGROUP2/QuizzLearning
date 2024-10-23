@@ -16,7 +16,7 @@ public class QuestionList extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
         int subjectId = Integer.parseInt(request.getParameter("id"));
-        int pageSize = 15; 
+        int pageSize = 12; 
         int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
         String chapterId = request.getParameter("chapterId");
         

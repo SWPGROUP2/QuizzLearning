@@ -5,7 +5,10 @@
 package dal;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import models.Option;
 
 /**
@@ -24,6 +27,29 @@ public class OptionDAO extends MyDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+        public List<Option> getOptionsByQuestionId(int questionId) {
+        List<Option> options = new ArrayList<>();
+        String query = "SELECT * FROM Options WHERE QuestionID = ?";
+        
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, questionId);
+            ResultSet resultSet = statement.executeQuery();
+            
+            while (resultSet.next()) {
+                Option option = new Option();
+                option.setOptionId(resultSet.getInt("optionId"));
+                option.setQuestionID(resultSet.getInt("QuestionID"));
+                option.setOptionText(resultSet.getString("optionText"));
+                option.setIsCorrect(resultSet.getInt("isCorrect"));
+                options.add(option);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return options;
     }
     
 }

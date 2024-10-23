@@ -54,10 +54,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:set var="startIndex" value="${(currentPage - 1) * 15 + 1}" /> 
+                                    <c:set var="startIndex" value="${(currentPage - 1) * 12 + 1}" /> 
                                     <c:forEach var="q" items="${questionList}" varStatus="status">
                                         <tr>
-                                            <td>${status.index + 1}</td> 
+                                            <td>${startIndex + status.index}</td> 
                                             <td>${q.getChapterId()}</td>
                                             <td>${q.getQuestion()}</td>
                                             <td>${q.getQuestionTypeId()}</td>                                         
@@ -70,6 +70,7 @@
                                                         <input type="hidden" name="subjectId" value="${param.id}">
                                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
                                                     </form>
+                                                    <a href="detailquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-info btn-sm">Detail</a>
                                                 </c:if>
                                             </td>
                                         </tr>
