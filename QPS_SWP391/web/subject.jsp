@@ -32,36 +32,54 @@
                             <h1>Subject List</h1>
 
                             <div class="mt-3 col-md-12">
-                                <form class="form-inline mb-4" action="search-subject" method="GET">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="keyword" placeholder="Search by subject name" value="${param.search}">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="submit">Search</button>
+                                <div class="row">
+                                    <form class="form-inline mb-4 col-md-6" action="search-subject" method="GET">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="keyword" placeholder="Search by subject name" value="${param.search}">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" type="submit">Search</button>
+                                            </div>
                                         </div>
+                                    </form>
+                                    <div class="col-md-6 d-flex justify-content-end mb-4">
+                                        <a href="add-subject" class="btn btn-primary" type="submit">Add Subject</a>
                                     </div>
-                                </form>
+                                </div>
                                 <c:forEach var="s" items="${listSubjectsByPagging}">
                                     <div class="col-md-12 mb-3 shadow bg-white rounded border" style="border-radius: 8px; width: 100%">
-                                        <form action="subject-list" method="POST">
+                                        <div>
                                             <div class="row align-items-center">
                                                 <div class="col-md-3 text-center">
                                                     <img class="align-items-center" src="${s.getThumbnail()}" style="width: 50%; height: auto;" />
                                                 </div>
 
-                                                <div class="col-md-3" style="margin-left: -20px">
+                                                <div class="col-md-2" style="margin-left: -20px">
                                                     <h2 class="">${s.getSubjectName()}</h2>
                                                 </div>
 
-                                                <div class="col-md-3">
+                                                <div class="col-md-2">
                                                     <li>${s.getTitle()}</li>
                                                 </div>
 
-                                                <!-- Cột 3: Nút Detail -->
-                                                <div class="col-md-3 text-center">
-                                                    <a href="questionlist?id=${s.getSubjectId()}" class="btn btn-primary btn-lg">View List Question</a>
+                                                <!-- Cột: Nút Detail và Delete nằm cạnh nhau -->
+                                                <div class="col-md-5 text-center">
+                                                    <!-- Form View List Question -->
+                                                    <form action="subject-list" method="POST" style="display:inline;">
+                                                        <a href="questionlist?id=${s.getSubjectId()}" class="btn btn-primary btn-lg">List Question</a>
+                                                    </form>
+                                                    
+                                                    <form action="edit-subject" method="POST" style="display:inline;">
+                                                        <input type="hidden" name="subjectId" value="${s.getSubjectId()}"/>
+                                                        <button type="submit" class="btn btn-primary btn-lg">Edit</button>
+                                                    </form>
+                                                    <!-- Form Delete -->
+                                                    <form action="delete-subject" method="POST" style="display:inline;">
+                                                        <input type="hidden" name="subjectId" value="${s.getSubjectId()}"/>
+                                                        <button type="submit" class="btn btn-danger btn-lg">Delete</button>
+                                                    </form>
                                                 </div>
                                             </div>
-                                        </form>
+                                        </div>
                                     </div>
                                 </c:forEach>
                             </div>

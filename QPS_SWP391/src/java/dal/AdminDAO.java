@@ -27,7 +27,7 @@ public class AdminDAO extends DBContext {
                     + "FROM Users u \n"
                     + "INNER JOIN Roles r ON r.RoleID = u.RoleID \n"
                     + "WHERE (-1 = ? OR u.RoleID = ?)\n"
-                    + "AND ('' = ? OR u.UserName LIKE ?)\n"
+                    + "AND ('' = ? OR u.FullName LIKE ?)\n"
                     + "ORDER BY u.UserID";
             PreparedStatement stm = connection.prepareStatement(sqlQuery);
             stm.setInt(1, roleId);

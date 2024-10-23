@@ -55,6 +55,18 @@
         <servlet-name>TestList</servlet-name>
         <servlet-class>controllers.TestList</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddSubject</servlet-name>
+        <servlet-class>controllers.AddSubject</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteSubject</servlet-name>
+        <servlet-class>controllers.DeleteSubject</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteUser</servlet-name>
+        <servlet-class>controllers.DeleteUser</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminHomePageController</servlet-name>
         <url-pattern>/adminhome</url-pattern>
@@ -126,6 +138,18 @@
     <servlet-mapping>
         <servlet-name>TestList</servlet-name>
         <url-pattern>/test-list</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddSubject</servlet-name>
+        <url-pattern>/add-subject</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteSubject</servlet-name>
+        <url-pattern>/delete-subject</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteUser</servlet-name>
+        <url-pattern>/delete-user</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
