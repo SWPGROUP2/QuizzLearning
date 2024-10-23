@@ -8,12 +8,12 @@ import java.util.logging.Logger;
 
 public class DBContext {
 
-    private static final Logger LOGGER = Logger.getLogger(DBContext.class.getName());
+    static final Logger LOGGER = Logger.getLogger(DBContext.class.getName());
     private static final String SERVER_NAME = "localhost";
     private static final String DATABASE_NAME = "swpquiz";
     private static final String PORT_NUMBER = "3306";
     private static final String USER_ID = "root";
-    private static final String PASSWORD = "123";
+    private static final String PASSWORD = "1234";
     protected Connection connection;
 
     public DBContext() {

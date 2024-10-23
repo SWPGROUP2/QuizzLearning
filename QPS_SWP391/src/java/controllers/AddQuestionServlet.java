@@ -22,7 +22,6 @@ public class AddQuestionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String subjectIdStr = request.getParameter("subjectId");
         String chapterIdStr = request.getParameter("chapterId");
         String questionText = request.getParameter("question");
@@ -30,33 +29,18 @@ public class AddQuestionServlet extends HttpServlet {
 
         boolean isValid = true;
 
-        int subjectId = Integer.parseInt(subjectIdStr);
-
-        int chapterId = Integer.parseInt(chapterIdStr);
-
-        int questionTypeId = Integer.parseInt(questionTypeIdStr);
+            
 
         if (questionText == null || questionText.trim().isEmpty()) {
             isValid = false;
             request.setAttribute("questionError", "Câu hỏi không được để trống.");
         }
 
-        if (questionTypeId == 1) {
-            for (int i = 1; i <= 4; i++) {
-                String optionText = request.getParameter("optionText" + i);
-                if (optionText == null || optionText.trim().isEmpty()) {
-                    isValid = false;
-                    request.setAttribute("optionError" + i, "Tùy chọn " + i + " không được để trống.");
-                }
-            }
-        } else if (questionTypeId == 2) {
-            String optionText = request.getParameter("optionText");
-            if (optionText == null || optionText.trim().isEmpty()) {
-                isValid = false;
-                request.setAttribute("optionError", "Tùy chọn không được để trống.");
-            }
-        }
+        int subjectId = Integer.parseInt(subjectIdStr);
+        int chapterId = Integer.parseInt(chapterIdStr);
+        int questionTypeId = Integer.parseInt(questionTypeIdStr);
 
+       
         if (!isValid) {
             request.setAttribute("subjectId", subjectId);
             request.setAttribute("chapterId", chapterId);
@@ -76,7 +60,7 @@ public class AddQuestionServlet extends HttpServlet {
         OptionDAO opdao = new OptionDAO();
         int questionId = quesdao.addQuestion(question);
 
-        if (questionTypeId == 1) { 
+        if (questionTypeId == 1) {
             for (int i = 1; i <= 4; i++) {
                 String optionText = request.getParameter("optionText" + i);
                 boolean isCorrect = request.getParameter("isCorrect" + i) != null;

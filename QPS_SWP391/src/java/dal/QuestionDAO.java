@@ -43,7 +43,6 @@ public class QuestionDAO extends MyDAO {
         return qlist;
     }
 
-
     public void updateQuestion(int questionId, String question, String definition) throws SQLException {
         String sql = "UPDATE Questions SET question = ?, definition = ? WHERE questionId = ?";
         try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -67,28 +66,48 @@ public class QuestionDAO extends MyDAO {
         }
     }
 
-    public Question getQuestionById(int questionId) throws SQLException {
+    public Question getQuestionById(int questionId) {
         Question question = null;
-        String sql = "SELECT * FROM Questions WHERE QuestionID = ?";
+        String sql = "SELECT * FROM Questions WHERE questionID = ?";
 
-        try ( PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, questionId);
-            ResultSet rs = pstmt.executeQuery();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, questionId);
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                question = new Question();
-                question.setQuestionID(rs.getInt("QuestionID"));
-                question.setSubjectId(rs.getInt("subjectId"));
-                question.setChapterId(rs.getInt("chapterId"));
-                question.setQuestion(rs.getString("Question"));
-                question.setQuestionTypeId(rs.getInt("QuestionTypeId"));
+                question = new Question(rs.getInt("questionID"),
+                        rs.getInt("subjectId"),
+                        rs.getInt("chapterId"),
+                        rs.getString("question"),
+                        rs.getInt("questionTypeId"));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return question;
     }
 
+    public void updateQuestion(Question question) {
+        String sql = "UPDATE Questions SET subjectId = ?, chapterId = ?, question = ?, questionTypeId = ? WHERE questionID = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, question.getSubjectId());
+            ps.setInt(2, question.getChapterId());
+            ps.setString(3, question.getQuestion());
+            ps.setInt(4, question.getQuestionTypeId());
+            ps.setInt(5, question.getQuestionID());
+
+            int rowsAffected = ps.executeUpdate();
+            LOGGER.info("Update Question rows affected: " + rowsAffected);
+        } catch (SQLException e) {
+            LOGGER.severe("Error updating question: " + e.getMessage());
+        }
+    }
+
     public boolean questionExists(int subjectId, String questionText) {
         String query = "SELECT COUNT(*) FROM Questions WHERE subjectId = ? AND question = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        try ( PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, subjectId);
             stmt.setString(2, questionText);
 
@@ -107,10 +126,8 @@ public class QuestionDAO extends MyDAO {
         Question result = new Question();
         List<Question> questions = new ArrayList<>();
 
-       
         String query = "SELECT * FROM Questions WHERE subjectId = ? LIMIT ? OFFSET ?";
         String countQuery = "SELECT COUNT(*) FROM Questions WHERE subjectId = ?";
-
 
         try (
                  PreparedStatement countStmt = connection.prepareStatement(countQuery);  PreparedStatement queryStmt = connection.prepareStatement(query)) {
@@ -141,30 +158,29 @@ public class QuestionDAO extends MyDAO {
         return result;
     }
 
-public Set<Integer> getUniqueChapters(int subjectId) {
-    Set<Integer> chapterSet = new HashSet<>();
+    public Set<Integer> getUniqueChapters(int subjectId) {
+        Set<Integer> chapterSet = new HashSet<>();
 
-    // Correctly obtaining the database connection
-      // Use this.getConnection() to get the connection
+        // Correctly obtaining the database connection
+        // Use this.getConnection() to get the connection
         String query = "SELECT DISTINCT chapterId FROM Questions WHERE subjectId = ?"; // Ensure table name is correct
-        try (PreparedStatement stmt = con.prepareStatement(query)) {
+        try ( PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setInt(1, subjectId);
             ResultSet result = stmt.executeQuery();
-            
+
             while (result.next()) {
                 chapterSet.add(result.getInt("chapterId")); // Add unique chapter IDs
             }
+        } catch (SQLException e) { // Catch SQLException instead of a general Exception
+            e.printStackTrace();
         }
-    catch (SQLException e) { // Catch SQLException instead of a general Exception
-        e.printStackTrace();
+
+        return chapterSet;
     }
 
-    return chapterSet;
-}
-    
     public int addQuestion(Question question) {
         String sql = "INSERT INTO Questions (subjectId, chapterId, Question, questionTypeId) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try ( PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, question.getSubjectId());
             ps.setInt(2, question.getChapterId());
             ps.setString(3, question.getQuestion());
@@ -173,38 +189,37 @@ public Set<Integer> getUniqueChapters(int subjectId) {
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
-                return rs.getInt(1);  
+                return rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
     }
-    
+
     public List<Question> getQuestionsByChapter(int subjectId, String chapterId) {
-    List<Question> questions = new ArrayList<>();
-    String sql = "SELECT * FROM Questions WHERE subjectId = ? AND chapterId = ?"; 
+        List<Question> questions = new ArrayList<>();
+        String sql = "SELECT * FROM Questions WHERE subjectId = ? AND chapterId = ?";
 
-    try (PreparedStatement stmt = con.prepareStatement(sql)) {
-        stmt.setInt(1, subjectId);
-        stmt.setString(2, chapterId);
-        ResultSet rs = stmt.executeQuery();
+        try ( PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, subjectId);
+            stmt.setString(2, chapterId);
+            ResultSet rs = stmt.executeQuery();
 
-        while (rs.next()) {
-     
-            Question question = new Question();
-            question.setQuestionID(rs.getInt("questionID"));
-            question.setSubjectId(rs.getInt("subjectId"));
-            question.setChapterId(rs.getInt("chapterId"));
-            question.setQuestion(rs.getString("question"));
-            question.setQuestionTypeId(rs.getInt("questionTypeId"));
-            questions.add(question);
+            while (rs.next()) {
+
+                Question question = new Question();
+                question.setQuestionID(rs.getInt("questionID"));
+                question.setSubjectId(rs.getInt("subjectId"));
+                question.setChapterId(rs.getInt("chapterId"));
+                question.setQuestion(rs.getString("question"));
+                question.setQuestionTypeId(rs.getInt("questionTypeId"));
+                questions.add(question);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+
+        return questions;
     }
-
-    return questions;
 }
-}
-

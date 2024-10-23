@@ -24,6 +24,7 @@
                 border-radius: 20px;
             }
         </style>
+        
         <script>
             function showOptions() {
                 const questionTypeId = document.querySelector('input[name="questionTypeId"]:checked').value;
@@ -88,7 +89,6 @@
                             </div>
                         </div>
 
-                        <!-- Single Choice Options -->
                         <div id="singleChoiceOptions" style="display:none;">
                             <div class="form-group">
                                 <label>Options</label>

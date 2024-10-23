@@ -30,7 +30,7 @@
                             <option value="">All Chapters</option>
                             <c:forEach var="chapter" items="${chapterSet}">
                                 <option value="${chapter}" 
-                                    <c:if test="${param.chapterId == chapter}">selected</c:if>>Chapter ${chapter}</option>
+                                        <c:if test="${param.chapterId == chapter}">selected</c:if>>Chapter ${chapter}</option>
                             </c:forEach>
                         </select>
                         <button type="submit" class="btn btn-primary">Filter</button>

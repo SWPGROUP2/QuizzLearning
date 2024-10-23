@@ -3,13 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/24_Fall_SWP391/SWPUpdate/QuizzLearning/QPS_SWP391/src/java/controllers/AddQuestionServlet.java</file>
             <file>file:/D:/24_Fall_SWP391/SWPUpdate/QuizzLearning/QPS_SWP391/web/addquestion.jsp</file>
-            <file>file:/D:/24_Fall_SWP391/SWPUpdate/QuizzLearning/QPS_SWP391/web/WEB-INF/web.xml</file>
-            <file>file:/D:/24_Fall_SWP391/SWPUpdate/QuizzLearning/QPS_SWP391/src/java/dal/QuestionDAO.java</file>
             <file>file:/D:/24_Fall_SWP391/SWPUpdate/QuizzLearning/QPS_SWP391/src/java/controllers/EditQuestionController.java</file>
-            <file>file:/D:/24_Fall_SWP391/SWPUpdate/QuizzLearning/QPS_SWP391/src/java/models/Question.java</file>
-            <file>file:/D:/24_Fall_SWP391/SWPUpdate/QuizzLearning/QPS_SWP391/src/java/models/Option.java</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate/QuizzLearning/QPS_SWP391/web/editquestion.jsp</file>
         </group>
     </open-files>
 </project-private>
