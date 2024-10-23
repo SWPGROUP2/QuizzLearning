@@ -55,6 +55,10 @@
         <servlet-name>TestList</servlet-name>
         <servlet-class>controllers.TestList</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DetailQuestionServlet</servlet-name>
+        <servlet-class>controllers.DetailQuestionServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminHomePageController</servlet-name>
         <url-pattern>/adminhome</url-pattern>
@@ -126,6 +130,10 @@
     <servlet-mapping>
         <servlet-name>TestList</servlet-name>
         <url-pattern>/test-list</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DetailQuestionServlet</servlet-name>
+        <url-pattern>/detailquestion</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
