@@ -56,6 +56,10 @@
         <servlet-class>controllers.TestList</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>DetailQuestionServlet</servlet-name>
+        <servlet-class>controllers.DetailQuestionServlet</servlet-class>
+    </servlet>
+      <servlet>
         <servlet-name>AddSubject</servlet-name>
         <servlet-class>controllers.AddSubject</servlet-class>
     </servlet>
@@ -142,6 +146,10 @@
     <servlet-mapping>
         <servlet-name>AddSubject</servlet-name>
         <url-pattern>/add-subject</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DetailQuestionServlet</servlet-name>
+        <url-pattern>/detailquestion</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DeleteSubject</servlet-name>
