@@ -32,6 +32,7 @@ public class EditQuestionController extends HttpServlet {
             List<Option> options = opdao.getOptionsByQuestionId(questionId);
             request.setAttribute("question", question);
             request.setAttribute("options", options);
+            request.setAttribute("matchingOption", options.get(0));
             request.setAttribute("subjectId", question.getSubjectId());
             request.getRequestDispatcher("editquestion.jsp").forward(request, response);
         } catch (NumberFormatException e) {
