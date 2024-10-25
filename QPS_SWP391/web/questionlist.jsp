@@ -47,9 +47,30 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Chapters</th>
-                                        <th>Questions</th>
-                                        <th>Question Type</th>
+                                        <a href="?id=${param.id}&sort=chapterId&order=${sortOrder == 'asc' ? 'desc' : 'asc'}" class="text-decoration-none">
+                                        <th>chapter Id</th>
+                                        Chapters
+                                        <c:choose>
+                                            <c:when test="${sortOrder == 'asc'}">
+                                                <i class="fas fa-arrow-up ml-1"></i>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <i class="fas fa-arrow-down ml-1"></i>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </a>                                        <th>Questions</th>
+                                       <a href="?id=${param.id}&sort=questionTypeId&order=${sortOrder == 'asc' ? 'desc' : 'asc'}" class="text-decoration-none">
+                                        <th>Question Type Id</th>
+                                        Question Types
+                                        <c:choose>
+                                            <c:when test="${sortOrder == 'asc'}">
+                                                <i class="fas fa-arrow-up ml-1"></i>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <i class="fas fa-arrow-down ml-1"></i>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </a>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>

@@ -19,14 +19,23 @@ public class QuestionList extends HttpServlet {
         int pageSize = 12; 
         int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
         String chapterId = request.getParameter("chapterId");
-        
+        String sort = request.getParameter("sort") != null ? request.getParameter("sort") : "default";
+        String sortOrder = request.getParameter("order") != null ? request.getParameter("order") : "asc";
+        String sortColumn = request.getParameter("sort") != null ? request.getParameter("sort") : "chapterId";
         QuestionDAO questionDAO = new QuestionDAO();
         List<Question> questionList;
-
+        
         if (chapterId != null && !chapterId.isEmpty()) {   
-            questionList = questionDAO.getQuestionsByChapter(subjectId, chapterId);
+        questionList = questionDAO.getQuestionsBySubjectIdChapterIdSorted(subjectId, chapterId, sortColumn, sortOrder);
         } else {
-            questionList = questionDAO.getQuestionsBySubjectId(subjectId);
+        questionList = questionDAO.getQuestionsBySubjectIdQuestionTypeIdSorted(subjectId, sortColumn, sortOrder);
+        }
+        if (sortColumn != null) {
+        if (sortColumn.equals("chapterId")) {
+        questionList = questionDAO.getQuestionsBySubjectIdChapterIdSorted(subjectId, chapterId, sort, sortOrder);
+        } else if (sortColumn.equals("questionTypeId")) {
+        questionList = questionDAO.getQuestionsBySubjectIdChapterIdSorted(subjectId, chapterId, sort, sortOrder);
+            }
         }
         int totalQuestions = questionList.size(); 
         int totalPages = (int) Math.ceil((double) totalQuestions / pageSize);
@@ -43,7 +52,8 @@ public class QuestionList extends HttpServlet {
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("chapterSet", chapterSet);
-
+        request.setAttribute("sortOrder", sortOrder); 
+        request.setAttribute("sort", sort);
         request.getRequestDispatcher("questionlist.jsp").forward(request, response);
     } catch (NumberFormatException e) {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid subjectId or page number");

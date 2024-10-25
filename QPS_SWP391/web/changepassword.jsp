@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,15 +11,6 @@
             body {
                 background: linear-gradient(to right, #fbc2eb, #a6c0fe);
                 font-family: Arial, sans-serif;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                margin: 0;
-            }
-            .container {
-                max-width: 500px;
-                width: 100%;
             }
             .card {
                 background: linear-gradient(to right, #fbc2eb, #a6c0fe);
@@ -59,29 +50,38 @@
         </style>
     </head>
     <body>
-        <div class="container">
-            <div class="card">
-                <h2 class="card-title mb-4 text-center">Change Password</h2>
-                <form action="changepassword" method="post">
-                    <div class="mb-3">
-                        <label for="currentPassword" class="form-label">Current Password</label>
-                        <input type="password" class="form-control" id="currentPassword" name="currentpass" placeholder="Enter your current password" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="newPassword" class="form-label">New Password</label>
-                        <input type="password" class="form-control" id="newPassword" name="newpass" placeholder="Enter a new password" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="confirmPassword" class="form-label">Confirm New Password</label>
-                        <input type="password" class="form-control" id="confirmPassword" name="confirmpass" placeholder="Confirm your new password" required>
-                    </div>
-                    <button type="submit" class="btn btn-custom w-100">Change Password</button>
-                    <a href="studenthome" class="btn btn-home w-100">Return to Home</a> <!-- Nút quay lại trang chủ -->
-                </form>
-                <c:if test="${not empty mess}">
-                    <div class="alert alert-info">${mess}</div>
-                </c:if>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40;">
+                    <%@include file="Components/Sidebar.jsp" %> <!-- Include Sidebar -->
+                </div>
 
+                <div class="col-md-10 d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+                    <div class="container">
+                        <div class="card">
+                            <h2 class="card-title mb-4 text-center">Change Password</h2>
+                            <form action="changepassword" method="post">
+                                <div class="mb-3">
+                                    <label for="currentPassword" class="form-label">Current Password</label>
+                                    <input type="password" class="form-control" id="currentPassword" name="currentpass" placeholder="Enter your current password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newPassword" class="form-label">New Password</label>
+                                    <input type="password" class="form-control" id="newPassword" name="newpass" placeholder="Enter a new password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                    <input type="password" class="form-control" id="confirmPassword" name="confirmpass" placeholder="Confirm your new password" required>
+                                </div>
+                                <button type="submit" class="btn btn-custom w-100">Change Password</button>
+                                <a href="studenthome" class="btn btn-home w-100 mt-3">Return to Home</a>
+                            </form>
+                            <c:if test="${not empty mess}">
+                                <div class="alert alert-info mt-3">${mess}</div>
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

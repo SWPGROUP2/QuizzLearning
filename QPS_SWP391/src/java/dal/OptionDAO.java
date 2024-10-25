@@ -51,5 +51,18 @@ public class OptionDAO extends MyDAO {
         
         return options;
     }
-    
+        
+    public void updateOption(Option option) {
+        String sql = "UPDATE Options SET optionText = ?, isCorrect = ? WHERE optionId = ?";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, option.getOptionText());
+            ps.setInt(2, option.getIsCorrect());
+            ps.setInt(3, option.getOptionId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
