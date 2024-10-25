@@ -42,16 +42,81 @@ public class QuestionDAO extends MyDAO {
 
         return qlist;
     }
-
-    public void updateQuestion(int questionId, String question, String definition) throws SQLException {
-        String sql = "UPDATE Questions SET question = ?, definition = ? WHERE questionId = ?";
-        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, question);
-            stmt.setString(2, definition);
-            stmt.setInt(3, questionId);
-            stmt.executeUpdate();
-        }
+    
+    public List<Question> getQuestionsBySubjectIdQuestionTypeIdSorted(int subjectId, String sort, String sortOrder) {
+    String sql = "SELECT * FROM Questions WHERE subjectId = ?";
+    
+    if ("questionType".equals(sort)) {
+        sql += " ORDER BY QuestionTypeId " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
     }
+    
+    List<Question> qlist = new ArrayList<>();
+    try (PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setInt(1, subjectId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            qlist.add(new Question(
+                rs.getInt("QuestionID"),
+                subjectId,
+                rs.getInt("chapterId"),
+                rs.getString("Question"),
+                rs.getInt("QuestionTypeId")
+            ));
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return qlist;
+    }
+    
+    public List<Question> getQuestionsBySubjectIdChapterIdSorted(int subjectId, String chapterId, String sort, String sortOrder) {
+    String sql = "SELECT * FROM Questions WHERE subjectId = ?";
+    if (chapterId != null && !chapterId.isEmpty()) {
+        sql += " AND chapterId = ?";
+    }
+    if ("chapterId".equals(sort)) {
+        sql += " ORDER BY chapterId " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
+    } else if ("questionTypeId".equals(sort)) {
+        sql += " ORDER BY questionTypeId " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
+    }
+    List<Question> qlist = new ArrayList<>();
+    try (PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setInt(1, subjectId);
+        if (chapterId != null && !chapterId.isEmpty()) {
+            ps.setString(2, chapterId);
+        }     
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            qlist.add(new Question(
+                rs.getInt("QuestionID"),
+                subjectId,
+                rs.getInt("chapterId"),
+                rs.getString("Question"),
+                rs.getInt("QuestionTypeId")
+            ));
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return qlist;
+    }
+
+    public void updateQuestion(Question question) {
+            String sql = "UPDATE Questions SET subjectId = ?, chapterId = ?, question = ?, questionTypeId = ? WHERE questionID = ?";
+            try {
+                PreparedStatement ps = connection.prepareStatement(sql);
+                ps.setInt(1, question.getSubjectId());
+                ps.setInt(2, question.getChapterId());
+                ps.setString(3, question.getQuestion());
+                ps.setInt(4, question.getQuestionTypeId());
+                ps.setInt(5, question.getQuestionID());
+
+                int rowsAffected = ps.executeUpdate();
+                LOGGER.info("Update Question rows affected: " + rowsAffected);
+            } catch (SQLException e) {
+                LOGGER.severe("Error updating question: " + e.getMessage());
+            }
+        }
 
     public boolean deleteQuestion(int QuestionID) {
         String deleteQuery = "DELETE FROM Questions WHERE QuestionID = ?";
