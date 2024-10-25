@@ -36,8 +36,6 @@ public class EditQuestionController extends HttpServlet {
             request.getRequestDispatcher("editquestion.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             response.sendRedirect("error.jsp");
-        } catch (SQLException ex) {
-            Logger.getLogger(EditQuestionController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -23,6 +24,7 @@
                 border-radius: 20px;
             }
         </style>
+        
         <script>
             function showOptions() {
                 const questionTypeId = document.querySelector('input[name="questionTypeId"]:checked').value;
@@ -77,6 +79,7 @@
                                        value="${not empty param.question ? param.question : ''}">
                             </div>
 
+                        <div id="singleChoiceOptions" style="display:none;">
                             <div class="form-group">
                                 <label>Question Type</label>
                                 <div class="form-check">

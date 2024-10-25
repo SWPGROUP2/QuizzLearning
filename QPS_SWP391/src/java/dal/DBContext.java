@@ -13,7 +13,7 @@ public class DBContext {
     private static final String DATABASE_NAME = "swpquiz";
     private static final String PORT_NUMBER = "3306";
     private static final String USER_ID = "root";
-    private static final String PASSWORD = "123";
+    private static final String PASSWORD = "1234";
     protected Connection connection;
 
     public DBContext() {
