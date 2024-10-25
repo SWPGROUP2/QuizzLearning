@@ -20,13 +20,17 @@ import java.util.logging.Logger;
 import models.Option;
 
 
-public class DetailQuestion extends HttpServlet {
+public class DetailQuestions extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int questionId = Integer.parseInt(request.getParameter("questionId"));
         
         QuestionDAO questionDAO = new QuestionDAO();
         Question question = null;
+
         question = questionDAO.getQuestionById(questionId);
+
+        question = questionDAO.getQuestionById(questionId);
+
         OptionDAO optionDAO = new OptionDAO();
         List<Option> options = optionDAO.getOptionsByQuestionId(questionId);
         request.setAttribute("question", question);

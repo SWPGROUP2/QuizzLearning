@@ -111,6 +111,6 @@ public class AddQuestionServlet extends HttpServlet {
 
     @Override
     public String getServletInfo() {
-        return "Servlet for adding questions";
-    }
+        return "Short description";
+    }// </editor-fold>
 }

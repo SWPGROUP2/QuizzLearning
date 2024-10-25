@@ -28,16 +28,17 @@ public class EditQuestionController extends HttpServlet {
             String questionIdStr = request.getParameter("questionId");
             int questionId = Integer.parseInt(questionIdStr);
             Question question = qsdao.getQuestionById(questionId);
-
             List<Option> options = opdao.getOptionsByQuestionId(questionId);
             request.setAttribute("question", question);
             request.setAttribute("options", options);
             request.setAttribute("matchingOption", options.get(0));
             request.setAttribute("subjectId", question.getSubjectId());
             request.getRequestDispatcher("editquestion.jsp").forward(request, response);
+
         } catch (NumberFormatException e) {
             response.sendRedirect("error.jsp");
         }
+
     }
 
     @Override
@@ -103,6 +104,7 @@ public class EditQuestionController extends HttpServlet {
 
     @Override
     public String getServletInfo() {
-        return "EditQuestionController handles editing of questions and their options";
-    }
+        return "Short description";
+    }// </editor-fold>
 }
+
