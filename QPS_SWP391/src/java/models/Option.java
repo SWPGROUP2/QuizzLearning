@@ -11,11 +11,11 @@ public class Option {
     public Option() {
     }
 
-    public Option(int optionId, int questionID, String optionText, boolean isCorrect) {
+    public Option(int questionID, int optionId, String optionText, int isCorrect) {
         this.questionID = questionID;
         this.optionId = optionId;
         this.optionText = optionText;
-        
+        this.isCorrect = isCorrect;
     }
 
     public int getQuestionID() {

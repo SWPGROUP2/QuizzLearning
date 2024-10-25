@@ -26,11 +26,11 @@ public class DetailQuestions extends HttpServlet {
         
         QuestionDAO questionDAO = new QuestionDAO();
         Question question = null;
-        try {
-            question = questionDAO.getQuestionById(questionId);
-        } catch (SQLException ex) {
-            Logger.getLogger(DetailQuestions.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        question = questionDAO.getQuestionById(questionId);
+
+        question = questionDAO.getQuestionById(questionId);
+
         OptionDAO optionDAO = new OptionDAO();
         List<Option> options = optionDAO.getOptionsByQuestionId(questionId);
         request.setAttribute("question", question);

@@ -16,9 +16,10 @@ import models.Option;
  * @author Admin
  */
 public class OptionDAO extends MyDAO {
+
     public void addOption(Option option) {
         String sql = "INSERT INTO Options (questionId, optionText, isCorrect) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, option.getQuestionID());
             ps.setString(2, option.getOptionText());
             ps.setInt(3, option.getIsCorrect());
@@ -28,30 +29,27 @@ public class OptionDAO extends MyDAO {
             e.printStackTrace();
         }
     }
-        public List<Option> getOptionsByQuestionId(int questionId) {
+
+    public List<Option> getOptionsByQuestionId(int questionId) {
         List<Option> options = new ArrayList<>();
-        String query = "SELECT * FROM Options WHERE QuestionID = ?";
-        
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, questionId);
-            ResultSet resultSet = statement.executeQuery();
-            
-            while (resultSet.next()) {
-                Option option = new Option();
-                option.setOptionId(resultSet.getInt("optionId"));
-                option.setQuestionID(resultSet.getInt("QuestionID"));
-                option.setOptionText(resultSet.getString("optionText"));
-                option.setIsCorrect(resultSet.getInt("isCorrect"));
+        String sql = "SELECT * FROM Options WHERE questionID = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, questionId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Option option = new Option(rs.getInt("questionID"),
+                        rs.getInt("optionId"),
+                        rs.getString("optionText"),
+                        rs.getInt("isCorrect"));
                 options.add(option);
             }
-            
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
         return options;
     }
-        
     public void updateOption(Option option) {
         String sql = "UPDATE Options SET optionText = ?, isCorrect = ? WHERE optionId = ?";
         
