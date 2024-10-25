@@ -152,23 +152,7 @@ public class QuestionDAO extends MyDAO {
         return question;
     }
 
-    public void updateQuestion(Question question) {
-        String sql = "UPDATE Questions SET subjectId = ?, chapterId = ?, question = ?, questionTypeId = ? WHERE questionID = ?";
 
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, question.getSubjectId());
-            ps.setInt(2, question.getChapterId());
-            ps.setString(3, question.getQuestion());
-            ps.setInt(4, question.getQuestionTypeId());
-            ps.setInt(5, question.getQuestionID());
-
-            int rowsAffected = ps.executeUpdate();
-            LOGGER.info("Update Question rows affected: " + rowsAffected);
-        } catch (SQLException e) {
-            LOGGER.severe("Error updating question: " + e.getMessage());
-        }
-    }
 
     public boolean questionExists(int subjectId, String questionText) {
         String query = "SELECT COUNT(*) FROM Questions WHERE subjectId = ? AND question = ?";

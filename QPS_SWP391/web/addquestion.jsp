@@ -24,7 +24,6 @@
                 border-radius: 20px;
             }
         </style>
-        
         <script>
             function showOptions() {
                 const questionTypeId = document.querySelector('input[name="questionTypeId"]:checked').value;
@@ -40,13 +39,12 @@
     <body class="container-fluid">
         <div class="row">
             <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
-                <%@include file="Components/Sidebar.jsp" %>
+                <%@ include file="Components/Sidebar.jsp" %>
             </div>
             <div class="col-md-10 px-4 py-4" style="margin-top: 20px">
                 <h2 class="text-center mb-4">Add New Question</h2>
                 <div class="card">
                     <div class="card-body">
-
                         <c:if test="${not empty successMessage}">
                             <div class="alert alert-success">
                                 <p>${successMessage}</p>
@@ -74,12 +72,17 @@
 
                             <div class="form-group">
                                 <label for="question">Question</label>
-                                <input type="text" class="form-control" id="question" name="question" 
-                                       required placeholder="Enter question text here..." 
-                                       value="${not empty param.question ? param.question : ''}">
+                                <input type="text" class="form-control ${not empty questionError ? 'is-invalid' : ''}" 
+                                       id="question" name="question" 
+                                       placeholder="Enter question text here..." 
+                                       value="${question}">
+                                <c:if test="${not empty questionError}">
+                                    <div class="invalid-feedback">
+                                        ${questionError}
+                                    </div>
+                                </c:if>
                             </div>
 
-                        <div id="singleChoiceOptions" style="display:none;">
                             <div class="form-group">
                                 <label>Question Type</label>
                                 <div class="form-check">
@@ -94,16 +97,26 @@
                                 </div>
                             </div>
 
-                            <!-- Single Choice Options -->
+                            
                             <div id="singleChoiceOptions" style="display:none;">
                                 <div class="form-group">
                                     <label>Options</label>
                                     <c:forEach var="i" begin="1" end="4">
                                         <div class="form-group">
-                                            <input type="text" class="form-control mb-1" name="optionText${i}" 
-                                                   placeholder="Option ${i}" ${questionTypeId == '1' ? 'required' : ''}>
+                                            <input type="text" 
+                                                   class="form-control mb-1 ${not empty requestScope['optionError'.concat(i)] ? 'is-invalid' : ''}" 
+                                                   name="optionText${i}" 
+                                                   placeholder="Option ${i}" 
+                                                   value="${requestScope['optionText'.concat(i)]}">
+                                            <c:if test="${not empty requestScope['optionError'.concat(i)]}">
+                                                <div class="invalid-feedback">
+                                                    ${requestScope['optionError'.concat(i)]}
+                                                </div>
+                                            </c:if>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="isCorrect${i}" value="1">
+                                                <input class="form-check-input" type="checkbox" 
+                                                       name="isCorrect${i}" value="1"
+                                                       ${requestScope['isCorrect'.concat(i)] ? 'checked' : ''}>
                                                 <label class="form-check-label">Correct</label>
                                             </div>
                                         </div>
@@ -111,12 +124,19 @@
                                 </div>
                             </div>
 
-                            <!-- Matching Option -->
                             <div id="matchingOptions" style="display:none;">
                                 <div class="form-group">
                                     <label for="optionText">Matching Option</label>
-                                    <input type="text" class="form-control" id="optionText" name="optionText" 
-                                           placeholder="Enter matching option" ${questionTypeId == '2' ? 'required' : ''}>
+                                    <input type="text" 
+                                           class="form-control ${not empty matchingError ? 'is-invalid' : ''}" 
+                                           id="optionText" name="optionText" 
+                                           placeholder="Enter matching option" 
+                                           value="${optionText}">
+                                    <c:if test="${not empty matchingError}">
+                                        <div class="invalid-feedback">
+                                            ${matchingError}
+                                        </div>
+                                    </c:if>
                                 </div>
                             </div>
 
