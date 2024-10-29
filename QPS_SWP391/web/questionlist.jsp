@@ -34,14 +34,14 @@
                 </div>
                 <div class="col-md-10" >
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <a href="subject-list" class="btn btn-secondary">Back to Subject</a>   
+                        <a href="subject-list" class="btn btn-dark">Back to Subject</a>   
                         <h1>Question List</h1>
                         <c:if test="${sessionScope.account.roleId != 1}">
                             <a href="addquestion?subjectId=${param.id}" class="btn btn-primary">Add</a>
                         </c:if>
                     </div>
                     <form action="questionlist" method="GET" class="form-inline mb-3">
-                        <input type="hidden" name="id" value="${param.id}"> <!-- Include subjectId as 'id' -->
+                        <input type="hidden" name="id" value="${param.id}"> 
                         <label for="chapterFilter" class="mr-2">Filter by Chapter:</label>
                         <select id="chapterFilter" name="chapterId" class="form-control mr-2">
                             <option value="">All Chapters</option>

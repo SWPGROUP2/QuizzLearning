@@ -30,7 +30,7 @@
             </div>
             <div class="col-md-10">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <a href="teacherhome" class="btn btn-secondary">Back to Homepage</a> 
+                    <a href="teacherhome" class="btn btn-dark">Back to Homepage</a> 
                     <h1>List Tests</h1>               
                     <a href="addTest" class="btn btn-primary">Add Test</a>
                 </div>
