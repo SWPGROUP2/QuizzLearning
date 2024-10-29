@@ -76,9 +76,9 @@ public class QuestionDAO extends MyDAO {
         sql += " AND chapterId = ?";
     }
     if ("chapterId".equals(sort)) {
-        sql += " ORDER BY chapterId " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
+        sql += " ORDER BY chapterId " + ("desc".equals(sortOrder) ? "desc" : "asc");
     } else if ("questionTypeId".equals(sort)) {
-        sql += " ORDER BY questionTypeId " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
+        sql += " ORDER BY questionTypeId " + ("desc".equals(sortOrder) ? "desc" : "asc");
     }
     List<Question> qlist = new ArrayList<>();
     try (PreparedStatement ps = con.prepareStatement(sql)) {

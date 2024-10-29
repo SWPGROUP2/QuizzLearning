@@ -14,10 +14,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <!-- Custom scripts -->
+
         <%@include file="Components/AllAccess.jsp"%>
-
-
     </head>
 
     <body class="container-fluid">
@@ -29,6 +27,7 @@
                 <div id="" class="mb-4">
                     <div id="">
                         <div class="container-fluid px-4 px-lg-5 row" style="margin-top: 10px">
+                            <a href="teacherhome" class="btn btn-secondary">Back to Homepage</a> 
                             <h1>Subject List</h1>
 
                             <div class="mt-3 col-md-12">

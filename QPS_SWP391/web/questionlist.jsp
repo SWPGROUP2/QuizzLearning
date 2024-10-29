@@ -9,6 +9,22 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Question List</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 10px;
+                text-align: left;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+        </style>
     </head>
     <body>
         <div class="container-fluid">
@@ -16,15 +32,14 @@
                 <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
                     <%@include file="Components/Sidebar.jsp" %>
                 </div>
-
-                <div class="col-md-10">
+                <div class="col-md-10" >
                     <div class="d-flex justify-content-between align-items-center mb-3">
+                        <a href="subject-list" class="btn btn-secondary">Back to Subject</a>   
                         <h1>Question List</h1>
                         <c:if test="${sessionScope.account.roleId != 1}">
                             <a href="addquestion?subjectId=${param.id}" class="btn btn-primary">Add</a>
                         </c:if>
                     </div>
-
                     <form action="questionlist" method="GET" class="form-inline mb-3">
                         <input type="hidden" name="id" value="${param.id}"> <!-- Include subjectId as 'id' -->
                         <label for="chapterFilter" class="mr-2">Filter by Chapter:</label>
@@ -37,7 +52,6 @@
                         </select>
                         <button type="submit" class="btn btn-primary">Filter</button>
                     </form>
-
                     <c:choose>
                         <c:when test="${questionList == null || questionList.size() == 0}">
                             <p>No questions found for this subject.</p>
@@ -47,30 +61,27 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <a href="?id=${param.id}&sort=chapterId&order=${sortOrder == 'asc' ? 'desc' : 'asc'}" class="text-decoration-none">
-                                        <th>chapter Id</th>
-                                        Chapters
-                                        <c:choose>
-                                            <c:when test="${sortOrder == 'asc'}">
-                                                <i class="fas fa-arrow-up ml-1"></i>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <i class="fas fa-arrow-down ml-1"></i>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </a>                                        <th>Questions</th>
-                                       <a href="?id=${param.id}&sort=questionTypeId&order=${sortOrder == 'asc' ? 'desc' : 'asc'}" class="text-decoration-none">
-                                        <th>Question Type Id</th>
-                                        Question Types
-                                        <c:choose>
-                                            <c:when test="${sortOrder == 'asc'}">
-                                                <i class="fas fa-arrow-up ml-1"></i>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <i class="fas fa-arrow-down ml-1"></i>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </a>
+                                      <th>
+                                        <a href="?id=${param.id}&sort=chapterId&order=${sortOrder == 'asc' ? 'desc' : 'asc'}">Chapter ID
+                                            <c:if test="${sort == 'chapterId'}">
+                                                <c:choose>
+                                                    <c:when test="${sortOrder == 'asc'}">&#9650;</c:when>
+                                                    <c:otherwise>&#9660;</c:otherwise>
+                                                </c:choose>
+                                            </c:if>
+                                        </a>
+                                    </th>                                    
+                                    <th>Questions</th>
+                                        <th>
+                                            <a href="?id=${param.id}&sort=questionTypeId&order=${sortOrder == 'asc' ? 'desc' : 'asc'}">Question Type ID
+                                                <c:if test="${sort == 'questionTypeId'}">
+                                                    <c:choose>
+                                                        <c:when test="${sortOrder == 'asc'}">&#9650;</c:when>
+                                                        <c:otherwise>&#9660;</c:otherwise>
+                                                    </c:choose>
+                                                </c:if>
+                                            </a>
+                                        </th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -82,7 +93,6 @@
                                             <td>${q.getChapterId()}</td>
                                             <td>${q.getQuestion()}</td>
                                             <td>${q.getQuestionTypeId()}</td>                                         
-
                                             <td>
                                                 <c:if test="${sessionScope.account.roleId != 1}">
                                                     <a href="editquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-primary btn-sm">Edit</a>
@@ -98,6 +108,7 @@
                                     </c:forEach>
                                 </tbody>
                             </table>
+                                
                         </c:otherwise>
                     </c:choose>
 

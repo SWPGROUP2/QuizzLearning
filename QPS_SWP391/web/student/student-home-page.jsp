@@ -69,7 +69,8 @@
                     <div class="overlay-text">
                         <h1>EDUCATION</h1>
                         <h2>QUIZ MANAGEMENT SYSTEM</h2>
-                        <a href="subject-list" class="learn-more-btn">Quiz History</a>
+                        <a href="" class="learn-more-btn">Practice</a>
+                        <a href="" class="learn-more-btn">Test</a>
                     </div>
                 </div>
             </div>

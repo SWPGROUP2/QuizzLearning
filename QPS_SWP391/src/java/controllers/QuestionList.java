@@ -19,7 +19,7 @@ public class QuestionList extends HttpServlet {
         int pageSize = 12; 
         int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
         String chapterId = request.getParameter("chapterId");
-        String sort = request.getParameter("sort") != null ? request.getParameter("sort") : "default";
+        String sort = request.getParameter("sort") != null ? request.getParameter("sort") : "chapterId";
         String sortOrder = request.getParameter("order") != null ? request.getParameter("order") : "asc";
         String sortColumn = request.getParameter("sort") != null ? request.getParameter("sort") : "chapterId";
         QuestionDAO questionDAO = new QuestionDAO();
