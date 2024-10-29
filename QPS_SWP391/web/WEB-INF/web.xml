@@ -57,7 +57,7 @@
     </servlet>
     <servlet>
         <servlet-name>DetailQuestion</servlet-name>
-        <servlet-class>controllers.DetailQuestion</servlet-class>
+        <servlet-class>controllers.DetailQuestions</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddSubject</servlet-name>
@@ -151,7 +151,7 @@
         <servlet-name>AddSubject</servlet-name>
         <url-pattern>/add-subject</url-pattern>
     </servlet-mapping>
-<!--    <session-config>
+    <!--    <session-config>
         <session-timeout>
             1000
         </session-timeout>

@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import models.Option;
 
 
-public class DetailQuestion extends HttpServlet {
+public class DetailQuestions extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int questionId = Integer.parseInt(request.getParameter("questionId"));
         
@@ -29,13 +29,13 @@ public class DetailQuestion extends HttpServlet {
         try {
             question = questionDAO.getQuestionById(questionId);
         } catch (SQLException ex) {
-            Logger.getLogger(DetailQuestion.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DetailQuestions.class.getName()).log(Level.SEVERE, null, ex);
         }
         OptionDAO optionDAO = new OptionDAO();
         List<Option> options = optionDAO.getOptionsByQuestionId(questionId);
         request.setAttribute("question", question);
         request.setAttribute("options", options);
-        request.getRequestDispatcher("detailquestion.jsp").forward(request, response);
+        request.getRequestDispatcher("detailquestions.jsp").forward(request, response);
         
     }
 
