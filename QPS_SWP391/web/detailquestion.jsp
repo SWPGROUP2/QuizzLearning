@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-md-10">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                    <a href="questionlist?id=${question.getSubjectId()}" class="btn btn-secondary">Back to Questions</a>
+                    <a href="questionlist?id=${question.getSubjectId()}" class="btn btn-dark">Back to Questions</a>
                     <h1>Question Details</h1>
                     <a href="editquestion?questionId=${question.getQuestionID()}" class="btn btn-primary btn-sm">Edit</a>
                     </div>
