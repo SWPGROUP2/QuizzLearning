@@ -35,7 +35,7 @@ public class DetailQuestions extends HttpServlet {
         List<Option> options = optionDAO.getOptionsByQuestionId(questionId);
         request.setAttribute("question", question);
         request.setAttribute("options", options);
-        request.getRequestDispatcher("detailquestions.jsp").forward(request, response);
+        request.getRequestDispatcher("detailquestion.jsp").forward(request, response);
         
     }
 
