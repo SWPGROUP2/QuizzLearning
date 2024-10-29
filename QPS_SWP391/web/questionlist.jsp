@@ -101,6 +101,7 @@
                                                         <input type="hidden" name="subjectId" value="${param.id}">
                                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
                                                     </form>
+                                                    <a href="detailquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-info btn-sm">Detail</a>
                                                 </c:if>
                                             </td>
                                         </tr>
