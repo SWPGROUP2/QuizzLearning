@@ -9,10 +9,12 @@ public class Question {
     private int chapterId;
     private int questionTypeId;
     private String question;
-    private List<Option> options;
+
+    // No-argument constructor if needed
     public Question() {
     }
 
+    // Parameterized constructor
     public Question(int questionID, int subjectId, int chapterId, String question, int questionTypeId) {
         this.questionID = questionID;
         this.subjectId = subjectId;
@@ -21,6 +23,7 @@ public class Question {
         this.questionTypeId = questionTypeId;
     }
 
+    // Getters and Setters
     public int getQuestionID() {
         return questionID;
     }
@@ -78,9 +81,6 @@ public class Question {
 
     public void setTotalCount(int totalCount) {
         this.totalCount = totalCount;
-    }
-        public List<Option> getOptions() {
-        return options;
     }
 
 }

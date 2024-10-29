@@ -34,9 +34,11 @@ public class EditQuestionController extends HttpServlet {
             request.setAttribute("matchingOption", options.get(0));
             request.setAttribute("subjectId", question.getSubjectId());
             request.getRequestDispatcher("editquestion.jsp").forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(EditQuestionController.class.getName()).log(Level.SEVERE, null, ex);
-        }     
+
+        } catch (NumberFormatException e) {
+            response.sendRedirect("error.jsp");
+        }
+
     }
 
     @Override
@@ -105,3 +107,4 @@ public class EditQuestionController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 }
+

@@ -47,7 +47,7 @@
                             <option value="">All Chapters</option>
                             <c:forEach var="chapter" items="${chapterSet}">
                                 <option value="${chapter}" 
-                                    <c:if test="${param.chapterId == chapter}">selected</c:if>>Chapter ${chapter}</option>
+                                        <c:if test="${param.chapterId == chapter}">selected</c:if>>Chapter ${chapter}</option>
                             </c:forEach>
                         </select>
                         <button type="submit" class="btn btn-primary">Filter</button>
@@ -86,10 +86,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:set var="startIndex" value="${(currentPage - 1) * 12 + 1}" /> 
+                                    <c:set var="startIndex" value="${(currentPage - 1) * 15 + 1}" /> 
                                     <c:forEach var="q" items="${questionList}" varStatus="status">
                                         <tr>
-                                            <td>${startIndex + status.index}</td> 
+                                            <td>${status.index + 1}</td> 
                                             <td>${q.getChapterId()}</td>
                                             <td>${q.getQuestion()}</td>
                                             <td>${q.getQuestionTypeId()}</td>                                         
@@ -101,7 +101,6 @@
                                                         <input type="hidden" name="subjectId" value="${param.id}">
                                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
                                                     </form>
-                                                    <a href="detailquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-info btn-sm">Detail</a>
                                                 </c:if>
                                             </td>
                                         </tr>
@@ -112,7 +111,6 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <!-- Pagination -->
                     <div class="pagination">
                         <c:if test="${currentPage > 1}">
                             <a href="?id=${param.id}&chapterId=${param.chapterId}&page=${currentPage - 1}" class="btn btn-secondary">Previous</a>

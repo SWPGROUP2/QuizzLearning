@@ -15,7 +15,6 @@ import models.Question;
 public class QuestionDAO extends MyDAO {
 
     public List<Question> getQuestionsBySubjectId(int subjectId) {
-        
         xSql = "SELECT * FROM Questions WHERE subjectId = ?";
         List<Question> qlist = new ArrayList<>();
         int xQuestionID;
@@ -104,7 +103,6 @@ public class QuestionDAO extends MyDAO {
 
     public void updateQuestion(Question question) {
             String sql = "UPDATE Questions SET subjectId = ?, chapterId = ?, question = ?, questionTypeId = ? WHERE questionID = ?";
-
             try {
                 PreparedStatement ps = connection.prepareStatement(sql);
                 ps.setInt(1, question.getSubjectId());
@@ -133,30 +131,32 @@ public class QuestionDAO extends MyDAO {
         }
     }
 
-    public List<Option> getOptionsByQuestionId(int questionId) throws SQLException {
-    List<Option> options = new ArrayList<>();
-    String sql = "SELECT * FROM Options WHERE QuestionID = ?";
-    
-    ps = con.prepareStatement(sql);
-    ps.setInt(1, questionId);
-    rs = ps.executeQuery();
-    
-    while (rs.next()) {
-        int optionId = rs.getInt("OptionID");
-        String optionText = rs.getString("OptionText");
-        boolean isCorrect = rs.getBoolean("IsCorrect");
-        options.add(new Option(optionId, questionId, optionText, isCorrect));
+    public Question getQuestionById(int questionId) {
+        Question question = null;
+        String sql = "SELECT * FROM Questions WHERE questionID = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, questionId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                question = new Question(rs.getInt("questionID"),
+                        rs.getInt("subjectId"),
+                        rs.getInt("chapterId"),
+                        rs.getString("question"),
+                        rs.getInt("questionTypeId"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return question;
     }
-    
-    rs.close();
-    ps.close();
-    
-    return options;
-}
-    
+
+
+
     public boolean questionExists(int subjectId, String questionText) {
         String query = "SELECT COUNT(*) FROM Questions WHERE subjectId = ? AND question = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        try ( PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, subjectId);
             stmt.setString(2, questionText);
 
@@ -175,10 +175,8 @@ public class QuestionDAO extends MyDAO {
         Question result = new Question();
         List<Question> questions = new ArrayList<>();
 
-       
         String query = "SELECT * FROM Questions WHERE subjectId = ? LIMIT ? OFFSET ?";
         String countQuery = "SELECT COUNT(*) FROM Questions WHERE subjectId = ?";
-
 
         try (
                  PreparedStatement countStmt = connection.prepareStatement(countQuery);  PreparedStatement queryStmt = connection.prepareStatement(query)) {
@@ -209,30 +207,29 @@ public class QuestionDAO extends MyDAO {
         return result;
     }
 
-public Set<Integer> getUniqueChapters(int subjectId) {
-    Set<Integer> chapterSet = new HashSet<>();
+    public Set<Integer> getUniqueChapters(int subjectId) {
+        Set<Integer> chapterSet = new HashSet<>();
 
-    // Correctly obtaining the database connection
-      // Use this.getConnection() to get the connection
+        // Correctly obtaining the database connection
+        // Use this.getConnection() to get the connection
         String query = "SELECT DISTINCT chapterId FROM Questions WHERE subjectId = ?"; // Ensure table name is correct
-        try (PreparedStatement stmt = con.prepareStatement(query)) {
+        try ( PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setInt(1, subjectId);
             ResultSet result = stmt.executeQuery();
-            
+
             while (result.next()) {
                 chapterSet.add(result.getInt("chapterId")); // Add unique chapter IDs
             }
+        } catch (SQLException e) { // Catch SQLException instead of a general Exception
+            e.printStackTrace();
         }
-    catch (SQLException e) { // Catch SQLException instead of a general Exception
-        e.printStackTrace();
+
+        return chapterSet;
     }
 
-    return chapterSet;
-}
-    
     public int addQuestion(Question question) {
         String sql = "INSERT INTO Questions (subjectId, chapterId, Question, questionTypeId) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try ( PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, question.getSubjectId());
             ps.setInt(2, question.getChapterId());
             ps.setString(3, question.getQuestion());
@@ -241,67 +238,37 @@ public Set<Integer> getUniqueChapters(int subjectId) {
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
-                return rs.getInt(1);  // Lấy questionId vừa được sinh
+                return rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
     }
-    
+
     public List<Question> getQuestionsByChapter(int subjectId, String chapterId) {
-    List<Question> questions = new ArrayList<>();
-    String sql = "SELECT * FROM Questions WHERE subjectId = ? AND chapterId = ?"; 
+        List<Question> questions = new ArrayList<>();
+        String sql = "SELECT * FROM Questions WHERE subjectId = ? AND chapterId = ?";
 
-    try (PreparedStatement stmt = con.prepareStatement(sql)) {
-        stmt.setInt(1, subjectId);
-        stmt.setString(2, chapterId);
-        ResultSet rs = stmt.executeQuery();
+        try ( PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, subjectId);
+            stmt.setString(2, chapterId);
+            ResultSet rs = stmt.executeQuery();
 
-        while (rs.next()) {
-     
-            Question question = new Question();
-            question.setQuestionID(rs.getInt("questionID"));
-            question.setSubjectId(rs.getInt("subjectId"));
-            question.setChapterId(rs.getInt("chapterId"));
-            question.setQuestion(rs.getString("question"));
-            question.setQuestionTypeId(rs.getInt("questionTypeId"));
-            questions.add(question);
+            while (rs.next()) {
+
+                Question question = new Question();
+                question.setQuestionID(rs.getInt("questionID"));
+                question.setSubjectId(rs.getInt("subjectId"));
+                question.setChapterId(rs.getInt("chapterId"));
+                question.setQuestion(rs.getString("question"));
+                question.setQuestionTypeId(rs.getInt("questionTypeId"));
+                questions.add(question);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+
+        return questions;
     }
-
-    return questions;
 }
-
-   public Question getQuestionById(int questionId) throws SQLException {
-    Question question = null;
-    String sql = "SELECT * FROM Questions WHERE QuestionID = ?";
-    
-    try {
-        ps = con.prepareStatement(sql);
-        ps.setInt(1, questionId);
-        rs = ps.executeQuery();
-        
-        if (rs.next()) {
-            int subjectId = rs.getInt("subjectId");
-            int chapterId = rs.getInt("chapterId");
-            int questionTypeId = rs.getInt("QuestionTypeId");
-            String questionText = rs.getString("Question");
-            
-       
-            List<Option> options = getOptionsByQuestionId(questionId);
-            
-            question = new Question(questionId, subjectId, chapterId, questionText, questionTypeId);
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
-        if (rs != null) rs.close();
-        if (ps != null) ps.close();
-    }
-    return question;
-}
-}
-
