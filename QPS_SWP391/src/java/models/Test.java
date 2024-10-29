@@ -5,6 +5,7 @@ public class Test {
     private int subjectId;
     private String testName;
     private String description;
+    private int questionCount;
 
     public Test(int testID, int subjectId, String testName, String description) {
         this.testID = testID;
@@ -13,12 +14,9 @@ public class Test {
         this.description = description;
     }
 
-    // Constructor mặc định (nếu cần)
     public Test() {
-        // No-argument constructor
     }
 
-    // Getter và Setter cho testID
     public int getTestID() {
         return testID;
     }
@@ -27,7 +25,6 @@ public class Test {
         this.testID = testID;
     }
 
-    // Getter và Setter cho subjectId
     public int getSubjectId() {
         return subjectId;
     }
@@ -36,7 +33,6 @@ public class Test {
         this.subjectId = subjectId;
     }
 
-    // Getter và Setter cho testName
     public String getTestName() {
         return testName;
     }
@@ -45,12 +41,19 @@ public class Test {
         this.testName = testName;
     }
 
-    // Getter và Setter cho description
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+     public int getQuestionCount() {
+        return questionCount;
+    }
+
+    public void setQuestionCount(int questionCount) {
+        this.questionCount = questionCount;
     }
 }

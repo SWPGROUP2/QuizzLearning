@@ -10,14 +10,12 @@ import java.util.List;
 
 public class TestDAO extends MyDAO {
 
-    // Lấy danh sách các test theo subjectId
     public List<Test> getTestsBySubjectId(int subjectId) {
         xSql = "SELECT * FROM Tests WHERE subjectId = ?";
         List<Test> testList = new ArrayList<>();
         int testID;
         String testName;
         String description;
-
         try {
             ps = con.prepareStatement(xSql);
             ps.setInt(1, subjectId);
@@ -26,17 +24,13 @@ public class TestDAO extends MyDAO {
                 testID = rs.getInt("testID");
                 testName = rs.getString("testName");
                 description = rs.getString("description");
-
-                // Tạo đối tượng Test và thêm vào danh sách
                 testList.add(new Test(testID, subjectId, testName, description));
             }
-
             rs.close();
             ps.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return testList;
     }
 
@@ -50,7 +44,6 @@ public class TestDAO extends MyDAO {
         String xQuestion;
         int xQuestionTypeId;
         boolean isInTest;
-
         try {
             ps = con.prepareStatement(xSql);
             ps.setInt(1, testId);
@@ -62,24 +55,19 @@ public class TestDAO extends MyDAO {
                 xQuestion = rs.getString("Question");
                 xQuestionTypeId = rs.getInt("QuestionTypeId");
                 isInTest = rs.getInt("isInTest") == 1;
-
-                // Thêm câu hỏi vào danh sách và đánh dấu câu hỏi đã có trong test
                 qlist.add(new Question(xQuestionID, subjectId, xChapterId, xQuestion, xQuestionTypeId));
             }
-
             rs.close();
             ps.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return qlist;
     }
 
     public List<Test> getAllTests() {
         List<Test> testList = new ArrayList<>();
         xSql = "SELECT * FROM Tests";
-
         try {
             ps = con.prepareStatement(xSql);
             rs = ps.executeQuery();
@@ -97,13 +85,57 @@ public class TestDAO extends MyDAO {
         return testList;
     }
 
-    public List<Test> searchTestsByName(String testName) {
+    public List<Test> searchTestsByName(String testName, int page, int testsPerPage, String sortBy, String sortOrder) {
+       List<Test> testList = new ArrayList<>();
+
+       String sortColumn = "TestID"; 
+       if ("questionCount".equals(sortBy)) {
+           sortColumn = "(SELECT COUNT(*) FROM TestQuestions WHERE TestQuestions.testID = Tests.TestID)";
+       }
+
+       String order = "ASC".equalsIgnoreCase(sortOrder) ? "ASC" : "DESC";
+
+       int offset = (page - 1) * testsPerPage;
+
+       xSql = "SELECT * FROM Tests WHERE TestName LIKE ? ORDER BY " + sortColumn + " " + order + " LIMIT ? OFFSET ?";
+
+       try {
+           ps = con.prepareStatement(xSql);
+           ps.setString(1, "%" + testName + "%");
+           ps.setInt(2, testsPerPage);
+           ps.setInt(3, offset);
+           rs = ps.executeQuery();
+
+           while (rs.next()) {
+               Test test = new Test();
+               test.setTestID(rs.getInt("TestID"));
+               test.setTestName(rs.getString("TestName"));
+               test.setDescription(rs.getString("Description"));
+               test.setSubjectId(rs.getInt("SubjectID"));
+               testList.add(test);
+           }
+
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+       return testList;
+   }
+ 
+    public List<Test> getTestsPaginated(int page, int testsPerPage, String sortBy, String sortOrder) {
         List<Test> testList = new ArrayList<>();
-        xSql = "SELECT * FROM Tests WHERE TestName LIKE ?"; // Sử dụng LIKE cho tìm kiếm
+        String sortColumn = "TestID";
+        if ("questionCount".equals(sortBy)) {
+            sortColumn = "(SELECT COUNT(*) FROM TestQuestions WHERE TestQuestions.testID = Tests.TestID)";
+        }
+        String order = "ASC".equalsIgnoreCase(sortOrder) ? "ASC" : "DESC"; 
+
+        int offset = (page - 1) * testsPerPage;
+        xSql = "SELECT * FROM Tests ORDER BY " + sortColumn + " " + order + " LIMIT ? OFFSET ?";
 
         try {
             ps = con.prepareStatement(xSql);
-            ps.setString(1, "%" + testName + "%"); // Thêm ký tự % để tìm kiếm chuỗi bất kỳ
+            ps.setInt(1, testsPerPage);
+            ps.setInt(2, offset);
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -112,16 +144,60 @@ public class TestDAO extends MyDAO {
                 test.setTestName(rs.getString("TestName"));
                 test.setDescription(rs.getString("Description"));
                 test.setSubjectId(rs.getInt("SubjectID"));
-
                 testList.add(test);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return testList;
+    }
+     
+    public int countAllTests() {
+        xSql = "SELECT COUNT(*) FROM Tests";
+        int count = 0;
+        try {
+            ps = con.prepareStatement(xSql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+     
+    public int countTestsByName(String testName) {
+        xSql = "SELECT COUNT(*) FROM Tests WHERE TestName LIKE ?";
+        int count = 0;
+        try {
+            ps = con.prepareStatement(xSql);
+            ps.setString(1, "%" + testName + "%");
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+    
+    public int countQuestionsInTest(int testId) {
+        int questionCount = 0;
+        xSql = "SELECT COUNT(*) AS QuestionCount FROM TestQuestions WHERE testID = ?";
 
-            rs.close();
-            ps.close();
+        try {
+            ps = con.prepareStatement(xSql);
+            ps.setInt(1, testId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                questionCount = rs.getInt("QuestionCount");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return testList;
+        return questionCount;
     }
 }

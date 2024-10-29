@@ -159,10 +159,10 @@
         <servlet-name>DeleteUser</servlet-name>
         <url-pattern>/delete-user</url-pattern>
     </servlet-mapping>
-
     <session-config>
         <session-timeout>
-            30
+            1000
         </session-timeout>
     </session-config>
 </web-app>
+

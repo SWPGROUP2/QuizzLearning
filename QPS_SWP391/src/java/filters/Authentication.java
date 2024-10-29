@@ -113,10 +113,10 @@ public class Authentication implements Filter {
 
         if (session.getAttribute("account") == null) {
             if (currentURI.contains("/admin") || currentURI.contains("/student")
-                    || (currentURI.contains("/teacher") && !currentURI.contains("/teacherhome") && !currentURI.contains("/teacherviewquestionsets"))) {
+                    || (currentURI.contains("/teacher") && currentURI.contains("/teacherhome") && !currentURI.contains("/teacherviewquestionsets"))) {
                 res.sendRedirect("../login");
             } else {
-                res.sendRedirect("login");
+                res.sendRedirect("login.jsp");
             }
         }
 
