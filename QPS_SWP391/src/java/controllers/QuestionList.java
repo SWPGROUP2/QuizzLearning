@@ -23,12 +23,11 @@ public class QuestionList extends HttpServlet {
         String sortOrder = request.getParameter("order") != null ? request.getParameter("order") : "asc";
         String sortColumn = request.getParameter("sort") != null ? request.getParameter("sort") : "chapterId";
         QuestionDAO questionDAO = new QuestionDAO();
-        List<Question> questionList;
-        
+        List<Question> questionList;        
         if (chapterId != null && !chapterId.isEmpty()) {   
         questionList = questionDAO.getQuestionsBySubjectIdChapterIdSorted(subjectId, chapterId, sortColumn, sortOrder);
         } else {
-        questionList = questionDAO.getQuestionsBySubjectIdQuestionTypeIdSorted(subjectId, sortColumn, sortOrder);
+        questionList = questionDAO.getQuestionsBySubjectIdQuestionTypeIdSorted(subjectId, chapterId, sortColumn, sortOrder);
         }
         if (sortColumn != null) {
         if (sortColumn.equals("chapterId")) {

@@ -37,7 +37,7 @@ public class TestList extends HttpServlet {
         }
 
         for (Test test : tests) {
-            int questionCount = testDAO.countQuestionsInTest(test.getTestID());
+            int questionCount = testDAO.countQuestionsInTest(test.getTestId());
             test.setQuestionCount(questionCount);
         }
 

@@ -16,7 +16,8 @@ public class TestDAO extends MyDAO {
         List<Test> testList = new ArrayList<>();
         int testID;
         String testName;
-        String description;
+        int duration;
+        int classID;
         try {
             ps = con.prepareStatement(xSql);
             ps.setInt(1, subjectId);
@@ -24,8 +25,9 @@ public class TestDAO extends MyDAO {
             while (rs.next()) {
                 testID = rs.getInt("testID");
                 testName = rs.getString("testName");
-                description = rs.getString("description");
-                testList.add(new Test(testID, subjectId, testName);
+                duration = rs.getInt("duration");
+                classID = rs.getInt("classID");
+                testList.add(new Test(testID, subjectId, testName, duration, classID));
             }
             rs.close();
             ps.close();
@@ -76,8 +78,9 @@ public class TestDAO extends MyDAO {
                 Test test = new Test();
                 test.setTestID(rs.getInt("TestID"));
                 test.setTestName(rs.getString("TestName"));
-                test.setDescription(rs.getString("Description"));
+                test.setDuration(rs.getInt("Duration"));
                 test.setSubjectId(rs.getInt("SubjectID"));
+                test.setClassId(rs.getInt("ClassID"));
                 testList.add(test);
             }
         } catch (Exception e) {
@@ -87,48 +90,49 @@ public class TestDAO extends MyDAO {
     }
 
     public List<Test> searchTestsByName(String testName, int page, int testsPerPage, String sortBy, String sortOrder) {
-       List<Test> testList = new ArrayList<>();
+        List<Test> testList = new ArrayList<>();
 
-       String sortColumn = "TestID"; 
-       if ("questionCount".equals(sortBy)) {
-           sortColumn = "(SELECT COUNT(*) FROM TestQuestions WHERE TestQuestions.testID = Tests.TestID)";
-       }
+        String sortColumn = "TestID";
+        if ("questionCount".equals(sortBy)) {
+            sortColumn = "(SELECT COUNT(*) FROM TestQuestions WHERE TestQuestions.testID = Tests.TestID)";
+        }
 
-       String order = "ASC".equalsIgnoreCase(sortOrder) ? "ASC" : "DESC";
+        String order = "ASC".equalsIgnoreCase(sortOrder) ? "ASC" : "DESC";
 
-       int offset = (page - 1) * testsPerPage;
+        int offset = (page - 1) * testsPerPage;
 
-       xSql = "SELECT * FROM Tests WHERE TestName LIKE ? ORDER BY " + sortColumn + " " + order + " LIMIT ? OFFSET ?";
+        xSql = "SELECT * FROM Tests WHERE TestName LIKE ? ORDER BY " + sortColumn + " " + order + " LIMIT ? OFFSET ?";
 
-       try {
-           ps = con.prepareStatement(xSql);
-           ps.setString(1, "%" + testName + "%");
-           ps.setInt(2, testsPerPage);
-           ps.setInt(3, offset);
-           rs = ps.executeQuery();
+        try {
+            ps = con.prepareStatement(xSql);
+            ps.setString(1, "%" + testName + "%");
+            ps.setInt(2, testsPerPage);
+            ps.setInt(3, offset);
+            rs = ps.executeQuery();
 
-           while (rs.next()) {
-               Test test = new Test();
-               test.setTestID(rs.getInt("TestID"));
-               test.setTestName(rs.getString("TestName"));
-               test.setDescription(rs.getString("Description"));
-               test.setSubjectId(rs.getInt("SubjectID"));
-               testList.add(test);
-           }
+            while (rs.next()) {
+                Test test = new Test();
+                test.setTestID(rs.getInt("TestID"));
+                test.setTestName(rs.getString("TestName"));
+                test.setDuration(rs.getInt("Duration"));
+                test.setSubjectId(rs.getInt("SubjectID"));
+                test.setClassId(rs.getInt("ClassID"));
+                testList.add(test);
+            }
 
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-       return testList;
-   }
- 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return testList;
+    }
+
     public List<Test> getTestsPaginated(int page, int testsPerPage, String sortBy, String sortOrder) {
         List<Test> testList = new ArrayList<>();
         String sortColumn = "TestID";
         if ("questionCount".equals(sortBy)) {
             sortColumn = "(SELECT COUNT(*) FROM TestQuestions WHERE TestQuestions.testID = Tests.TestID)";
         }
-        String order = "ASC".equalsIgnoreCase(sortOrder) ? "ASC" : "DESC"; 
+        String order = "ASC".equalsIgnoreCase(sortOrder) ? "ASC" : "DESC";
 
         int offset = (page - 1) * testsPerPage;
         xSql = "SELECT * FROM Tests ORDER BY " + sortColumn + " " + order + " LIMIT ? OFFSET ?";
@@ -143,8 +147,9 @@ public class TestDAO extends MyDAO {
                 Test test = new Test();
                 test.setTestID(rs.getInt("TestID"));
                 test.setTestName(rs.getString("TestName"));
-                test.setDescription(rs.getString("Description"));
+                test.setDuration(rs.getInt("Duration"));
                 test.setSubjectId(rs.getInt("SubjectID"));
+                test.setClassId(rs.getInt("ClassID"));
                 testList.add(test);
             }
         } catch (Exception e) {
@@ -152,7 +157,7 @@ public class TestDAO extends MyDAO {
         }
         return testList;
     }
-     
+
     public int countAllTests() {
         xSql = "SELECT COUNT(*) FROM Tests";
         int count = 0;
@@ -167,7 +172,7 @@ public class TestDAO extends MyDAO {
         }
         return count;
     }
-     
+
     public int countTestsByName(String testName) {
         xSql = "SELECT COUNT(*) FROM Tests WHERE TestName LIKE ?";
         int count = 0;
@@ -183,10 +188,10 @@ public class TestDAO extends MyDAO {
         }
         return count;
     }
-    
+
     public int countQuestionsInTest(int testId) {
         int questionCount = 0;
-        xSql = "SELECT COUNT(*) AS QuestionCount FROM TestQuestions WHERE testID = ?";
+        xSql = "SELECT COUNT(*) AS QuestionCount FROM Test_Questions WHERE TestID = ?";
 
         try {
             ps = con.prepareStatement(xSql);
@@ -201,7 +206,7 @@ public class TestDAO extends MyDAO {
 
         return questionCount;
     }
-    
+
     public boolean addTest(Test test) {
         String sql = "INSERT INTO Tests (SubjectID, TestName, Duration, ClassID) VALUES (?, ?, ?, ?)";
         try {
@@ -210,14 +215,16 @@ public class TestDAO extends MyDAO {
             ps.setString(2, test.getTestName());
             ps.setInt(3, test.getDuration());
             ps.setInt(4, test.getClassId());
-            
+
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-           
+
             return false;
         } finally {
             try {
-                if (ps != null) ps.close();
+                if (ps != null) {
+                    ps.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }

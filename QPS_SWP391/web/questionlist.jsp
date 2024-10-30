@@ -61,17 +61,17 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                      <th>
-                                        <a href="?id=${param.id}&sort=chapterId&order=${sortOrder == 'asc' ? 'desc' : 'asc'}">Chapter ID
-                                            <c:if test="${sort == 'chapterId'}">
-                                                <c:choose>
-                                                    <c:when test="${sortOrder == 'asc'}">&#9650;</c:when>
-                                                    <c:otherwise>&#9660;</c:otherwise>
-                                                </c:choose>
-                                            </c:if>
-                                        </a>
-                                    </th>                                    
-                                    <th>Questions</th>
+                                        <th>
+                                            <a href="?id=${param.id}&sort=chapterId&order=${sortOrder == 'asc' ? 'desc' : 'asc'}">Chapter ID
+                                                <c:if test="${sort == 'chapterId'}">
+                                                    <c:choose>
+                                                        <c:when test="${sortOrder == 'asc'}">&#9650;</c:when>
+                                                        <c:otherwise>&#9660;</c:otherwise>
+                                                    </c:choose>
+                                                </c:if>
+                                            </a>
+                                        </th>                                    
+                                        <th>Questions</th>
                                         <th>
                                             <a href="?id=${param.id}&sort=questionTypeId&order=${sortOrder == 'asc' ? 'desc' : 'asc'}">Question Type ID
                                                 <c:if test="${sort == 'questionTypeId'}">
@@ -93,22 +93,21 @@
                                             <td>${q.getChapterId()}</td>
                                             <td>${q.getQuestion()}</td>
                                             <td>${q.getQuestionTypeId()}</td>                                         
-                                            <td>
-                                                <c:if test="${sessionScope.account.roleId != 1}">
-                                                    <a href="editquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-primary btn-sm">Edit</a>
+                                            <td>                                       
+                                                <a href="editquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-primary btn-sm">Edit</a>
                                                     <form action="DeleteQuestionServlet" method="POST" style="display:inline;">
                                                         <input type="hidden" name="id" value="${q.getQuestionID()}">
                                                         <input type="hidden" name="subjectId" value="${param.id}">
                                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
                                                     </form>
-                                                    <a href="detailquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-info btn-sm">Detail</a>
-                                                </c:if>
+
+                                                <a href="detailquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-info btn-sm">Detail</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>
                             </table>
-                                
+
                         </c:otherwise>
                     </c:choose>
 

@@ -6,10 +6,8 @@ public class Test {
     private String testName;
     private int duration;
     private int classId;
-
-    public Test() {
-    }
-
+    private int questionCount;
+    
     public Test(int testId, int subjectId, String testName, int duration, int classId) {
         this.testId = testId;
         this.subjectId = subjectId;
@@ -17,12 +15,15 @@ public class Test {
         this.duration = duration;
         this.classId = classId;
     }
+    
+        public Test() {
+    }
 
     public int getTestId() {
         return testId;
     }
 
-    public void setTestId(int testId) {
+    public void setTestID(int testId) {
         this.testId = testId;
     }
 
@@ -57,6 +58,12 @@ public class Test {
     public void setClassId(int classId) {
         this.classId = classId;
     }
-
     
+    public int getQuestionCount() {
+        return questionCount;
+    }
+     
+    public void setQuestionCount(int questionCount) {
+        this.questionCount = questionCount;
+    }
 }
