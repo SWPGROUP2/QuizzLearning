@@ -3,6 +3,7 @@
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
+    <!-- Servlets -->
     <servlet>
         <servlet-name>ChangePasswordControllers</servlet-name>
         <servlet-class>controllers.ChangePasswordController</servlet-class>
@@ -71,10 +72,6 @@
         <servlet-name>DeleteUser</servlet-name>
         <servlet-class>controllers.DeleteUser</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>AdminHomePageController</servlet-name>
-        <url-pattern>/adminhome</url-pattern>
-    </servlet-mapping>
     <servlet>
         <servlet-name>StudentHomePageController</servlet-name>
         <servlet-class>controllers.StudentHomePageController</servlet-class>
@@ -87,14 +84,23 @@
         <servlet-name>AddUserController</servlet-name>
         <servlet-class>controllers.AddUserController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>controllers.HomeServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mappings -->
+    <servlet>
+        <servlet-name>AddTestController</servlet-name>
+        <servlet-class>controllers.AddTestController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminHomePageController</servlet-name>
+        <url-pattern>/adminhome</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AddUserController</servlet-name>
         <url-pattern>/adduser</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>HomeServlet</servlet-name>
-        <servlet-class>controller.HomeServlet</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>ChangePasswordControllers</servlet-name>
         <url-pattern>/changepassword</url-pattern>
@@ -143,7 +149,7 @@
         <servlet-name>TestList</servlet-name>
         <url-pattern>/test-list</url-pattern>
     </servlet-mapping>
-     <servlet-mapping>
+    <servlet-mapping>
         <servlet-name>DetailQuestion</servlet-name>
         <url-pattern>/detailquestion</url-pattern>
     </servlet-mapping>
@@ -159,10 +165,16 @@
         <servlet-name>DeleteUser</servlet-name>
         <url-pattern>/delete-user</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteQuestionServlet</servlet-name>
+        <url-pattern>/deletequestion</url-pattern>
+    </servlet-mapping>
+    <!-- Session Configuration -->
+    <servlet-mapping>
+        <servlet-name>AddTestController</servlet-name>
+        <url-pattern>/addtest</url-pattern>
+    </servlet-mapping>
     <session-config>
-        <session-timeout>
-            1000
-        </session-timeout>
+        <session-timeout>1000</session-timeout>
     </session-config>
 </web-app>
-

@@ -15,7 +15,7 @@ import models.Question;
 public class QuestionDAO extends MyDAO {
 
     public List<Question> getQuestionsBySubjectId(int subjectId) {
-        xSql = "SELECT * FROM Questions WHERE subjectId = ?";
+        xSql = "SELECT * FROM Questions WHERE SubjectID = ?";
         List<Question> qlist = new ArrayList<>();
         int xQuestionID;
         int xChapterId;
@@ -28,9 +28,9 @@ public class QuestionDAO extends MyDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 xQuestionID = rs.getInt("QuestionID");
-                xChapterId = rs.getInt("chapterId");
+                xChapterId = rs.getInt("ChapterID");
                 xQuestion = rs.getString("Question");
-                xQuestionTypeId = rs.getInt("QuestionTypeId");
+                xQuestionTypeId = rs.getInt("QuestionTypeID");
                 qlist.add(new Question(xQuestionID, subjectId, xChapterId, xQuestion, xQuestionTypeId));
             }
 
@@ -44,10 +44,10 @@ public class QuestionDAO extends MyDAO {
     }
     
     public List<Question> getQuestionsBySubjectIdQuestionTypeIdSorted(int subjectId, String sort, String sortOrder) {
-    String sql = "SELECT * FROM Questions WHERE subjectId = ?";
+    String sql = "SELECT * FROM Questions WHERE SubjectID = ?";
     
     if ("questionType".equals(sort)) {
-        sql += " ORDER BY QuestionTypeId " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
+        sql += " ORDER BY QuestionTypeID " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
     }
     
     List<Question> qlist = new ArrayList<>();
@@ -58,9 +58,9 @@ public class QuestionDAO extends MyDAO {
             qlist.add(new Question(
                 rs.getInt("QuestionID"),
                 subjectId,
-                rs.getInt("chapterId"),
+                rs.getInt("ChapterID"),
                 rs.getString("Question"),
-                rs.getInt("QuestionTypeId")
+                rs.getInt("QuestionTypeID")
             ));
         }
     } catch (SQLException e) {
@@ -70,14 +70,14 @@ public class QuestionDAO extends MyDAO {
     }
     
     public List<Question> getQuestionsBySubjectIdChapterIdSorted(int subjectId, String chapterId, String sort, String sortOrder) {
-    String sql = "SELECT * FROM Questions WHERE subjectId = ?";
+    String sql = "SELECT * FROM Questions WHERE SubjectID = ?";
     if (chapterId != null && !chapterId.isEmpty()) {
-        sql += " AND chapterId = ?";
+        sql += " AND ChapterID = ?";
     }
-    if ("chapterId".equals(sort)) {
-        sql += " ORDER BY chapterId " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
-    } else if ("questionTypeId".equals(sort)) {
-        sql += " ORDER BY questionTypeId " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
+    if ("ChapterID".equals(sort)) {
+        sql += " ORDER BY ChapterID " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
+    } else if ("QuestionTypeID".equals(sort)) {
+        sql += " ORDER BY QuestionTypeID " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
     }
     List<Question> qlist = new ArrayList<>();
     try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -90,9 +90,9 @@ public class QuestionDAO extends MyDAO {
             qlist.add(new Question(
                 rs.getInt("QuestionID"),
                 subjectId,
-                rs.getInt("chapterId"),
+                rs.getInt("ChapterID"),
                 rs.getString("Question"),
-                rs.getInt("QuestionTypeId")
+                rs.getInt("QuestionTypeID")
             ));
         }
     } catch (SQLException e) {
@@ -102,7 +102,7 @@ public class QuestionDAO extends MyDAO {
     }
 
     public void updateQuestion(Question question) {
-            String sql = "UPDATE Questions SET subjectId = ?, chapterId = ?, question = ?, questionTypeId = ? WHERE questionID = ?";
+            String sql = "UPDATE Questions SET SubjectID = ?, ChapterID = ?, question = ?, QuestionTypeID = ? WHERE QuestionID = ?";
             try {
                 PreparedStatement ps = connection.prepareStatement(sql);
                 ps.setInt(1, question.getSubjectId());
@@ -133,7 +133,7 @@ public class QuestionDAO extends MyDAO {
 
     public Question getQuestionById(int questionId) {
         Question question = null;
-        String sql = "SELECT * FROM Questions WHERE questionID = ?";
+        String sql = "SELECT * FROM Questions WHERE QuestionID = ?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -155,7 +155,7 @@ public class QuestionDAO extends MyDAO {
 
 
     public boolean questionExists(int subjectId, String questionText) {
-        String query = "SELECT COUNT(*) FROM Questions WHERE subjectId = ? AND question = ?";
+        String query = "SELECT COUNT(*) FROM Questions WHERE subjectID = ? AND Question = ?";
         try ( PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, subjectId);
             stmt.setString(2, questionText);
@@ -175,8 +175,8 @@ public class QuestionDAO extends MyDAO {
         Question result = new Question();
         List<Question> questions = new ArrayList<>();
 
-        String query = "SELECT * FROM Questions WHERE subjectId = ? LIMIT ? OFFSET ?";
-        String countQuery = "SELECT COUNT(*) FROM Questions WHERE subjectId = ?";
+        String query = "SELECT * FROM Questions WHERE SubjectID = ? LIMIT ? OFFSET ?";
+        String countQuery = "SELECT COUNT(*) FROM Questions WHERE SubjectID = ?";
 
         try (
                  PreparedStatement countStmt = connection.prepareStatement(countQuery);  PreparedStatement queryStmt = connection.prepareStatement(query)) {
@@ -212,7 +212,7 @@ public class QuestionDAO extends MyDAO {
 
         // Correctly obtaining the database connection
         // Use this.getConnection() to get the connection
-        String query = "SELECT DISTINCT chapterId FROM Questions WHERE subjectId = ?"; // Ensure table name is correct
+        String query = "SELECT DISTINCT ChapterID FROM Questions WHERE SubjectID = ?"; // Ensure table name is correct
         try ( PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setInt(1, subjectId);
             ResultSet result = stmt.executeQuery();
@@ -228,7 +228,7 @@ public class QuestionDAO extends MyDAO {
     }
 
     public int addQuestion(Question question) {
-        String sql = "INSERT INTO Questions (subjectId, chapterId, Question, questionTypeId) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Questions (SubjectID, ChapterID, Question, QuestionTypeID) VALUES (?, ?, ?, ?)";
         try ( PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, question.getSubjectId());
             ps.setInt(2, question.getChapterId());
@@ -248,7 +248,7 @@ public class QuestionDAO extends MyDAO {
 
     public List<Question> getQuestionsByChapter(int subjectId, String chapterId) {
         List<Question> questions = new ArrayList<>();
-        String sql = "SELECT * FROM Questions WHERE subjectId = ? AND chapterId = ?";
+        String sql = "SELECT * FROM Questions WHERE SubjectID = ? AND ChapterID = ?";
 
         try ( PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, subjectId);
