@@ -1,5 +1,6 @@
-CREATE DATABASE SWPQuiz;
 DROP DATABASE IF EXISTS SWPQuiz;
+CREATE DATABASE SWPQuiz;
+
 USE SWPQuiz;
 
 
@@ -58,7 +59,7 @@ CREATE TABLE Questions (
     ChapterID INT,
     QuestionTypeID INT,
     Question VARCHAR(255) CHARACTER SET utf8mb4,
-    FOREIGN KEY (subjectID) REFERENCES Subject(subjectID)
+    FOREIGN KEY (subjectID) REFERENCES Subject(subjectID) ON DELETE CASCADE
 );
 
 INSERT INTO Questions (SubjectID, ChapterID, QuestionTypeID, Question) 
@@ -71,7 +72,7 @@ CREATE TABLE Options (
     QuestionID INT,
     OptionText VARCHAR(1000) CHARACTER SET utf8mb4,
     IsCorrect BIT,
-    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID)
+    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID) ON DELETE CASCADE
 );
 
 INSERT INTO Options (QuestionID, OptionText, IsCorrect) 
@@ -118,4 +119,5 @@ CREATE TABLE Test_Questions (
 INSERT INTO Test_Questions (TestID, QuestionID) 
 VALUES 
 (1, 1), 
+(1, 2),
 (2, 2);
