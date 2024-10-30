@@ -9,21 +9,19 @@ public class Question {
     private int chapterId;
     private int questionTypeId;
     private String question;
-
+private String questionTypeName;
     // No-argument constructor if needed
     public Question() {
     }
-
-    // Parameterized constructor
-    public Question(int questionID, int subjectId, int chapterId, String question, int questionTypeId) {
+    public Question(int questionID, int subjectId, int chapterId, String question, int questionTypeId, String questionTypeName) {
         this.questionID = questionID;
         this.subjectId = subjectId;
         this.chapterId = chapterId;
         this.question = question;
         this.questionTypeId = questionTypeId;
+        this.questionTypeName = questionTypeName;
     }
 
-    // Getters and Setters
     public int getQuestionID() {
         return questionID;
     }
@@ -81,6 +79,14 @@ public class Question {
 
     public void setTotalCount(int totalCount) {
         this.totalCount = totalCount;
+    }
+    
+        public String getQuestionTypeName() {
+        return questionTypeName;
+    }
+
+    public void setQuestionTypeName(String questionTypeName) {
+        this.questionTypeName = questionTypeName;
     }
 
 }

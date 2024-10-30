@@ -10,7 +10,10 @@ import models.Question;
 public class QuestionDAO extends MyDAO {
 
     public List<Question> getQuestionsBySubjectId(int subjectId) {
-        String sql = "SELECT * FROM Questions WHERE SubjectID = ?";
+        String sql = "SELECT q.*, qt.QuestionTypeName " +
+                     "FROM Questions q " +
+                     "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID " +
+                     "WHERE q.SubjectID = ?";
         List<Question> qlist = new ArrayList<>();
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -22,47 +25,48 @@ public class QuestionDAO extends MyDAO {
                         rs.getInt("SubjectID"),
                         rs.getInt("ChapterID"),
                         rs.getString("Question"),
-                        rs.getInt("QuestionTypeID")
+                        rs.getInt("QuestionTypeID"),
+                        rs.getString("QuestionTypeName")  // Retrieve questionTypeName
                     ));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return qlist;
     }
 
-    public List<Question> getQuestionsBySubjectIdChapterIdSorted(int subjectId, String chapterId, String sort, String sortOrder) {
-    String sql = "SELECT * FROM Questions WHERE SubjectID = ?";
-    if (chapterId != null && !chapterId.isEmpty()) {
-        sql += " AND ChapterID = ?";
-    }
-    if ("chapterId".equals(sort)) {
-        sql += " ORDER BY ChapterID " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
-    } else if ("questionTypeId".equals(sort)) {
-        sql += " ORDER BY questionTypeId " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
-    }
-    List<Question> qlist = new ArrayList<>();
-    try (PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setInt(1, subjectId);
+     public List<Question> getQuestionsBySubjectIdChapterIdSorted(int subjectId, String chapterId, String sort, String sortOrder) {
+        String sql = "SELECT q.*, qt.QuestionTypeName " +
+                     "FROM Questions q " +
+                     "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID " +
+                     "WHERE q.SubjectID = ?";
         if (chapterId != null && !chapterId.isEmpty()) {
-            ps.setString(2, chapterId);
-        }     
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            qlist.add(new Question(
-                rs.getInt("QuestionID"),
-                subjectId,
-                rs.getInt("ChapterID"),
-                rs.getString("Question"),
-                rs.getInt("QuestionTypeId")
-            ));
+            sql += " AND q.ChapterID = ?";
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return qlist;
+        sql += " ORDER BY " + sort + " " + (sortOrder.equals("desc") ? "DESC" : "ASC");
+
+        List<Question> qlist = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, subjectId);
+            if (chapterId != null && !chapterId.isEmpty()) {
+                ps.setString(2, chapterId);
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                qlist.add(new Question(
+                    rs.getInt("QuestionID"),
+                    subjectId,
+                    rs.getInt("ChapterID"),
+                    rs.getString("Question"),
+                    rs.getInt("QuestionTypeID"),
+                    rs.getString("QuestionTypeName")  
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return qlist;
     }
     
     public List<Question> getQuestionsBySubjectIdQuestionTypeIdSorted(int subjectId, String chapterId, String sort, String sortOrder) {
@@ -82,7 +86,8 @@ public class QuestionDAO extends MyDAO {
                 subjectId,
                 rs.getInt("ChapterID"),
                 rs.getString("Question"),
-                rs.getInt("QuestionTypeId")
+                rs.getInt("QuestionTypeId"),
+                rs.getString("QuestionTypeName")
             ));
         }
     } catch (SQLException e) {
@@ -119,8 +124,8 @@ public class QuestionDAO extends MyDAO {
             }
         }
 
-    public Question getQuestionById(int questionId) {
-        String sql = "SELECT * FROM Questions WHERE QuestionID = ?";
+public Question getQuestionById(int questionId) {
+        String sql = "SELECT q.*, qt.QuestionTypeName FROM Questions q JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID WHERE q.QuestionID = ?";
         Question question = null;
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -132,7 +137,8 @@ public class QuestionDAO extends MyDAO {
                         rs.getInt("SubjectID"),
                         rs.getInt("ChapterID"),
                         rs.getString("Question"),
-                        rs.getInt("QuestionTypeID")
+                        rs.getInt("QuestionTypeID"),
+                        rs.getString("QuestionTypeName")
                     );
                 }
             }
@@ -198,7 +204,7 @@ public class QuestionDAO extends MyDAO {
         Question result = new Question();
         List<Question> questions = new ArrayList<>();
 
-        String query = "SELECT * FROM Questions WHERE SubjectID = ? LIMIT ? OFFSET ?";
+        String query = "SELECT q.*, qt.QuestionTypeName FROM Questions q JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID WHERE q.SubjectID = ? LIMIT ? OFFSET ?";
         String countQuery = "SELECT COUNT(*) FROM Questions WHERE SubjectID = ?";
 
         try (
@@ -224,7 +230,8 @@ public class QuestionDAO extends MyDAO {
                         rs.getInt("SubjectID"),
                         rs.getInt("ChapterID"),
                         rs.getString("Question"),
-                        rs.getInt("QuestionTypeID")
+                        rs.getInt("QuestionTypeID"),
+                        rs.getString("QuestionTypeName")
                     ));
                 }
             }
