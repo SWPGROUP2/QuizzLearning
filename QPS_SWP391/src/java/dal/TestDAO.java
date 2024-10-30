@@ -5,6 +5,7 @@ import models.Question;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class TestDAO extends MyDAO {
                 testID = rs.getInt("testID");
                 testName = rs.getString("testName");
                 description = rs.getString("description");
-                testList.add(new Test(testID, subjectId, testName, description));
+                testList.add(new Test(testID, subjectId, testName);
             }
             rs.close();
             ps.close();
@@ -199,5 +200,28 @@ public class TestDAO extends MyDAO {
         }
 
         return questionCount;
+    }
+    
+    public boolean addTest(Test test) {
+        String sql = "INSERT INTO Tests (SubjectID, TestName, Duration, ClassID) VALUES (?, ?, ?, ?)";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, test.getSubjectId());
+            ps.setString(2, test.getTestName());
+            ps.setInt(3, test.getDuration());
+            ps.setInt(4, test.getClassId());
+            
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error in addTest: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

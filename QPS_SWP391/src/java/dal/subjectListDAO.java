@@ -18,7 +18,7 @@ import models.subject;
 public class subjectListDAO extends MyDAO {
 
     public List<subject> getAllSubject() {
-        xSql = "select * from [Subject]";
+        xSql = "select * from Subject";
         List<subject> slist = new ArrayList<>();
 
         int xsubjectId;

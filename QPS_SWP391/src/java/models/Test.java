@@ -1,28 +1,29 @@
 package models;
 
 public class Test {
-    private int testID;
+    private int testId;
     private int subjectId;
     private String testName;
-    private String description;
-    private int questionCount;
-
-    public Test(int testID, int subjectId, String testName, String description) {
-        this.testID = testID;
-        this.subjectId = subjectId;
-        this.testName = testName;
-        this.description = description;
-    }
+    private int duration;
+    private int classId;
 
     public Test() {
     }
 
-    public int getTestID() {
-        return testID;
+    public Test(int testId, int subjectId, String testName, int duration, int classId) {
+        this.testId = testId;
+        this.subjectId = subjectId;
+        this.testName = testName;
+        this.duration = duration;
+        this.classId = classId;
     }
 
-    public void setTestID(int testID) {
-        this.testID = testID;
+    public int getTestId() {
+        return testId;
+    }
+
+    public void setTestId(int testId) {
+        this.testId = testId;
     }
 
     public int getSubjectId() {
@@ -41,19 +42,21 @@ public class Test {
         this.testName = testName;
     }
 
-    public String getDescription() {
-        return description;
+    public int getDuration() {
+        return duration;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
+
+    public int getClassId() {
+        return classId;
+    }
+
+    public void setClassId(int classId) {
+        this.classId = classId;
+    }
+
     
-     public int getQuestionCount() {
-        return questionCount;
-    }
-
-    public void setQuestionCount(int questionCount) {
-        this.questionCount = questionCount;
-    }
 }
