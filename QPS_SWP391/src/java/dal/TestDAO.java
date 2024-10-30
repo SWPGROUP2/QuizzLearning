@@ -213,8 +213,7 @@ public class TestDAO extends MyDAO {
             
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Error in addTest: " + e.getMessage());
-            e.printStackTrace();
+           
             return false;
         } finally {
             try {
