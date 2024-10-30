@@ -46,6 +46,7 @@ public class TestDAO extends MyDAO {
         int xChapterId;
         String xQuestion;
         int xQuestionTypeId;
+        String xQuestionTypeName;
         boolean isInTest;
         try {
             ps = con.prepareStatement(xSql);
@@ -57,8 +58,9 @@ public class TestDAO extends MyDAO {
                 xChapterId = rs.getInt("chapterId");
                 xQuestion = rs.getString("Question");
                 xQuestionTypeId = rs.getInt("QuestionTypeId");
+                xQuestionTypeName = rs.getString("QuestionTypeName");
                 isInTest = rs.getInt("isInTest") == 1;
-                qlist.add(new Question(xQuestionID, subjectId, xChapterId, xQuestion, xQuestionTypeId));
+                qlist.add(new Question(xQuestionID, subjectId, xChapterId, xQuestion, xQuestionTypeId,xQuestionTypeName));
             }
             rs.close();
             ps.close();

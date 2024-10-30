@@ -73,7 +73,7 @@
                                         </th>                                    
                                         <th>Questions</th>
                                         <th>
-                                            <a href="?id=${param.id}&sort=questionTypeId&order=${sortOrder == 'asc' ? 'desc' : 'asc'}">Question Type ID
+                                            <a href="?id=${param.id}&sort=questionTypeId&order=${sortOrder == 'asc' ? 'desc' : 'asc'}">Question Type
                                                 <c:if test="${sort == 'questionTypeId'}">
                                                     <c:choose>
                                                         <c:when test="${sortOrder == 'asc'}">&#9650;</c:when>
@@ -92,7 +92,7 @@
                                             <td>${status.index + 1}</td> 
                                             <td>${q.getChapterId()}</td>
                                             <td>${q.getQuestion()}</td>
-                                            <td>${q.getQuestionTypeId()}</td>                                         
+                                            <td>${q.getQuestionTypeName()}</td>                                         
                                             <td>                                       
                                                 <a href="editquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-primary btn-sm">Edit</a>
                                                     <form action="DeleteQuestionServlet" method="POST" style="display:inline;">
@@ -100,7 +100,6 @@
                                                         <input type="hidden" name="subjectId" value="${param.id}">
                                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
                                                     </form>
-
                                                 <a href="detailquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-info btn-sm">Detail</a>
                                             </td>
                                         </tr>
