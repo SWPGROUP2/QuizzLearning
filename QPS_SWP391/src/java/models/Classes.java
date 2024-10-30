@@ -16,13 +16,8 @@ public class Classes {
         this.classID = classID;
         this.className = className;
         this.userId = userId;
-    }
-
-  
+    }  
     
-
-    
-
     public int getClassID() {
         return classID;
     }

@@ -71,20 +71,20 @@
                             <tbody>
                                 <c:forEach var="test" items="${tests}">
                                     <tr>
-                                        <td>${test.testID}</td>
+                                        <td>${test.testId}</td>
                                         <td>${test.testName}</td>
                                         <td>${test.questionCount}</td>
                                         <td>
                                             <form action="testDetail" method="get" class="d-inline">
-                                                <input type="hidden" name="testID" value="${test.testID}">
+                                                <input type="hidden" name="testID" value="${test.testId}">
                                                 <button type="submit" class="btn btn-info btn-sm">Detail</button>
                                             </form>
                                             <form action="editTest" method="get" class="d-inline">
-                                                <input type="hidden" name="testID" value="${test.testID}">
+                                                <input type="hidden" name="testID" value="${test.testId}">
                                                 <button type="submit" class="btn btn-primary btn-sm">Edit</button>
                                             </form>
                                             <form action="deleteTest" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this test?');">
-                                                <input type="hidden" name="testID" value="${test.testID}">
+                                                <input type="hidden" name="testID" value="${test.testId}">
                                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                             </form>
                                         </td>

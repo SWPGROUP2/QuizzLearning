@@ -3,7 +3,6 @@
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
-    <!-- Servlets -->
     <servlet>
         <servlet-name>ChangePasswordControllers</servlet-name>
         <servlet-class>controllers.ChangePasswordController</servlet-class>
@@ -93,6 +92,10 @@
         <servlet-name>AddTestController</servlet-name>
         <servlet-class>controllers.AddTestController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>QuestionService</servlet-name>
+        <servlet-class>controllers.QuestionService</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminHomePageController</servlet-name>
         <url-pattern>/adminhome</url-pattern>
@@ -166,13 +169,12 @@
         <url-pattern>/delete-user</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>DeleteQuestionServlet</servlet-name>
-        <url-pattern>/deletequestion</url-pattern>
-    </servlet-mapping>
-    <!-- Session Configuration -->
-    <servlet-mapping>
         <servlet-name>AddTestController</servlet-name>
         <url-pattern>/addtest</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>QuestionService</servlet-name>
+        <url-pattern>/QuestionService</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>1000</session-timeout>

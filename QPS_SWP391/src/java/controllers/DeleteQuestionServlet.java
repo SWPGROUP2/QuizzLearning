@@ -28,7 +28,7 @@ public class DeleteQuestionServlet extends HttpServlet {
     }
  @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response); // Delegate to doPost for deletion logic
+        doPost(request, response);
     }
      @Override
     public String getServletInfo() {
