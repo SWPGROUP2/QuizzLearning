@@ -1,6 +1,6 @@
 package controllers;
 
-import dal.subjectListDAO;
+import dal.SubjectDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -19,7 +19,7 @@ public class AddSubject extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        subjectListDAO dao = new subjectListDAO();
+        SubjectDAO dao = new SubjectDAO();
 
         String name = request.getParameter("name");
         String title = request.getParameter("title");

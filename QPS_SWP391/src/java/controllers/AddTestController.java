@@ -6,7 +6,7 @@ package controllers;
 
 import dal.ClassDAO;
 import dal.TestDAO;
-import dal.subjectListDAO;
+import dal.SubjectDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -54,12 +54,12 @@ public class AddTestController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        subjectListDAO subjecdao = new subjectListDAO();
+        SubjectDAO subjecdao = new SubjectDAO();
         ClassDAO classdao = new ClassDAO();
 
         List<subject> subjects = subjecdao.getAllSubject();
         List<Classes> classlist = classdao.getAllClasses();
-        
+
         request.setAttribute("subjects", subjects);
         request.setAttribute("classlist", classlist);
         request.getRequestDispatcher("addtest.jsp").forward(request, response);
@@ -80,31 +80,35 @@ public class AddTestController extends HttpServlet {
         int classId = Integer.parseInt(request.getParameter("class"));
         String testName = request.getParameter("testName");
         int duration = Integer.parseInt(request.getParameter("duration"));
-        
+
         Test test = new Test();
         test.setSubjectId(subjectId);
         test.setClassId(classId);
         test.setTestName(testName);
         test.setDuration(duration);
-        
+
         TestDAO testdao = new TestDAO();
         boolean success = testdao.addTest(test);
-        
+
         if (success) {
-            response.sendRedirect("addtest.jsp"); 
+            int testId = testdao.getTestId(testName, subjectId, classId, duration);
+            if (testId > 0) {
+                response.sendRedirect("edittest?testId=" + testId);
+            } else {
+
+                response.sendRedirect("addtest.jsp");
+            }
         } else {
-            // Nếu có lỗi, quay lại trang add test với thông báo lỗi
             request.setAttribute("error", "Failed to add test. Please try again.");
-            
-            // Lấy lại danh sách subjects và classes để hiển thị form
-            subjectListDAO subjecdao = new subjectListDAO();
+
+            SubjectDAO subjecdao = new SubjectDAO();
             ClassDAO classdao = new ClassDAO();
             List<subject> subjects = subjecdao.getAllSubject();
             List<Classes> classlist = classdao.getAllClasses();
-            
+
             request.setAttribute("subjects", subjects);
             request.setAttribute("classlist", classlist);
-            
+
             request.getRequestDispatcher("addtest.jsp").forward(request, response);
         }
     }

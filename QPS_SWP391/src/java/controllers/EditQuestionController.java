@@ -36,7 +36,7 @@ public class EditQuestionController extends HttpServlet {
             request.getRequestDispatcher("editquestion.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
-            response.sendRedirect("error.jsp");
+            
         }
 
     }

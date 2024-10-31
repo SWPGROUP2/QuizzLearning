@@ -15,7 +15,7 @@ import models.subject;
  *
  * @author dungmuahahaha
  */
-public class subjectListDAO extends MyDAO {
+public class SubjectDAO extends MyDAO {
 
     public List<subject> getAllSubject() {
         xSql = "select * from Subject";

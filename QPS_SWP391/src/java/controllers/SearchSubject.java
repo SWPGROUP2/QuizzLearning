@@ -1,6 +1,6 @@
 package controllers;
 
-import dal.subjectListDAO;
+import dal.SubjectDAO;
 import java.util.List;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -42,7 +42,7 @@ public class SearchSubject extends HttpServlet {
         }
 
         // Gọi phương thức DAO để tìm kiếm với phân trang
-        subjectListDAO dao = new subjectListDAO();
+        SubjectDAO dao = new SubjectDAO();
         List<subject> subjectList = dao.searchSubjectsByNameWithPaging(keyword, page, PAGE_SIZE);
 
         // Tính tổng số kết quả (tổng số trang để hiển thị pagination)

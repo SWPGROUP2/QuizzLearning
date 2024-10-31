@@ -1,6 +1,6 @@
 package controllers;
 
-import dal.subjectListDAO;
+import dal.SubjectDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -13,7 +13,7 @@ public class DeleteSubject extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Lấy subjectId từ request
         String subjectIdParam = request.getParameter("subjectId");
-        subjectListDAO dao = new subjectListDAO();
+        SubjectDAO dao = new SubjectDAO();
         if (subjectIdParam != null && !subjectIdParam.isEmpty()) {
             int subjectId = Integer.parseInt(subjectIdParam);
 
