@@ -76,7 +76,7 @@ public class AddTestController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int subjectId = Integer.parseInt(request.getParameter("subject"));
+        int subjectId = Integer.parseInt(request.getParameter("subjectId"));
         int classId = Integer.parseInt(request.getParameter("class"));
         String testName = request.getParameter("testName");
         int duration = Integer.parseInt(request.getParameter("duration"));
@@ -93,9 +93,8 @@ public class AddTestController extends HttpServlet {
         if (success) {
             int testId = testdao.getTestId(testName, subjectId, classId, duration);
             if (testId > 0) {
-                response.sendRedirect("edittest?testId=" + testId);
+                response.sendRedirect("edittest?testId=" + testId + "&subjectId=" + subjectId);
             } else {
-
                 response.sendRedirect("addtest.jsp");
             }
         } else {
