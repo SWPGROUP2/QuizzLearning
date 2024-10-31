@@ -1,21 +1,26 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
 package controllers;
 
-import dal.SubjectDAO;
-import java.util.List;
+import dal.QuestionDAO;
+import dal.TestDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import models.subject;
+import java.util.List;
+import models.Question;
+import models.Test;
 
 /**
  *
  * @author Admin
  */
-public class SubjectList extends HttpServlet {
+public class DetailTestController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,10 +39,10 @@ public class SubjectList extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SubjectList</title>");
+            out.println("<title>Servlet DetailTestController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SubjectList at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DetailTestController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,30 +60,20 @@ public class SubjectList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
-        response.setContentType("text/html;charset=UTF-8");
+        String testIdParam = request.getParameter("testId");
+        int testId = Integer.parseInt(testIdParam);
 
-        final int PAGE_SIZE = 3;
-        int page = 1;
-        String pageStr = request.getParameter("page");
-        if (pageStr != null) {
-            page = Integer.parseInt(pageStr);
-        }
-        int totalSearch = new SubjectDAO().getTotalSubject();
-        int totalPage = totalSearch / PAGE_SIZE;
-        if (totalSearch % PAGE_SIZE != 0) {
-            totalPage += 1;
-        }
+        TestDAO testdao = new TestDAO();
+        QuestionDAO quesdao = new QuestionDAO();
 
-        SubjectDAO subjectListDAO = new SubjectDAO();
+        Test test = testdao.getTestById(testId);
+        List<Question> questions = quesdao.getQuestionsBySubjectId(testId);
 
-        List<subject> listSubjectsByPagging = subjectListDAO.getListSubjectsByPagging(page, PAGE_SIZE);
-        request.setAttribute("listSubjectsByPagging", listSubjectsByPagging);
+        request.setAttribute("test", test);
+        request.setAttribute("questions", questions);
 
-        request.setAttribute("page", page);
-        request.setAttribute("totalPage", totalPage);
-        request.setAttribute("pagination_url", "subject-list?");
-        request.getRequestDispatcher("subject.jsp").forward(request, response);
+        request.getRequestDispatcher("detailtest.jsp").forward(request, response);
+
     }
 
     /**

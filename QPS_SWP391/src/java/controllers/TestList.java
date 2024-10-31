@@ -10,16 +10,17 @@ import dal.TestDAO;
 import models.Test;
 
 public class TestList extends HttpServlet {
+
     TestDAO testDAO = new TestDAO();
     private static final int testsPerPage = 5;
 
-   @Override
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String searchQuery = request.getParameter("searchQuery");
         String pageParam = request.getParameter("page");
         String sortBy = request.getParameter("sortBy");
-        String sortOrder = request.getParameter("sortOrder"); 
+        String sortOrder = request.getParameter("sortOrder");
 
         int currentPage = 1;
         if (pageParam != null) {
@@ -28,6 +29,7 @@ public class TestList extends HttpServlet {
 
         List<Test> tests;
         int totalTests;
+
         if (searchQuery != null && !searchQuery.isEmpty()) {
             tests = testDAO.searchTestsByName(searchQuery, currentPage, testsPerPage, sortBy, sortOrder);
             totalTests = testDAO.countTestsByName(searchQuery);
@@ -49,6 +51,7 @@ public class TestList extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("sortBy", sortBy);
         request.setAttribute("sortOrder", sortOrder);
-        request.getRequestDispatcher("testList.jsp").forward(request, response); 
+
+        request.getRequestDispatcher("testList.jsp").forward(request, response);
     }
 }

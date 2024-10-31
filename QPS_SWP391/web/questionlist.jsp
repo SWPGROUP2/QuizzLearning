@@ -32,26 +32,29 @@
                 <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
                     <%@include file="Components/Sidebar.jsp" %>
                 </div>
-                <div class="col-md-10" >
+                <div class="col-md-10">
+                    <div class="d-flex align-items-center mb-2">
+                        <a href="subject-list" class="btn btn-dark mr-8">Back to Subject</a>
+                        <h1 class="flex-grow-1 text-center mb-0">Question List</h1>
+                        
+                    </div>
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <a href="subject-list" class="btn btn-dark">Back to Subject</a>   
-                        <h1>Question List</h1>
+                        <form action="questionlist" method="GET" class="form-inline">
+                            <input type="hidden" name="id" value="${param.id}"> 
+                            <label for="chapterFilter" class="mr-2">Filter by Chapter:</label>
+                            <select id="chapterFilter" name="chapterId" class="form-control mr-2">
+                                <option value="">All Chapters</option>
+                                <c:forEach var="chapter" items="${chapterSet}">
+                                    <option value="${chapter}" 
+                                            <c:if test="${param.chapterId == chapter}">selected</c:if>>Chapter ${chapter}</option>
+                                </c:forEach>
+                            </select>
+                            <button type="submit" class="btn btn-primary mr-2">Filter</button>
+                        </form>
                         <c:if test="${sessionScope.account.roleId != 1}">
                             <a href="addquestion?subjectId=${param.id}" class="btn btn-primary">Add</a>
                         </c:if>
                     </div>
-                    <form action="questionlist" method="GET" class="form-inline mb-3">
-                        <input type="hidden" name="id" value="${param.id}"> 
-                        <label for="chapterFilter" class="mr-2">Filter by Chapter:</label>
-                        <select id="chapterFilter" name="chapterId" class="form-control mr-2">
-                            <option value="">All Chapters</option>
-                            <c:forEach var="chapter" items="${chapterSet}">
-                                <option value="${chapter}" 
-                                        <c:if test="${param.chapterId == chapter}">selected</c:if>>Chapter ${chapter}</option>
-                            </c:forEach>
-                        </select>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                    </form>
                     <c:choose>
                         <c:when test="${questionList == null || questionList.size() == 0}">
                             <p>No questions found for this subject.</p>
@@ -62,7 +65,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>
-                                            <a href="?id=${param.id}&sort=chapterId&order=${sortOrder == 'asc' ? 'desc' : 'asc'}">Chapter ID
+                                            <a href="?id=${param.id}&sort=chapterId&order=${sortOrder == 'asc' ? 'desc' : 'asc'}">Chapter No
                                                 <c:if test="${sort == 'chapterId'}">
                                                     <c:choose>
                                                         <c:when test="${sortOrder == 'asc'}">&#9650;</c:when>
@@ -95,21 +98,19 @@
                                             <td>${q.getQuestionTypeName()}</td>                                         
                                             <td>                                       
                                                 <a href="editquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-primary btn-sm">Edit</a>
-                                                    <form action="DeleteQuestionServlet" method="POST" style="display:inline;">
-                                                        <input type="hidden" name="id" value="${q.getQuestionID()}">
-                                                        <input type="hidden" name="subjectId" value="${param.id}">
-                                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
-                                                    </form>
+                                                <form action="DeleteQuestionServlet" method="POST" style="display:inline;">
+                                                    <input type="hidden" name="id" value="${q.getQuestionID()}">
+                                                    <input type="hidden" name="subjectId" value="${param.id}">
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
+                                                </form>
                                                 <a href="detailquestion?questionId=${q.getQuestionID()}&subjectId=${param.id}" class="btn btn-info btn-sm">Detail</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>
                             </table>
-
                         </c:otherwise>
                     </c:choose>
-
                     <div class="pagination">
                         <c:if test="${currentPage > 1}">
                             <a href="?id=${param.id}&chapterId=${param.chapterId}&page=${currentPage - 1}" class="btn btn-secondary">Previous</a>
@@ -124,5 +125,8 @@
                 </div>
             </div>
         </div>
+
+
+
     </body>
 </html>

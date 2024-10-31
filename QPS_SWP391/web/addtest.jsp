@@ -38,10 +38,10 @@
                         <input type="text" class="form-control" id="testName" name="testName" required>
                     </div>
                     <div class="form-group">
-                        <label for="duration">Duration(m):</label>
+                        <label for="duration">Duration (minutes):</label>
                         <input type="number" class="form-control" id="duration" name="duration" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add Test</button>
+                    <button type="submit" class="btn btn-primary">Continue</button>
                 </form>
             </div>
         </div>

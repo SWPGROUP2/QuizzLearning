@@ -60,7 +60,7 @@ public class TestDAO extends MyDAO {
                 xQuestionTypeId = rs.getInt("QuestionTypeId");
                 xQuestionTypeName = rs.getString("QuestionTypeName");
                 isInTest = rs.getInt("isInTest") == 1;
-                qlist.add(new Question(xQuestionID, subjectId, xChapterId, xQuestion, xQuestionTypeId,xQuestionTypeName));
+                qlist.add(new Question(xQuestionID, subjectId, xChapterId, xQuestion, xQuestionTypeId, xQuestionTypeName));
             }
             rs.close();
             ps.close();
@@ -232,4 +232,87 @@ public class TestDAO extends MyDAO {
             }
         }
     }
+
+    public int getTestId(String testName, int subjectId, int classId, int duration) {
+        int testId = -1;
+        String sql = "SELECT TestID FROM Tests WHERE testName = ? AND subjectId = ? AND classId = ? AND duration = ? ORDER BY TestID DESC LIMIT 1";
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, testName);
+            ps.setInt(2, subjectId);
+            ps.setInt(3, classId);
+            ps.setInt(4, duration);
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    testId = rs.getInt("TestID");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return testId;
+    }
+
+    public Test getTestById(int testId) {
+        Test test = null;
+        String sql = "SELECT * FROM Tests WHERE TestID = ?";
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, testId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    test = new Test();
+                    test.setTestID(rs.getInt("TestID"));
+                    test.setSubjectId(rs.getInt("subjectId"));
+                    test.setClassId(rs.getInt("classId"));
+                    test.setTestName(rs.getString("testName"));
+                    test.setDuration(rs.getInt("duration"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return test;
+    }
+
+    public List<Question> getQuestionsByTestId(int testId) {
+        List<Question> questions = new ArrayList<>();
+        String sql = "SELECT * FROM Test_Questions WHERE TestID = ?";
+        try {PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, testId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Question question = new Question();
+                question.setQuestionID(rs.getInt("questionID"));
+                questions.add(question);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return questions;
+    }
+    
+    public void updateTest(Test test) {
+    String sql = "UPDATE Tests SET testName = ?, duration = ?, classId = ?, subjectId = ? WHERE testId = ?";
+    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+        pstmt.setString(1, test.getTestName());
+        pstmt.setInt(2, test.getDuration());
+        pstmt.setInt(3, test.getClassId());
+        pstmt.setInt(4, test.getSubjectId());
+        pstmt.setInt(5, test.getTestId());
+
+        pstmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+    
+    
+
 }
