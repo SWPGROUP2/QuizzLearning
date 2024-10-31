@@ -19,7 +19,7 @@
                 <form action="addtest" method="post">
                     <div class="form-group">
                         <label for="subject">Subject:</label>
-                        <select class="form-control" id="subject" name="subject" required>
+                        <select class="form-control" id="subject" name="subjectId" required>
                             <c:forEach var="subject" items="${subjects}">
                                 <option value="${subject.subjectId}">${subject.subjectName}</option>
                             </c:forEach>
