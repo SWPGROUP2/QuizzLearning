@@ -102,12 +102,6 @@
                         </div>
                     </row>
 
-                    <row> 
-                        <div>
-                            <h5>Don't have an account? <a href="/signup.jsp" class="text-decoration-none">Sign up</a></h5>
-                        </div>
-                    </row>
-
                 </row>
 
                 <row > 
