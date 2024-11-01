@@ -44,6 +44,7 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
+                                    <td>Subject ID
                                     <th>
                                         <a href="test-list?sortBy=testID&sortOrder=${sortOrder == 'ASC' ? 'DESC' : 'ASC'}&searchQuery=${searchQuery}">Test No
                                             <c:if test="${sortBy == 'testID'}">
@@ -71,6 +72,7 @@
                             <tbody>
                                 <c:forEach var="test" items="${tests}">
                                     <tr>
+                                        <td>${test.subjectId}</td>
                                         <td>${test.testId}</td>
                                         <td>${test.testName}</td>
                                         <td>${test.questionCount}</td>
@@ -110,5 +112,3 @@
         </div>
     </body>
 </html>
-
-    

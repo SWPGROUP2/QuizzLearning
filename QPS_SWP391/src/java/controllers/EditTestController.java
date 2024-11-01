@@ -67,11 +67,7 @@ public class EditTestController extends HttpServlet {
         String testIdParam = request.getParameter("testId");
         String subjectIdParam = request.getParameter("subjectId");
 
-        // Kiểm tra xem cả hai tham số có tồn tại không
-        if (testIdParam == null || subjectIdParam == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Test ID and Subject ID are required");
-            return;
-        }
+        
 
         try {
             int testId = Integer.parseInt(testIdParam);
@@ -92,13 +88,10 @@ public class EditTestController extends HttpServlet {
             request.setAttribute("classes", classes);
             request.setAttribute("subjects", subjects);
 
-            // Ghi nhận vào console để kiểm tra
-            System.out.println("Questions retrieved: " + questions.size());
 
             request.getRequestDispatcher("edittest.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Test ID or Subject ID");
         }
     }
 

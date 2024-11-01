@@ -98,7 +98,6 @@ public class AddTestController extends HttpServlet {
                 response.sendRedirect("addtest.jsp");
             }
         } else {
-            request.setAttribute("error", "Failed to add test. Please try again.");
 
             SubjectDAO subjecdao = new SubjectDAO();
             ClassDAO classdao = new ClassDAO();

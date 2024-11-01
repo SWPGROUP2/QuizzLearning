@@ -74,8 +74,16 @@
                             <tbody>
                                 <c:forEach var="question" items="${questions}">
                                     <tr>
-                                        <td><input type="checkbox" name="questionIds" value="${question.questionID}"></td>
-                                        <td>${question.chapterID}</td>
+                                        <td>
+                                            <input type="checkbox" 
+                                                   name="questionIds" 
+                                                   value="${question.questionID}"
+                                                   <c:forEach var="selectedQuestion" items="${selectedQuestions}">
+                                                       <c:if test="${selectedQuestion.questionID == question.questionID}">checked</c:if>
+                                                   </c:forEach>
+                                                   >
+                                        </td>
+                                        <td>${question.chapterId}</td>
                                         <td>${question.question}</td>
                                         <td>${question.questionTypeName}</td>
                                     </tr>
