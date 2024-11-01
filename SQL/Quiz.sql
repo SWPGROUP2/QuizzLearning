@@ -51,7 +51,7 @@ CREATE TABLE QuestionType (
     QuestionTypeName VARCHAR(255) CHARACTER SET utf8mb4
 );
 
-INSERT INTO QuestionType (QuestionTypeName) VALUES ('single-choice'), ('matching'), ('order');
+INSERT INTO QuestionType (QuestionTypeName) VALUES ('Multiple-choice'), ('Short-answer');
 
 CREATE TABLE Questions (
     QuestionID INT AUTO_INCREMENT PRIMARY KEY,
