@@ -12,6 +12,16 @@ public class QuestionType {
     private int QuestionTypeId;
     private String QuestionTypeName;
 
+    public QuestionType() {
+    }
+
+    public QuestionType(int QuestionTypeId, String QuestionTypeName) {
+        this.QuestionTypeId = QuestionTypeId;
+        this.QuestionTypeName = QuestionTypeName;
+    }
+    
+   
+
     public int getQuestionTypeId() {
         return QuestionTypeId;
     }

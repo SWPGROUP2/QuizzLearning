@@ -6,7 +6,27 @@ public class Test {
     private String testName;
     private int duration;
     private int classId;
+    private int questionTypeId;
     private int questionCount;
+
+    public Test(int testId, int subjectId, String testName, int duration, int classId, int questionTypeId, int questionCount) {
+        this.testId = testId;
+        this.subjectId = subjectId;
+        this.testName = testName;
+        this.duration = duration;
+        this.classId = classId;
+        this.questionTypeId = questionTypeId;
+        this.questionCount = questionCount;
+    }
+
+    public int getQuestionTypeId() {
+        return questionTypeId;
+    }
+
+    public void setQuestionTypeId(int questionTypeId) {
+        this.questionTypeId = questionTypeId;
+    }
+    
     
     public Test(int testId, int subjectId, String testName, int duration, int classId) {
         this.testId = testId;

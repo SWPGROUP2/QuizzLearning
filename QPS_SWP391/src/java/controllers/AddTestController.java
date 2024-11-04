@@ -5,6 +5,7 @@
 package controllers;
 
 import dal.ClassDAO;
+import dal.QuestionTypeDAO;
 import dal.TestDAO;
 import dal.SubjectDAO;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import javax.security.auth.Subject;
 import models.Classes;
+import models.QuestionType;
 import models.Test;
 import models.subject;
 
@@ -56,12 +58,16 @@ public class AddTestController extends HttpServlet {
             throws ServletException, IOException {
         SubjectDAO subjecdao = new SubjectDAO();
         ClassDAO classdao = new ClassDAO();
+        QuestionTypeDAO questypedao = new QuestionTypeDAO();
 
         List<subject> subjects = subjecdao.getAllSubject();
         List<Classes> classlist = classdao.getAllClasses();
+        List<QuestionType> questionTypes = questypedao.getAllQuestionTypes();
 
         request.setAttribute("subjects", subjects);
         request.setAttribute("classlist", classlist);
+        request.setAttribute("questionTypes", questionTypes);
+
         request.getRequestDispatcher("addtest.jsp").forward(request, response);
     }
 
@@ -80,13 +86,15 @@ public class AddTestController extends HttpServlet {
         int classId = Integer.parseInt(request.getParameter("class"));
         String testName = request.getParameter("testName");
         int duration = Integer.parseInt(request.getParameter("duration"));
+        int questionTypeId = Integer.parseInt(request.getParameter("questionTypeId"));
 
         Test test = new Test();
         test.setSubjectId(subjectId);
         test.setClassId(classId);
         test.setTestName(testName);
         test.setDuration(duration);
-
+        test.setQuestionTypeId(questionTypeId); 
+        
         TestDAO testdao = new TestDAO();
         boolean success = testdao.addTest(test);
 
