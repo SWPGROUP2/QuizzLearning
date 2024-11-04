@@ -4,15 +4,19 @@ import dal.QuestionDAO;
 import java.util.List;
 
 public class Question {
+
     private int questionID;
     private int subjectId;
     private int chapterId;
     private int questionTypeId;
     private String question;
-private String questionTypeName;
+    private String questionTypeName;
+    private List<Option> options; // Sửa thành List<Option> cho tùy chọn
+
     // No-argument constructor if needed
     public Question() {
     }
+
     public Question(int questionID, int subjectId, int chapterId, String question, int questionTypeId, String questionTypeName) {
         this.questionID = questionID;
         this.subjectId = subjectId;
@@ -63,7 +67,7 @@ private String questionTypeName;
     }
 
     private List<Question> questions;
-        private int totalCount; 
+    private int totalCount;
 
     public List<Question> getQuestions() {
         return questions;
@@ -80,13 +84,20 @@ private String questionTypeName;
     public void setTotalCount(int totalCount) {
         this.totalCount = totalCount;
     }
-    
-        public String getQuestionTypeName() {
+
+    public String getQuestionTypeName() {
         return questionTypeName;
     }
 
     public void setQuestionTypeName(String questionTypeName) {
         this.questionTypeName = questionTypeName;
     }
+    
+        public List<Option> getOptions() { // Sửa thành getOptions
+        return options;
+    }
 
+    public void setOptions(List<Option> options) { // Sửa thành setOptions
+        this.options = options;
+    }
 }
