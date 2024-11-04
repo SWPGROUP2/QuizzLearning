@@ -1,9 +1,39 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <html>
     <head>
         <title>Edit Test</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script>
+            function getQuestionTypeId(questionTypeName) {
+                switch (questionTypeName) {
+                    case 'Multiple-choice':
+                        return 1;
+                    case 'Short-answer':
+                        return 2;
+                    default:
+                        return null;
+                }
+            }
+
+            function filterQuestions() {
+                const selectedTypeId = document.getElementById('questionType').value;
+                const rows = document.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const questionTypeCell = row.cells[3].textContent.trim();
+                    const questionTypeId = getQuestionTypeId(questionTypeCell);
+                    if (selectedTypeId === '' || questionTypeId == selectedTypeId) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+        </script>
+
     </head>
     <body>
         <div class="container-fluid">
@@ -43,7 +73,6 @@
                                                         >${classItem.getClassName()}</option>
                                             </c:forEach>
                                         </select>
-
                                     </td>
                                     <td>
                                         <select name="subject" class="form-control" required>
@@ -60,6 +89,19 @@
                                 </tr>
                             </tbody>
                         </table>
+
+                        <h2>Select Question Type</h2>
+                        <div class="form-group">
+                            <label for="questionType">Question Type:</label>
+                            <select class="form-control" id="questionType" name="questionTypeId" onchange="filterQuestions()">
+                                <option value="">All</option>
+                                <c:forEach var="type" items="${questionTypes}">
+                                    <option value="${type.questionTypeId}" 
+                                            <c:if test="${type.questionTypeId == test.questionTypeId}">selected</c:if>
+                                            >${type.questionTypeName}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
 
                         <h2>Questions in Test</h2>
                         <table class="table table-bordered">
@@ -78,16 +120,16 @@
                                             <input type="checkbox" 
                                                    name="questionIds" 
                                                    value="${question.questionID}"
-                                                   <c:forEach var="selectedQuestion" items="${selectedQuestions}">
-                                                       <c:if test="${selectedQuestion.questionID == question.questionID}">checked</c:if>
-                                                   </c:forEach>
-                                                   >
-                                        </td>
-                                        <td>${question.chapterId}</td>
+                                                   <c:if test="${fn:contains(selectedQuestionIds, question.questionID)}">checked</c:if> 
+                                                       >
+                                            </td>
+                                            <td>${question.chapterId}</td>
                                         <td>${question.question}</td>
                                         <td>${question.questionTypeName}</td>
                                     </tr>
                                 </c:forEach>
+
+
                             </tbody>
                         </table>
                         <button type="submit" class="btn btn-primary">Save Changes</button>

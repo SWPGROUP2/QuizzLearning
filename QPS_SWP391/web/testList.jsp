@@ -81,7 +81,7 @@
                                                 <input type="hidden" name="testId" value="${test.testId}">
                                                 <button type="submit" class="btn btn-info btn-sm">Detail</button>
                                             </form>
-                                            <a class="btn btn-primary" href="edittest?testId=${test.testId}&subjectId=${test.subjectId}">Edit</a>
+                                            <a class="btn btn-primary btn-sm" href="edittest?testId=${test.testId}&subjectId=${test.subjectId}">Edit</a>
                                             <form action="deleteTest" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this test?');">
                                                 <input type="hidden" name="testID" value="${test.testId}">
                                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
