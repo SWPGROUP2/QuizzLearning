@@ -34,9 +34,19 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="questionType">Question Type:</label>
+                        <select class="form-control" id="questionType" name="questionTypeId" required>
+                            <c:forEach var="questionType" items="${questionTypes}">
+                                <option value="${questionType.questionTypeId}">${questionType.questionTypeName}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="testName">Test Name:</label>
                         <input type="text" class="form-control" id="testName" name="testName" required>
                     </div>
+
+
                     <div class="form-group">
                         <label for="duration">Duration (minutes):</label>
                         <input type="number" class="form-control" id="duration" name="duration" required>

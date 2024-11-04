@@ -52,6 +52,6 @@ public class TestList extends HttpServlet {
         request.setAttribute("sortBy", sortBy);
         request.setAttribute("sortOrder", sortOrder);
 
-        request.getRequestDispatcher("testList.jsp").forward(request, response);
+        request.getRequestDispatcher("testlist.jsp").forward(request, response);
     }
 }

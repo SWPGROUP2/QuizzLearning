@@ -11,6 +11,12 @@
     <servlet>
         <servlet-name>SubmitTestServlet</servlet-name>
         <servlet-class>controllers.SubmitTestServlet</servlet-class>
+        <servlet-name>TermSetController</servlet-name>
+        <servlet-class>controllers.TermSetController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TermController</servlet-name>
+        <servlet-class>controllers.TermController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DetailTestController</servlet-name>
@@ -31,6 +37,12 @@
     <servlet-mapping>
         <servlet-name>SubmitTestServlet</servlet-name>
         <url-pattern>/submitTest</url-pattern>
+        <servlet-name>TermSetController</servlet-name>
+        <url-pattern>/termset</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TermController</servlet-name>
+        <url-pattern>/termlist</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>

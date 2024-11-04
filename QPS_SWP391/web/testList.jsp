@@ -44,6 +44,7 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
+
                                     <th>
                                         <a href="test-list?sortBy=testID&sortOrder=${sortOrder == 'ASC' ? 'DESC' : 'ASC'}&searchQuery=${searchQuery}">Test No
                                             <c:if test="${sortBy == 'testID'}">
@@ -54,6 +55,7 @@
                                             </c:if>
                                         </a>
                                     </th>
+                                    <th>Test Id</th>
                                     <th>Test Name</th>
                                     <th>
                                         <a href="test-list?sortBy=questionCount&sortOrder=${sortOrder == 'ASC' ? 'DESC' : 'ASC'}&searchQuery=${searchQuery}">Questions in Test
@@ -72,6 +74,7 @@
                                 <c:forEach var="test" items="${tests}">
                                     <tr>
                                         <td>${test.testId}</td>
+                                        <td>${test.subjectId}</td>
                                         <td>${test.testName}</td>
                                         <td>${test.questionCount}</td>
                                         <td>
@@ -79,7 +82,7 @@
                                                 <input type="hidden" name="testId" value="${test.testId}">
                                                 <button type="submit" class="btn btn-info btn-sm">Detail</button>
                                             </form>
-                                            <a class="btn btn-primary" href="edittest?testId=${test.testId}&subjectId=${test.subjectId}">Edit</a>
+                                            <a class="btn btn-primary btn-sm" href="edittest?testId=${test.testId}&subjectId=${test.subjectId}">Edit</a>
                                             <form action="deleteTest" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this test?');">
                                                 <input type="hidden" name="testID" value="${test.testId}">
                                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -110,5 +113,3 @@
         </div>
     </body>
 </html>
-
-    

@@ -1,15 +1,15 @@
-CREATE DATABASE SWPQuiz;
 DROP DATABASE IF EXISTS SWPQuiz;
+CREATE DATABASE SWPQuiz;
+
 USE SWPQuiz;
+
 
 CREATE TABLE Roles (
     RoleID INT AUTO_INCREMENT PRIMARY KEY,
     Role VARCHAR(255) CHARACTER SET utf8mb4
 );
 
-INSERT INTO Roles (Role) VALUES ('student');  -- id 1
-INSERT INTO Roles (Role) VALUES ('admin');    -- id 2
-INSERT INTO Roles (Role) VALUES ('teacher');  -- id 3
+INSERT INTO Roles (Role) VALUES ('student'), ('admin'), ('teacher');
 
 CREATE TABLE Users (
     UserID INT AUTO_INCREMENT PRIMARY KEY,
@@ -33,87 +33,91 @@ VALUES
 ('student', 1, 'student@example.com', '1', '045632789', 'Nguyen Van C', '2000-01-01', 'Fu-Hoa Lac', 'HE123456');
 
 CREATE TABLE Subject (
-    subjectId INT AUTO_INCREMENT PRIMARY KEY,
-    subjectName VARCHAR(255) CHARACTER SET utf8mb4,
-    title VARCHAR(255) CHARACTER SET utf8mb4,
-    thumbnail VARCHAR(255) CHARACTER SET utf8mb4
+    SubjectID INT AUTO_INCREMENT PRIMARY KEY,
+    SubjectName VARCHAR(255) CHARACTER SET utf8mb4,
+    Title VARCHAR(255) CHARACTER SET utf8mb4,
+    Thumbnail VARCHAR(255) CHARACTER SET utf8mb4
 );
+
+INSERT INTO Subject (SubjectName, Title, Thumbnail) 
+VALUES 
+('JPT', 'Japanese', 'https://cf.quizizz.com/img/course-assets/title_imgs/2%20-%20Mathematics.png'),
+('IELTS', 'English', 'https://cf.quizizz.com/img/course-assets/title_imgs/1%20-%20English%20and%20Language%20Arts.png'),
+('TOPIK', 'Korean', 'https://cf.quizizz.com/img/course-assets/title_imgs/3%20-%20Social%20Studies.png'),
+('Test', 'World Languages', 'https://cf.quizizz.com/img/course-assets/title_imgs/5-%20World%20Languages.png');
 
 CREATE TABLE QuestionType (
- QuestionTypeId INT AUTO_INCREMENT PRIMARY KEY,	
- QuestionTypeName VARCHAR(255) CHARACTER SET utf8mb4
+    QuestionTypeID INT AUTO_INCREMENT PRIMARY KEY,	
+    QuestionTypeName VARCHAR(255) CHARACTER SET utf8mb4
 );
 
-INSERT INTO QuestionType (QuestionTypeName) VALUES ('single-choice');  -- id 1
-INSERT INTO QuestionType (QuestionTypeName) VALUES ('matching');    -- id 2
-INSERT INTO QuestionType (QuestionTypeName) VALUES ('order');  -- id 3
+INSERT INTO QuestionType (QuestionTypeName) VALUES ('single-choice'), ('matching'), ('order');
 
-select * from QuestionType;
 CREATE TABLE Questions (
     QuestionID INT AUTO_INCREMENT PRIMARY KEY,
-    subjectId INT,
-    chapterId INT,
-    QuestionTypeId INT,
+    SubjectID INT,
+    ChapterID INT,
+    QuestionTypeID INT,
     Question VARCHAR(255) CHARACTER SET utf8mb4,
-    FOREIGN KEY (subjectId) REFERENCES Subject(subjectId)
+    FOREIGN KEY (subjectID) REFERENCES Subject(subjectID) ON DELETE CASCADE
 );
+
+INSERT INTO Questions (SubjectID, ChapterID, QuestionTypeID, Question) 
+VALUES 
+(1, 1, 2, 'Match the capital city to its country.'),
+(1, 2, 1, 'What is the capital of Japan?');
 
 CREATE TABLE Options (
     OptionID INT AUTO_INCREMENT PRIMARY KEY,
     QuestionID INT,
-    OptionText varchar(1000) CHARACTER SET utf8mb4,
+    OptionText VARCHAR(1000) CHARACTER SET utf8mb4,
     IsCorrect BIT,
-    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID)
+    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID) ON DELETE CASCADE
 );
 
-INSERT INTO `Subject` (subjectId, subjectName, title, thumbnail) 
+INSERT INTO Options (QuestionID, OptionText, IsCorrect) 
 VALUES 
-(1, 'JPT', 'Japanese', 'https://cf.quizizz.com/img/course-assets/title_imgs/2%20-%20Mathematics.png'),
-(2, 'IELTS', 'English', 'https://cf.quizizz.com/img/course-assets/title_imgs/1%20-%20English%20and%20Language%20Arts.png'),
-(3, 'TOPIK', 'Korean', 'https://cf.quizizz.com/img/course-assets/title_imgs/3%20-%20Social%20Studies.png'),
-(4, 'Test', 'World Languages', 'https://cf.quizizz.com/img/course-assets/title_imgs/5-%20World%20Languages.png');
+(1, 'Paris - France', 1), 
+(2, 'Tokyo', 1),         
+(2, 'Kyoto', 0),
+(2, 'Osaka', 0),
+(2, 'Nagoya', 0);
 
-INSERT INTO `Questions` (subjectId, chapterId, QuestionTypeId, Question)
-VALUES 
-(1, 1, 2,  'おはようございます'),
-(1, 1, 2, 'こんにちは'),
-(1, 1, 2, 'こんばんは');
+CREATE TABLE Class (
+    ClassID INT AUTO_INCREMENT PRIMARY KEY,
+    ClassName VARCHAR(255) CHARACTER SET utf8mb4,
+    UserID INT,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
 
-INSERT INTO `Options` (QuestionID, OptionText, IsCorrect)
-VALUES 
-(1, 'Chào buổi sáng', 1),
-(2, 'Chào buổi trưa', 1),
-(2, 'Chào buổi chiều', 0),
-(2, 'Chào buổi đêm', 0),
-(2, 'i luv u', 0),
-(2, 'Chào buổi tối', 0);
+INSERT INTO Class (ClassName, UserID) VALUES ('Class A', 1), ('Class B', 2), ('Class C', 3);
 
 CREATE TABLE Tests (
     TestID INT AUTO_INCREMENT PRIMARY KEY,
-    subjectId INT,
-    testName VARCHAR(255) CHARACTER SET utf8mb4,
-    description TEXT CHARACTER SET utf8mb4,
-    FOREIGN KEY (subjectId) REFERENCES Subject(subjectId)
+    SubjectID INT,
+    TestName VARCHAR(255) CHARACTER SET utf8mb4,
+    Duration INT,
+    ClassID INT,
+    FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID),
+    FOREIGN KEY (ClassID) REFERENCES Class(ClassID)
 );
 
-INSERT INTO `Tests` (subjectId, testName, description)
+INSERT INTO Tests (SubjectId, TestName, Duration, ClassID) 
 VALUES 
-(1, 'Japanese Test 1', 'Bài kiểm tra tiếng Nhật cơ bản'),
-(2, 'English Test 1', 'Bài luyện thi IELTS'),
-(3, 'Korean Test 1', 'Bài luyện thi TOPIK');
+(1, 'Japanese Test 1', 60, 1),
+(2, 'English Test 1', 45, 2),
+(3, 'Korean Test 1', 30, 3);
 
 CREATE TABLE Test_Questions (
+    TestQuestionsID INT AUTO_INCREMENT PRIMARY KEY,
     TestID INT,
     QuestionID INT,
-    PRIMARY KEY (TestID, QuestionID),
     FOREIGN KEY (TestID) REFERENCES Tests(TestID),
     FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID)
 );
 
 INSERT INTO Test_Questions (TestID, QuestionID) 
 VALUES 
-(1, 1),  -- Thêm câu hỏi 1 vào bài kiểm tra 1
-(1, 2),  -- Thêm câu hỏi 2 vào bài kiểm tra 1
-(2, 3);  -- Thêm câu hỏi 3 vào bài kiểm tra 2
-
-
+(1, 1), 
+(1, 2),
+(2, 2);
