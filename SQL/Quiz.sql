@@ -108,16 +108,73 @@ VALUES
 (2, 'English Test 1', 45, 2),
 (3, 'Korean Test 1', 30, 3);
 
-CREATE TABLE Test_Questions (
-    TestQuestionsID INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE TestQuestions (
     TestID INT,
     QuestionID INT,
+    PRIMARY KEY (TestID, QuestionID),
     FOREIGN KEY (TestID) REFERENCES Tests(TestID),
     FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID)
 );
 
-INSERT INTO Test_Questions (TestID, QuestionID) 
-VALUES 
-(1, 1), 
-(1, 2),
-(2, 2);
+SELECT 
+    q.QuestionID,
+    q.Question,
+    o.OptionID,
+    o.OptionText,
+    o.IsCorrect
+FROM 
+    TestQuestions tq
+JOIN Questions q ON tq.QuestionID = q.QuestionID
+JOIN Options o ON q.QuestionID = o.QuestionID
+WHERE 
+    tq.TestID = 1;
+    
+SELECT q.Question 
+FROM TestQuestions tq
+JOIN Questions q ON tq.QuestionID = q.QuestionID
+WHERE tq.TestID = 1; 
+
+INSERT INTO TestQuestions (TestID, QuestionID) 
+VALUES(1,3), (1,4), (1,5), (1,6), (1,7), (1,8), (1,9);
+
+select * from TestQuestions;
+select * from Questions;
+select * from Options;
+SELECT IsCorrect FROM Options WHERE QuestionID = 1 AND OptionID = 1;
+
+
+SELECT * FROM Options WHERE questionID = 2;
+SELECT * FROM Test_Questions;
+
+CREATE TABLE StudentAnswers (
+    answer_id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT,
+    test_id INT,
+    question_id INT,
+    option_id INT,
+    answer_text TEXT, -- dành cho câu trả lời dạng tự luận
+    answered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES Users(UserID),
+    FOREIGN KEY (test_id) REFERENCES Tests(TestID),
+    FOREIGN KEY (question_id) REFERENCES Questions(QuestionID),
+    FOREIGN KEY (option_id) REFERENCES Options(OptionID)
+);
+
+CREATE TABLE TestResults (
+    result_id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT,
+    test_id INT,
+    score DECIMAL(5, 2),
+    completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES Users(UserID),
+    FOREIGN KEY (test_id) REFERENCES Tests(TestID)
+);
+
+SELECT q.QuestionID, q.SubjectID, q.ChapterID, q.QuestionTypeID, q.Question,
+qt.QuestionTypeName FROM Questions q
+JOIN TestQuestions tq ON q.QuestionID = tq.QuestionID
+JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID
+WHERE tq.TestID = 1;
+
+SELECT o.OptionID, o.QuestionID, o.OptionText, o.IsCorrect
+FROM Options o WHERE o.QuestionID = 2

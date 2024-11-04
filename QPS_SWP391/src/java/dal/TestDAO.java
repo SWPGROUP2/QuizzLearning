@@ -2,12 +2,17 @@ package dal;
 
 import models.Test;
 import models.Question;
+import models.Option;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestDAO extends MyDAO {
 
@@ -282,7 +287,8 @@ public class TestDAO extends MyDAO {
     public List<Question> getQuestionsByTestId(int testId) {
         List<Question> questions = new ArrayList<>();
         String sql = "SELECT * FROM Test_Questions WHERE TestID = ?";
-        try {PreparedStatement ps = connection.prepareStatement(sql);
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, testId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -295,24 +301,92 @@ public class TestDAO extends MyDAO {
         }
         return questions;
     }
-    
+
     public void updateTest(Test test) {
-    String sql = "UPDATE Tests SET testName = ?, duration = ?, classId = ?, subjectId = ? WHERE testId = ?";
-    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        String sql = "UPDATE Tests SET testName = ?, duration = ?, classId = ?, subjectId = ? WHERE testId = ?";
+        try ( PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-        pstmt.setString(1, test.getTestName());
-        pstmt.setInt(2, test.getDuration());
-        pstmt.setInt(3, test.getClassId());
-        pstmt.setInt(4, test.getSubjectId());
-        pstmt.setInt(5, test.getTestId());
+            pstmt.setString(1, test.getTestName());
+            pstmt.setInt(2, test.getDuration());
+            pstmt.setInt(3, test.getClassId());
+            pstmt.setInt(4, test.getSubjectId());
+            pstmt.setInt(5, test.getTestId());
 
-        pstmt.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-}
 
-    
-    
+    public List<Question> getQuestionsByTestId2(int testId) {
+        List<Question> questions = new ArrayList<>();
 
+        String query = "SELECT q.QuestionID, q.SubjectID, q.ChapterID, q.QuestionTypeID, q.Question, "
+                + "qt.QuestionTypeName FROM Questions q "
+                + "JOIN TestQuestions tq ON q.QuestionID = tq.QuestionID "
+                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
+                + "WHERE tq.TestID = ?";
+
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, testId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int questionID = resultSet.getInt("QuestionID");
+                int subjectId = resultSet.getInt("SubjectID");
+                int chapterId = resultSet.getInt("ChapterID");
+                int questionTypeId = resultSet.getInt("QuestionTypeID");
+                String questionText = resultSet.getString("Question");
+                String questionTypeName = resultSet.getString("QuestionTypeName");
+
+                Question question = new Question(questionID, subjectId, chapterId, questionText, questionTypeId, questionTypeName);
+                question.setOptions(getOptionsByQuestionId(questionID)); // Lấy các tùy chọn cho câu hỏi
+
+                questions.add(question);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return questions;
+    }
+
+    public List<Option> getOptionsByQuestionId(int questionId) {
+        List<Option> options = new ArrayList<>();
+
+        String query = "SELECT o.OptionID, o.QuestionID, o.OptionText, o.IsCorrect "
+                + "FROM Options o WHERE o.QuestionID = ?";
+
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, questionId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int optionId = resultSet.getInt("OptionID");
+                String optionText = resultSet.getString("OptionText");
+                int isCorrect = resultSet.getInt("IsCorrect");
+
+                Option option = new Option(questionId, optionId, optionText, isCorrect);
+                options.add(option);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return options;
+    }
+
+    public boolean isCorrectOption(int questionId, int optionId) {
+        String query = "SELECT IsCorrect FROM Options WHERE QuestionID = ? AND OptionID = ?";
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, questionId);
+            statement.setInt(2, optionId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("IsCorrect") == 1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 }

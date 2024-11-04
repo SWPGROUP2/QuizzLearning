@@ -70,7 +70,7 @@
                         <h1>EDUCATION</h1>
                         <h2>QUIZ MANAGEMENT SYSTEM</h2>
                         <a href="" class="learn-more-btn">Practice</a>
-                        <a href="" class="learn-more-btn">Test</a>
+                        <a href="test" class="learn-more-btn">Test</a>
                     </div>
                 </div>
             </div>
