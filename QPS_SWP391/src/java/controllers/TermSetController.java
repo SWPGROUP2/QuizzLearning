@@ -20,7 +20,7 @@ public class TermSetController extends HttpServlet {
         System.out.println("Term sets in controller: " + termSets.size());
 
         request.setAttribute("termSets", termSets);
-        request.getRequestDispatcher("termset.jsp").forward(request, response);
+        request.getRequestDispatcher("termsetlist.jsp").forward(request, response);
     }
 }
 

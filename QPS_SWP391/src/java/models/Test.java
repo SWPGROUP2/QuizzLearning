@@ -8,14 +8,34 @@ public class Test {
     private int classId;
     private int questionTypeId;
     private int questionCount;
+    private String subjectName;
 
-    public Test(int testId, int subjectId, String testName, int duration, int classId, int questionTypeId, int questionCount) {
+    public Test(int testId, int subjectId, String testName, int duration, int classId, int questionTypeId, int questionCount, String subjectName) {
         this.testId = testId;
         this.subjectId = subjectId;
         this.testName = testName;
         this.duration = duration;
         this.classId = classId;
         this.questionTypeId = questionTypeId;
+        this.questionCount = questionCount;
+        this.subjectName = subjectName;
+    }
+    
+        public Test(int testId, int subjectId, String testName, int duration, int classId, String subjectName) {
+        this.testId = testId;
+        this.subjectId = subjectId;
+        this.testName = testName;
+        this.duration = duration;
+        this.classId = classId;
+        this.subjectName = subjectName;
+    }
+
+    public Test(int testID, int subjectId, String testName, int duration, int classID, int questionCount) {
+        this.testId = testId;
+        this.subjectId = subjectId;
+        this.testName = testName;
+        this.duration = duration;
+        this.classId = classId;
         this.questionCount = questionCount;
     }
 
@@ -26,7 +46,6 @@ public class Test {
     public void setQuestionTypeId(int questionTypeId) {
         this.questionTypeId = questionTypeId;
     }
-    
     
     public Test(int testId, int subjectId, String testName, int duration, int classId) {
         this.testId = testId;
@@ -85,5 +104,13 @@ public class Test {
      
     public void setQuestionCount(int questionCount) {
         this.questionCount = questionCount;
+    }
+    
+        public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 }
