@@ -43,7 +43,7 @@
                                 </div>
                             </c:forEach>
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary">Nộp bài</button>
+                                <button type="submit" class="btn btn-primary">Nộp bàii</button>
                             </div>
                         </form>
                     </div>
