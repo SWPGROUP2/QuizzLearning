@@ -52,17 +52,15 @@
                 text-decoration: none;
             }
             .learn-more-btn:hover {
-                background-color: #e55065; /* Thay đổi màu khi hover */
+                background-color: #e55065;
             }
         </style>
     </head>
     <body class="container-fluid">
         <div class="row" style="height: 639px;">
-            <!-- Sidebar  -->
             <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
                 <%@include file="/Components/Sidebar.jsp" %>
             </div>
-            <!-- Page Content  -->
             <div class="col-md-10 px-0">
                 <div class="image-container">
                     <img src="assets/img/sanhAlpha.jpg" alt="Background Image">

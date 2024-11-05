@@ -104,66 +104,42 @@ public class TestDAO extends MyDAO {
         return qlist;
     }
 
-    public List<Test> getAllTests() {
-        List<Test> testList = new ArrayList<>();
-        String xSql = "SELECT *, (SELECT COUNT(*) FROM TestQuestions WHERE TestQuestions.testID = Tests.TestID) AS questionCount FROM Tests";
-        try (PreparedStatement ps = con.prepareStatement(xSql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Test test = new Test();
-                test.setTestID(rs.getInt("TestID"));
-                test.setTestName(rs.getString("TestName"));
-                test.setDuration(rs.getInt("Duration"));
-                test.setSubjectId(rs.getInt("SubjectID"));
-                test.setClassId(rs.getInt("ClassID"));
-                test.setQuestionCount(rs.getInt("questionCount")); 
-                testList.add(test);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return testList;
+public List<Test> getAllTests(String searchQuery, String sortBy, String sortOrder) {
+    List<Test> tests = new ArrayList<>();
+    String sql = "SELECT t.TestID, t.TestName, t.Duration, t.ClassID, COUNT(tq.QuestionID) AS questionCount " +
+                 "FROM Tests t LEFT JOIN Test_Questions tq ON t.TestID = tq.TestID " +
+                 "WHERE t.TestName LIKE ? " + 
+                 "GROUP BY t.TestID, t.TestName, t.Duration, t.ClassID";
+
+    if (sortBy != null && sortOrder != null) {
+        sql += " ORDER BY " + sortBy + " " + sortOrder;
     }
 
-public List<Test> searchTestsByName(String testName, int page, int testsPerPage, String sortBy, String sortOrder) {
-    List<Test> testList = new ArrayList<>();
-    
-    String sortColumn = "TestID"; 
-    if ("questionCount".equals(sortBy)) {
-        sortColumn = "(SELECT COUNT(*) FROM TestQuestions WHERE TestQuestions.testID = Tests.TestID)";
-    }
+    System.out.println("Executing SQL: " + sql); 
 
-    String order = "ASC".equalsIgnoreCase(sortOrder) ? "ASC" : "DESC";
-    int offset = (page - 1) * testsPerPage;
+    try (
+         PreparedStatement stmt = con.prepareStatement(sql)) {
 
-    String xSql = "SELECT t.*, (SELECT COUNT(*) FROM TestQuestions tq WHERE tq.testID = t.TestID) AS questionCount " +
-                   "FROM Tests t WHERE t.TestName LIKE ? " +
-                   "ORDER BY " + sortColumn + " " + order + " LIMIT ? OFFSET ?";
+        stmt.setString(1, "%" + searchQuery + "%"); 
 
-    try (PreparedStatement ps = con.prepareStatement(xSql)) {
-        ps.setString(1, "%" + testName + "%");
-        ps.setInt(2, testsPerPage);
-        ps.setInt(3, offset);
-        try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Test test = new Test();
-                test.setTestID(rs.getInt("TestID"));
-                test.setTestName(rs.getString("TestName"));
-                test.setDuration(rs.getInt("Duration"));
-                test.setSubjectId(rs.getInt("SubjectID"));
-                test.setClassId(rs.getInt("ClassID"));
-
-                testList.add(test);
-            }
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            Test test = new Test();
+            test.setTestID(rs.getInt("TestID"));
+            test.setTestName(rs.getString("TestName"));
+            test.setDuration(rs.getInt("Duration"));
+            test.setClassId(rs.getInt("ClassID"));
+            test.setQuestionCount(rs.getInt("questionCount"));
+            tests.add(test);
         }
     } catch (SQLException e) {
-        e.printStackTrace();
+        e.printStackTrace(); 
     }
-    return testList;
+
+    System.out.println("Number of tests found: " + tests.size()); 
+    return tests;
 }
 
-
-    
         public List<Test> getTestsPaginated(int page, int testsPerPage, String sortBy, String sortOrder) {
         List<Test> testList = new ArrayList<>();
         String sortColumn = "TestID";

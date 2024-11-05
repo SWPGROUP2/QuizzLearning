@@ -53,7 +53,7 @@ public class UpdateUserProfile extends HttpServlet {
                 request.setAttribute("mess", "Invalid phone number");
                 request.getRequestDispatcher("user-profile.jsp").forward(request, response);
             } else if(!isValidDob(dob)){
-                request.setAttribute("mess", "You're not enough 15 years old.");
+                request.setAttribute("mess", "You're not old enough (>15Y)");
                 request.getRequestDispatcher("user-profile.jsp").forward(request, response);
             }
             else{
