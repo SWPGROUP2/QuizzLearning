@@ -51,6 +51,7 @@ public class LoginController extends HttpServlet {
                 }
             } else {
                 String error = "Wrong email or password!!!";
+                request.setAttribute("email", email);
                 request.setAttribute("error", error);
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }

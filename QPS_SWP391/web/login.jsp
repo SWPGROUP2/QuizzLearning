@@ -13,7 +13,7 @@
                 background-position: center;
                 font-family: Arial, sans-serif;
                 margin: 0;
-                padding: 0;            
+                padding: 0;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -21,11 +21,12 @@
             }
 
             form {
-                background-color: #fff;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-                width: 400px;
+                background-color: rgba(255, 255, 255, 0.9);
+                padding: 25px;
+                border-radius: 12px;
+                box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+                width: 100%;
+                max-width: 400px;
                 text-align: center;
             }
 
@@ -33,10 +34,11 @@
             input[type="password"] {
                 width: 100%;
                 padding: 10px;
-                margin-bottom: 10px;
+                margin-bottom: 15px;
                 border-radius: 5px;
                 border: 1px solid #ddd;
                 box-sizing: border-box;
+                font-size: 1rem;
             }
 
             input[type="checkbox"] {
@@ -49,78 +51,73 @@
                 padding: 10px;
                 border-radius: 5px;
                 border: none;
-                color: #fff;
                 background-color: #000;
                 color: #fff;
+                font-size: 1rem;
                 cursor: pointer;
-                transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+                transition: background-color 0.3s, color 0.3s;
             }
 
             input[type="submit"]:hover {
                 background-color: #4A3F8A;
             }
 
-            h2 {
-                margin-bottom: 20px;
+            h1 {
                 color: #333;
+                margin-bottom: 20px;
             }
 
-            h5 {
-                margin-bottom: 0;
-                padding-top: 10px;
-                color: #000;
-                cursor: pointer;
+            .message {
                 margin-top: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .error-message {
+                color: #ff4d4d;
+            }
 
+            .success-message {
+                color: #32CD32;
             }
         </style>
     </head>
     <body>
+        <div>
+            <form action="login" method="post">
+                <h1>Login</h1>             
+                <div class="mb-2 mt-4">
+                    <input type="email" id="username" name="email" class="form-control" 
+                           placeholder="Email Address" required
+                           value="${email != null ? email : ''}">
+                </div>                
+                <div>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                </div>
 
-    <container>
-        <row>
-            <form action="login" method="post" style="background-color: rgba(255, 255, 255, 0.2); box-shadow: 3px 3px 3px 3px rgba(7, 7, 7, 0.6);">
-                <h1 ><span style="color: black" class="badge badge-secondary">Login</span></h1>
-                <row>
-                    <row>
-                        <div class="mb-2 mt-4">
-                            <input  type="email" id="username" name="email" class="form-control" placeholder="Email Address" required>
-                        </div> 
-                    </row>
-                    <row>
-                        <div>
-                            <input placeholder="Password" type="password" id="password" name="password" class="form-control" required>
-                        </div>
-                    </row>
-
-                    <row> 
-                        <hr class="mt-4"/>
-                    </row>
-                    <row> 
-                        <div  class="mt-4">
-                            <input type="submit" value="Log in">
-                        </div>
-                    </row>
-
-                </row>
-
-                <row > 
-                    <c:if test="${error!=null}">
-                        <div class="message mt-4">
-                            <h4 style="color: red;">${error}</h4>
-                        </div>
-                    </c:if>
-                    <c:if test="${mess!=null}">
-                        <div class="message mt-4">
-                            <h4 style="color: greenyellow;">${mess}</h4>
-                        </div>
-                    </c:if>
-                </row>
-
-
-
+                <div style="text-align: left;">
+                    <label class="checkbox-label">
+                        <input type="checkbox" onclick="togglePassword()"> Show Password
+                    </label>
+                </div>
+                <input type="submit" value="Log in">
+                <c:if test="${error!=null}">
+                    <div class="message error-message">
+                        <h4>${error}</h4>
+                    </div>
+                </c:if>
+                <c:if test="${mess!=null}">
+                    <div class="message success-message">
+                        <h4>${mess}</h4>
+                    </div>
+                </c:if>
             </form>
-        </row>
-    </container>
-</body>
+        </div>
+
+        <script>
+            function togglePassword() {
+                const passwordField = document.getElementById("password");
+                passwordField.type = (passwordField.type === "password") ? "text" : "password";
+            }
+        </script>
+    </body>
 </html>
