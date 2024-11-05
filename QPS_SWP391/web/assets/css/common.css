@@ -48,3 +48,9 @@
 .bg-white { background-color: var(--white-color) !important }
 
 .border-primary { border-color: var(--primary-color) !important}
+            .sidebar {
+                width: 200px;
+                background-color: #343a40;
+                border-right: 1px solid #1a1e21;
+                height: 100vh;
+            }

@@ -21,6 +21,10 @@
             th {
                 background-color: #f2f2f2;
             }
+            .text-center {
+                text-align: center;
+                flex: 1; 
+            }
         </style>
     </head>
     <body class="container-fluid">
@@ -29,10 +33,21 @@
                 <%@include file="Components/Sidebar.jsp" %>
             </div>
             <div class="col-md-10">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <a href="teacherhome" class="btn btn-dark">Back to Homepage</a> 
-                    <h1>List Tests</h1>               
-                    <a href="addtest" class="btn btn-primary">Add Test</a>
+                <div class="d-flex align-items-center mb-3">
+                    <c:choose>
+                        <c:when test="${sessionScope.account.roleId == 3}">
+                            <a href="teacherhome" class="btn btn-dark">Back to Homepage</a>
+                        </c:when>
+                        <c:when test="${sessionScope.account.roleId == 1}">
+                            <a href="studenthome" class="btn btn-dark">Back to Homepage</a>
+                        </c:when>
+                        <c:otherwise>
+                        </c:otherwise>
+                    </c:choose>
+                    <h1 class="text-center">Tests List</h1>
+                    <c:if test="${sessionScope.account.roleId == 3}">
+                        <a href="addtest" class="btn btn-primary">Add Test</a>
+                    </c:if>
                 </div>
 
                 <form class="form-inline mb-4" action="test-list" method="GET">
@@ -44,7 +59,6 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-
                                     <th>
                                         <a href="test-list?sortBy=testID&sortOrder=${sortOrder == 'ASC' ? 'DESC' : 'ASC'}&searchQuery=${searchQuery}">Test No
                                             <c:if test="${sortBy == 'testID'}">
@@ -55,7 +69,6 @@
                                             </c:if>
                                         </a>
                                     </th>
-                                    <th>Test Id</th>
                                     <th>Test Name</th>
                                     <th>
                                         <a href="test-list?sortBy=questionCount&sortOrder=${sortOrder == 'ASC' ? 'DESC' : 'ASC'}&searchQuery=${searchQuery}">Questions in Test
@@ -73,20 +86,27 @@
                             <tbody>
                                 <c:forEach var="test" items="${tests}">
                                     <tr>
-                                        <td>${test.testId}</td>
                                         <td>${test.subjectId}</td>
                                         <td>${test.testName}</td>
                                         <td>${test.questionCount}</td>
                                         <td>
-                                            <form action="detailtest" method="get" class="d-inline">
-                                                <input type="hidden" name="testId" value="${test.testId}">
-                                                <button type="submit" class="btn btn-info btn-sm">Detail</button>
-                                            </form>
-                                            <a class="btn btn-primary btn-sm" href="edittest?testId=${test.testId}&subjectId=${test.subjectId}">Edit</a>
-                                            <form action="deleteTest" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this test?');">
-                                                <input type="hidden" name="testID" value="${test.testId}">
-                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                            </form>
+                                            <c:if test="${sessionScope.account.roleId == 3}">
+                                                <form action="detailtest" method="get" class="d-inline">
+                                                    <input type="hidden" name="testId" value="${test.testId}">
+                                                    <button type="submit" class="btn btn-info btn-sm">Detail</button>
+                                                </form>
+                                                <a class="btn btn-primary btn-sm" href="edittest?testId=${test.testId}&subjectId=${test.subjectId}">Edit</a>
+                                                <form action="deleteTest" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this test?');">
+                                                    <input type="hidden" name="testID" value="${test.testId}">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                </form>
+                                            </c:if>
+                                            <c:if test="${sessionScope.account.roleId == 1}">
+                                                <form action="doTest" method="get" class="d-inline">
+                                                    <input type="hidden" name="testId" value="${test.testId}">
+                                                    <button type="submit" class="btn btn-success btn-sm">Do Test</button>
+                                                </form>
+                                            </c:if>
                                         </td>
                                     </tr>
                                 </c:forEach>

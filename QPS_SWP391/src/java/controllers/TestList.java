@@ -31,7 +31,8 @@ public class TestList extends HttpServlet {
         int totalTests;
 
         if (searchQuery != null && !searchQuery.isEmpty()) {
-            tests = testDAO.searchTestsByName(searchQuery, currentPage, testsPerPage, sortBy, sortOrder);
+            tests = testDAO.getAllTests(searchQuery, sortBy, sortOrder);
+    request.setAttribute("tests", tests);
             totalTests = testDAO.countTestsByName(searchQuery);
         } else {
             tests = testDAO.getTestsPaginated(currentPage, testsPerPage, sortBy, sortOrder);

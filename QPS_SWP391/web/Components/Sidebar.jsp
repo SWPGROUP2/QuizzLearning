@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<%@ page import="models.User" %>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -34,29 +34,41 @@
             .dropdown-content {
                 display: none;
                 position: absolute;
-                background-color: #f9f9f9;
-                min-width: 160px;
+                background-color: #495057;
+                min-width: 100%;
                 z-index: 1;
+                padding: 0;
+                border-radius: 5px;
+                overflow: hidden;
             }
             .dropdown-content a {
-                color: black;
-                padding: 12px 16px;
+                color: white;
+                padding: 10px 20px;
                 text-decoration: none;
                 display: block;
-                text-align: left;
+                background-color: #495057;
             }
             .dropdown-content a:hover {
-                background-color: #f1f1f1;
+                background-color: #FF5E73;
             }
-            .dropdown:hover .dropdown-content {
+            .nav-item:hover .dropdown-content {
                 display: block;
+            }
+            .avatar-container {
+                width: 70px; 
+                height: 75px;
+                border-radius: 50%;
+                border: 3px solid rgba(255, 94, 94, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 0 auto;
+                cursor: pointer;
             }
             .sidebar img {
-                width: 50px;
-                height: 50px;
+                width: 65px;
+                height: 70px;
                 border-radius: 50%;
-                margin: 0 auto;
-                display: block;
             }
         </style>
     </head>
@@ -64,21 +76,44 @@
         <nav class="sidebar p-3">
             <div class="text-center mb-4 dropdown">
                 <h3>QPS04</h3>
-                <img class="dropbtn" src="assets/img/roll.jpg" alt="User Image">
+                <%
+                    User account = (User) session.getAttribute("account");
+                    String avatarUrl = account != null ? account.getAvatar() : "assets/img/default-avatar.png"; // Fallback to a default image
+                %>
+                <a href="user-profile.jsp" class="avatar-container">
+                    <img src="<%= avatarUrl %>" alt="User Image">
+                </a>
             </div>
-
             <ul class="list-unstyled">
-                <li class="nav-item text-center mb-3">
-                    <p>HomePage</p>
-                </li>
-                <li class="nav-item">
-                    <a class="btn" href="user-profile.jsp">Profile</a>
+                <li class="nav-item dropdown">
+                    <a class="btn" href="<%= ((User) session.getAttribute("account")).getRoleId() == 1 ? "studenthome" : ((User) session.getAttribute("account")).getRoleId() == 2 ? "adminhome" : "teacherhome" %>">
+                        Homepage
+                    </a>
+                    <div class="dropdown-content" style="left: 100%; top: 0;">
+                        <%
+                            if (account != null) {
+                                int roleId = account.getRoleId();
+                                if (roleId == 1) {
+                        %>
+                                    <a href="termset">Term Set List</a>
+                                    <a href="test-list">Test List</a>
+                        <%
+                                } else if (roleId == 3) {
+                        %>
+                                    <a href="subject-list">Subject List</a>
+                                    <a href="test-list">Test List</a>
+                        <%
+                                }
+                            } else {
+                        %>
+                            <p>No account found!</p>
+                        <%
+                            }
+                        %>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="btn" href="login.jsp">Logout</a>
-                </li>
-                <li class="nav-item">
-                    <button class="btn" onclick="history.back()">Back</button>
                 </li>
             </ul>
         </nav>

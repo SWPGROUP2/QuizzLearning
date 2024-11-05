@@ -21,7 +21,7 @@
 
                 <div class="col-md-10">
                     <div class="container">
-                        <a href="${sessionScope.account.roleId == 1 ? 'studenthome' : 'teacherhome'}" class="atag">Go back</a>
+                        <a href="${sessionScope.account.roleId != 1 ? 'studenthome' : 'teacherhome'}" class="atag">Go back</a>
                         
                         <h2>Edit Profile</h2>
                         <div class="profile-picture" onclick="openPopup()">
@@ -74,24 +74,7 @@
                                 <div style="margin-bottom: 8px;font-weight: bold;">
                                     Student/Teacher ID:
                                 </div>
-                                <input type="text" id="schoolId" name="schoolId" value="${sessionScope.account.userCode}">
-
-                                <div style="margin-bottom: 8px;font-weight: bold;">
-                                    Select Campus:
-                                </div>
-                                <%
-                                    User user = (User) session.getAttribute("account");
-                                    String place = user.getPlace().trim();
-                                %>
-                                <div style="margin: 5px 0px;">
-                                    <select name="placeWork" style="width: 200px; padding: 5px; border: 1px solid #ccc; border-radius: 5px;"> 
-                                        <option value="FU-Hoa Lac" <%= place.equals("FU-Hoa Lac") ? "selected" : "" %>>FU-Hoa Lac</option>
-                                        <option value="FU-Ho Chi Minh" <%= place.equals("FU-Ho Chi Minh") ? "selected" : "" %>>FU-Ho Chi Minh</option>
-                                        <option value="FU-Da nang" <%= place.equals("FU-Da nang") ? "selected" : "" %>>FU-Da nang</option>
-                                        <option value="FU-Can Tho" <%= place.equals("FU-Can Tho") ? "selected" : "" %>>FU-Can Tho</option>
-                                        <option value="FU-Quy Nhon" <%= place.equals("FU-Quy Nhon") ? "selected" : "" %>>FU-Quy Nhon</option>
-                                    </select>
-                                </div>
+                                <input type="text" id="schoolId" name="schoolId" value="${sessionScope.account.userCode}" readonly>
 
                                 <input type="hidden" id="hiddenId" name="userId" value="${sessionScope.account.userId}">
                                 <div><h3 style="color: red">${requestScope.mess}</h3></div>
