@@ -117,6 +117,9 @@ CREATE TABLE Test_Questions (
 );
 
 INSERT INTO Test_Questions (TestID, QuestionID) 
+VALUES(1,3), (1,4), (1,5), (1,6), (1,7), (1,8), (1,9);
+
+INSERT INTO Test_Questions (TestID, QuestionID) 
 VALUES 
 (1, 1), 
 (1, 2),
@@ -154,3 +157,12 @@ VALUES
 (1, 'はい、わかりました', 'Vâng, tôi hiểu rồi'),
 (1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
+select * from Test_Questions;
+
+SELECT q.QuestionID, q.SubjectID, q.ChapterID, q.QuestionTypeID, q.Question,
+qt.QuestionTypeName FROM Questions q
+JOIN TestQuestions tq ON q.QuestionID = tq.QuestionID
+JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID
+WHERE tq.TestID = 1;
+
+
