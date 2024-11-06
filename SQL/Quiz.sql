@@ -3,7 +3,6 @@ CREATE DATABASE SWPQuiz;
 
 USE SWPQuiz;
 
-
 CREATE TABLE Roles (
     RoleID INT AUTO_INCREMENT PRIMARY KEY,
     Role VARCHAR(255) CHARACTER SET utf8mb4
@@ -58,7 +57,7 @@ CREATE TABLE Questions (
     SubjectID INT,
     ChapterID INT,
     QuestionTypeID INT,
-    Question VARCHAR(255) CHARACTER SET utf8mb4,
+    Question VARCHAR(255) CHARACTER SET utf8mb4, 
     foreign key (QuestionTypeID) references QuestionType(QuestionTypeID) ON DELETE CASCADE,
     FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID) ON DELETE CASCADE
 );
@@ -97,13 +96,21 @@ CREATE TABLE Options (
 INSERT INTO Options (QuestionID, OptionText, IsCorrect) 
 VALUES 
 (1, 'Paris - France', 0), 
-(1, 'Tokyo', 1),         
+(1, 'Tokyo', 1),        
+(1, 'HN-HCM', 0), 
+(1, 'Kyoto', 1),    
 (2, 'Yes', 1),
 (2, 'No', 0),
+(2, 'Maybe', 1),
+(2, 'Perhap', 0),
 (3, 'This is my family.', 1),
 (3, 'I live alone.', 0),
-(4, 'Famous temples and gardens.', 1),
+(3, 'This is not my family.', 1),
+(3, 'I live.', 0),
+(4, 'Famous gardens.', 1),
 (4, 'Modern buildings.', 0),
+(4, 'Famous temples.', 1),
+(4, 'Modern chicks.', 0),
 (5, 'I wake up at...', 1),
 
 (6, 'London', 1),
@@ -158,6 +165,9 @@ VALUES
 (2, 6), (2, 7), (2, 8), (2, 9), (2, 10),  -- Câu hỏi cho bài kiểm tra tiếng Anh 1
 (3, 11), (3, 12), (3, 13), (3, 14), (3, 15);  -- Câu hỏi cho bài kiểm tra tiếng Hàn 1
 
+
+
+
 CREATE TABLE TermSets (
     TermSetID INT AUTO_INCREMENT PRIMARY KEY,
     TermSetName VARCHAR(255) CHARACTER SET utf8mb4,
@@ -191,6 +201,7 @@ VALUES
 (1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
 
+
 CREATE TABLE StudentAnswers (
     answer_id INT PRIMARY KEY AUTO_INCREMENT,
     student_id INT,
@@ -214,4 +225,3 @@ CREATE TABLE TestResults (
     FOREIGN KEY (student_id) REFERENCES Users(UserID),
     FOREIGN KEY (test_id) REFERENCES Tests(TestID)
 );
-
