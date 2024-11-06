@@ -3,7 +3,6 @@ CREATE DATABASE SWPQuiz;
 
 USE SWPQuiz;
 
-
 CREATE TABLE Roles (
     RoleID INT AUTO_INCREMENT PRIMARY KEY,
     Role VARCHAR(255) CHARACTER SET utf8mb4
@@ -58,14 +57,33 @@ CREATE TABLE Questions (
     SubjectID INT,
     ChapterID INT,
     QuestionTypeID INT,
-    Question VARCHAR(255) CHARACTER SET utf8mb4,
-    FOREIGN KEY (subjectID) REFERENCES Subject(subjectID) ON DELETE CASCADE
+    Question VARCHAR(255) CHARACTER SET utf8mb4, 
+    foreign key (QuestionTypeID) references QuestionType(QuestionTypeID) ON DELETE CASCADE,
+    FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID) ON DELETE CASCADE
 );
 
 INSERT INTO Questions (SubjectID, ChapterID, QuestionTypeID, Question) 
 VALUES 
-(1, 1, 2, 'Match the capital city to its country.'),
-(1, 2, 1, 'What is the capital of Japan?');
+-- Các câu hỏi cho môn Nhật
+(1, 1, 1, 'Tokyo là thủ đô của nước nào?'),  
+(1, 1, 1, 'Osaka là thành phố lớn thứ hai của Nhật Bản?'),  
+(1, 2, 2, 'Hãy viết một đoạn văn ngắn giới thiệu về gia đình bạn.'),  
+(1, 2, 1, 'Kyoto nổi tiếng với gì?'),  
+(1, 2, 2, 'Hãy mô tả một ngày trong cuộc sống của bạn bằng tiếng Nhật.'), 
+
+-- Các câu hỏi cho môn Anh
+(2, 1, 1, 'What is the capital of the UK?'),  
+(2, 1, 1, 'What is the largest city in the UK?'),  
+(2, 2, 2, 'Write an essay about your favorite book.'),  
+(2, 2, 1, 'What is the most famous landmark in London?'),  
+(2, 2, 2, 'Describe your daily routine in English.'), 
+
+-- Các câu hỏi cho môn Hàn
+(3, 1, 1, 'What is the capital of South Korea?'),  
+(3, 1, 1, 'What is the official language of South Korea?'),  
+(3, 2, 2, 'Describe your daily routine in Korean.'),  
+(3, 2, 1, 'What is the traditional food of Korea?'),  
+(3, 2, 2, 'Write a short paragraph about your favorite Korean drama.');  
 
 CREATE TABLE Options (
     OptionID INT AUTO_INCREMENT PRIMARY KEY,
@@ -77,11 +95,25 @@ CREATE TABLE Options (
 
 INSERT INTO Options (QuestionID, OptionText, IsCorrect) 
 VALUES 
-(1, 'Paris - France', 1), 
-(2, 'Tokyo', 1),         
-(2, 'Kyoto', 0),
-(2, 'Osaka', 0),
-(2, 'Nagoya', 0);
+(1, 'Paris - France', 0), 
+(1, 'Tokyo', 1),         
+(2, 'Yes', 1),
+(2, 'No', 0),
+(3, 'This is my family.', 1),
+(3, 'I live alone.', 0),
+(4, 'Famous temples and gardens.', 1),
+(4, 'Modern buildings.', 0),
+(5, 'I wake up at...', 1),
+
+(6, 'London', 1),
+(6, 'Birmingham', 0),
+(7, 'Yes', 1),
+(7, 'No', 0),
+(8, 'Big Ben.', 1),
+(8, 'The Eiffel Tower.', 0),
+(9, 'I love eating Kimbap.', 1),
+(9, 'I don’t like spicy food.', 0),
+(10, 'I like playing soccer.', 1);
 
 CREATE TABLE Class (
     ClassID INT AUTO_INCREMENT PRIMARY KEY,
@@ -98,29 +130,35 @@ CREATE TABLE Tests (
     TestName VARCHAR(255) CHARACTER SET utf8mb4,
     Duration INT,
     ClassID INT,
+    QuestionTypeID INT,
+    FOREIGN KEY (QuestionTypeID) REFERENCES QuestionType(QuestionTypeID),
     FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID),
     FOREIGN KEY (ClassID) REFERENCES Class(ClassID)
 );
 
-INSERT INTO Tests (SubjectId, TestName, Duration, ClassID) 
+INSERT INTO Tests (SubjectID, TestName, Duration, ClassID, QuestionTypeID) 
 VALUES 
-(1, 'Japanese Test 1', 60, 1),
-(2, 'English Test 1', 45, 2),
-(3, 'Korean Test 1', 30, 3);
+(1, 'Japanese Test 1', 60, 1, 1),  
+(2, 'English Test 1', 45, 2, 1),   
+(3, 'Korean Test 1', 30, 3, 1),    
+(1, 'Japanese Test 2', 75, 1, 2);  
 
 CREATE TABLE Test_Questions (
     TestQuestionsID INT AUTO_INCREMENT PRIMARY KEY,
     TestID INT,
     QuestionID INT,
-    FOREIGN KEY (TestID) REFERENCES Tests(TestID),
-    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID)
+    FOREIGN KEY (TestID) REFERENCES Tests(TestID) ON DELETE CASCADE,
+    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID) ON DELETE CASCADE
 );
 
 INSERT INTO Test_Questions (TestID, QuestionID) 
 VALUES 
-(1, 1), 
-(1, 2),
-(2, 2);
+(1, 1), (1, 2), (1, 3), (1, 4), (1, 5),  -- Câu hỏi cho bài kiểm tra Nhật Bản 1
+(2, 6), (2, 7), (2, 8), (2, 9), (2, 10),  -- Câu hỏi cho bài kiểm tra tiếng Anh 1
+(3, 11), (3, 12), (3, 13), (3, 14), (3, 15);  -- Câu hỏi cho bài kiểm tra tiếng Hàn 1
+
+
+
 
 CREATE TABLE TermSets (
     TermSetID INT AUTO_INCREMENT PRIMARY KEY,
@@ -154,3 +192,4 @@ VALUES
 (1, 'はい、わかりました', 'Vâng, tôi hiểu rồi'),
 (1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
+

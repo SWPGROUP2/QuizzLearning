@@ -4,6 +4,9 @@
  */
 package dal;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import models.Classes;
@@ -12,35 +15,54 @@ import models.Classes;
  *
  * @author Admin
  */
-public class ClassDAO extends MyDAO{
+public class ClassDAO extends MyDAO {
+
     public List<Classes> getAllClasses() {
-    String sql = "SELECT * FROM Class";
-    List<Classes> classList = new ArrayList<>();
+        String sql = "SELECT * FROM Class";
+        List<Classes> classList = new ArrayList<>();
 
-    try {
-        ps = con.prepareStatement(sql);
-        rs = ps.executeQuery();
-        
-        while (rs.next()) {
-            int classId = rs.getInt("ClassID");
-            String className = rs.getString("ClassName");
-            int userId = rs.getInt("UserID");
-
-            classList.add(new Classes(classId,className,userId));
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
         try {
-            if (rs != null) rs.close();
-            if (ps != null) ps.close();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int classId = rs.getInt("ClassID");
+                String className = rs.getString("ClassName");
+                int userId = rs.getInt("UserID");
+
+                classList.add(new Classes(classId, className, userId));
+            }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-    }
-    
-    return classList;
-}
 
-    
+        return classList;
+    }
+
+    public String getClassNameById(int classId) {
+        String sql = "SELECT ClassName FROM Class WHERE ClassID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, classId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getString("ClassName");
+            }
+        } catch (SQLException e) {
+            System.out.println("getClassNameById: " + e.getMessage());
+        }
+        return null;
+    }
+
 }

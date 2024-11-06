@@ -8,6 +8,10 @@
         <servlet-name>TermController</servlet-name>
         <servlet-class>controllers.TermController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteTestController</servlet-name>
+        <servlet-class>controllers.DeleteTestController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DetailTestController</servlet-name>
         <url-pattern>/detailtest</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>TermController</servlet-name>
         <url-pattern>/termlist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteTestController</servlet-name>
+        <url-pattern>/deletetest</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
