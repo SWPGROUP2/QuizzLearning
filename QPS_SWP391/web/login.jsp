@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="./assets/css/common.css">
         <style>
             body {
-                background: linear-gradient(to right, #fbc2eb, #a6c0fe);
+                background-image: url('./assets/img/sanhAlpha.jpg');
                 background-size: cover;
                 background-position: center;
                 font-family: Arial, sans-serif;

@@ -69,6 +69,8 @@ public class UpdateUserProfile extends HttpServlet {
                 response.sendRedirect("studenthome");
             } else if (userDAO.getUserById(Integer.parseInt(id)).getRoleId() == 3) {
                 response.sendRedirect("teacherhome");
+            } else if (userDAO.getUserById(Integer.parseInt(id)).getRoleId() == 2) {
+                 response.sendRedirect("adminhome");
             }
         } catch (ServletException | IOException | NumberFormatException ex) {
             Logger.getLogger(UpdateUserProfile.class.getName()).log(Level.SEVERE, null, ex);
