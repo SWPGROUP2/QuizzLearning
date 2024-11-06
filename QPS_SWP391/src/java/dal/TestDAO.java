@@ -182,12 +182,12 @@ public class TestDAO extends MyDAO {
     public int countTestsByName(String testName) {
         xSql = "SELECT COUNT(*) FROM Tests WHERE TestName LIKE ?";
         int count = 0;
-        try ( PreparedStatement ps = con.prepareStatement(xSql)) {
+        try {
+            ps = con.prepareStatement(xSql);
             ps.setString(1, "%" + testName + "%");
-            try ( ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    count = rs.getInt(1);
-                }
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -199,12 +199,12 @@ public class TestDAO extends MyDAO {
         int questionCount = 0;
         xSql = "SELECT COUNT(*) AS QuestionCount FROM Test_Questions WHERE TestID = ?";
 
-        try ( PreparedStatement ps = con.prepareStatement(xSql)) {
+        try {
+            ps = con.prepareStatement(xSql);
             ps.setInt(1, testId);
-            try ( ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    questionCount = rs.getInt("QuestionCount");
-                }
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                questionCount = rs.getInt("QuestionCount");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -212,7 +212,7 @@ public class TestDAO extends MyDAO {
 
         return questionCount;
     }
-  
+
     public boolean addTest(Test test) {
         String sql = "INSERT INTO Tests (SubjectID, TestName, Duration, ClassID) VALUES (?, ?, ?, ?)";
         try {
@@ -308,13 +308,13 @@ public class TestDAO extends MyDAO {
         }
         return questions;
     }
-    
+
     public List<Test> getAllTests(String searchQuery, String sortBy, String sortOrder) {
-    List<Test> tests = new ArrayList<>();
-    String sql = "SELECT t.TestID, t.TestName, t.Duration, t.ClassID, COUNT(tq.QuestionID) AS questionCount " +
-                 "FROM Tests t LEFT JOIN Test_Questions tq ON t.TestID = tq.TestID " +
-                 "WHERE t.TestName LIKE ? " + 
-                 "GROUP BY t.TestID, t.TestName, t.Duration, t.ClassID";
+        List<Test> tests = new ArrayList<>();
+        String sql = "SELECT t.TestID, t.TestName, t.Duration, t.ClassID, COUNT(tq.QuestionID) AS questionCount "
+                + "FROM Tests t LEFT JOIN Test_Questions tq ON t.TestID = tq.TestID "
+                + "WHERE t.TestName LIKE ? "
+                + "GROUP BY t.TestID, t.TestName, t.Duration, t.ClassID";
 
         if (sortBy != null && sortOrder != null) {
             sql += " ORDER BY " + sortBy + " " + sortOrder;
@@ -347,7 +347,8 @@ public class TestDAO extends MyDAO {
 
     public void updateTest(Test test) {
         String sql = "UPDATE Tests SET testName = ?, duration = ?, classId = ?, subjectId = ? WHERE testId = ?";
-        try ( PreparedStatement pstmt = con.prepareStatement(sql)) {
+        try ( PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
             pstmt.setString(1, test.getTestName());
             pstmt.setInt(2, test.getDuration());
             pstmt.setInt(3, test.getClassId());
@@ -358,6 +359,66 @@ public class TestDAO extends MyDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void deleteTest(int testId) {
+        String sql = "DELETE FROM Tests WHERE testId = ?";
+        try ( PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, testId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isCorrectOption(int questionId, int optionId) {
+        String query = "SELECT IsCorrect FROM Options WHERE QuestionID = ? AND OptionID = ?";
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, questionId);
+            statement.setInt(2, optionId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("IsCorrect") == 1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public void saveTestResult(int studentId, int testId, double score) throws SQLException {
+        String sql = "INSERT INTO TestResults (student_id, test_id, score) VALUES (?, ?, ?)";
+
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, studentId);
+            statement.setInt(2, testId);
+            statement.setDouble(3, score);
+            statement.executeUpdate();
+        }
+    }
+
+    public List<TestResult> getTestHistory(int userId) {
+        List<TestResult> testHistory = new ArrayList<>();
+        String sql = "SELECT t.TestName, r.score FROM Tests t "
+                + "JOIN TestResults r ON t.TestID = r.test_id "
+                + "WHERE r.student_id = ?";
+
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                TestResult result = new TestResult();
+                result.setTestName(rs.getString("testName"));
+                result.setScore(rs.getInt("score"));
+                testHistory.add(result);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return testHistory;
     }
 
     public List<Question> getQuestionsByTestId2(int testId) {
@@ -415,65 +476,4 @@ public class TestDAO extends MyDAO {
         }
         return options;
     }
-
-    public boolean isCorrectOption(int questionId, int optionId) {
-        String query = "SELECT IsCorrect FROM Options WHERE QuestionID = ? AND OptionID = ?";
-        try ( PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, questionId);
-            statement.setInt(2, optionId);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                return resultSet.getInt("IsCorrect") == 1;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(TestDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
-
-    public void saveTestResult(int studentId, int testId, double score) throws SQLException {
-        String sql = "INSERT INTO TestResults (student_id, test_id, score) VALUES (?, ?, ?)";
-
-        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, studentId);
-            statement.setInt(2, testId);
-            statement.setDouble(3, score);
-            statement.executeUpdate();
-        }
-    }
-
-    public List<TestResult> getTestHistory(int userId) {
-        List<TestResult> testHistory = new ArrayList<>();
-        String sql = "SELECT t.TestName, r.score FROM Tests t "
-                + "JOIN TestResults r ON t.TestID = r.test_id "
-                + "WHERE r.student_id = ?";
-
-        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setInt(1, userId);
-            ResultSet rs = statement.executeQuery();
-
-            while (rs.next()) {
-                TestResult result = new TestResult();
-                result.setTestName(rs.getString("testName"));
-                result.setScore(rs.getInt("score"));
-                testHistory.add(result);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return testHistory;
-    }
-
-    public void deleteTest(int testId) {
-        String sql = "DELETE FROM Tests WHERE testId = ?";
-        try ( PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, testId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
