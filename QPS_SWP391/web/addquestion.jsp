@@ -88,12 +88,12 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="questionTypeId" id="singleChoice" value="1" 
                                            ${param.questionTypeId == '1' ? 'checked' : ''} onchange="showOptions()">
-                                    <label class="form-check-label" for="singleChoice">Single Choice</label>
+                                    <label class="form-check-label" for="singleChoice">Multiple Choice</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="questionTypeId" id="matching" value="2" 
                                            ${empty param.questionTypeId || param.questionTypeId == '2' ? 'checked' : ''} onchange="showOptions()">
-                                    <label class="form-check-label" for="matching">Matching</label>
+                                    <label class="form-check-label" for="matching">Short Answer</label>
                                 </div>
                             </div>
 
@@ -126,11 +126,11 @@
 
                             <div id="matchingOptions" style="display:none;">
                                 <div class="form-group">
-                                    <label for="optionText">Matching Option</label>
+                                    <label for="optionText">Short Answer Option</label>
                                     <input type="text" 
                                            class="form-control ${not empty matchingError ? 'is-invalid' : ''}" 
                                            id="optionText" name="optionText" 
-                                           placeholder="Enter matching option" 
+                                           placeholder="Enter short answer" 
                                            value="${optionText}">
                                     <c:if test="${not empty matchingError}">
                                         <div class="invalid-feedback">
