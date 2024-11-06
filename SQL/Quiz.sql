@@ -157,7 +157,30 @@ VALUES
 (1, 'はい、わかりました', 'Vâng, tôi hiểu rồi'),
 (1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
-select * from Test_Questions;
+
+CREATE TABLE StudentAnswers (
+    answer_id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT,
+    test_id INT,
+    question_id INT,
+    option_id INT,
+    answer_text TEXT, -- dành cho câu trả lời dạng tự luận
+    answered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES Users(UserID),
+    FOREIGN KEY (test_id) REFERENCES Tests(TestID),
+    FOREIGN KEY (question_id) REFERENCES Questions(QuestionID),
+    FOREIGN KEY (option_id) REFERENCES Options(OptionID)
+);
+
+CREATE TABLE TestResults (
+    result_id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT,
+    test_id INT,
+    score DECIMAL(5, 2),
+    completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES Users(UserID),
+    FOREIGN KEY (test_id) REFERENCES Tests(TestID)
+);
 
 SELECT q.QuestionID, q.SubjectID, q.ChapterID, q.QuestionTypeID, q.Question,
 qt.QuestionTypeName FROM Questions q
@@ -165,4 +188,9 @@ JOIN TestQuestions tq ON q.QuestionID = tq.QuestionID
 JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID
 WHERE tq.TestID = 1;
 
+SELECT t.TestName, tr.score 
+FROM TestResults tr
+JOIN Tests t ON tr.test_id = t.TestID
+WHERE tr.student_id = 1;
 
+select * from TestResults;

@@ -21,7 +21,8 @@
                 <div class="col-md-10">
                     <div class="container mt-5">
                         <h1 class="text-center mb-4">Bài kiểm tra ID: ${testId}</h1>
-                        <form action="submitTest" method="post"  value="${testId}">
+                        <form action="submitTest" method="post">
+                            <input type="hidden" name="testId" value="${testId}">
                             <c:forEach var="entry" items="${questionOptionsMap.entrySet()}">
                                 <c:set var="question" value="${entry.key}" />
                                 <c:set var="options" value="${entry.value}" />
