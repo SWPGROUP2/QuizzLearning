@@ -75,7 +75,7 @@
     <body>
         <nav class="sidebar p-3">
             <div class="text-center mb-4 dropdown">
-                <h3>QPS04</h3>
+                <h3>QPS03</h3>
                 <%
                     User account = (User) session.getAttribute("account");
 String avatarUrl = (account != null && account.getAvatar() != null) ? account.getAvatar() : "assets/avatar/default-image.png";
