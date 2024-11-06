@@ -78,10 +78,10 @@
                 <h3>QPS04</h3>
                 <%
                     User account = (User) session.getAttribute("account");
-                    String avatarUrl = account != null ? account.getAvatar() : "assets/img/default-avatar.png"; // Fallback to a default image
+String avatarUrl = (account != null && account.getAvatar() != null) ? account.getAvatar() : "assets/avatar/default-image.png";
                 %>
                 <a href="user-profile.jsp" class="avatar-container">
-                    <img src="<%= avatarUrl %>" alt="User Image">
+                    <img src="<%= avatarUrl %>" >
                 </a>
             </div>
             <ul class="list-unstyled">

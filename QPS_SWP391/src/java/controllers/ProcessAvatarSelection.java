@@ -18,10 +18,6 @@ import java.util.logging.Logger;
 
 import models.User;
 
-/**
- *
- * @author ACER
- */
 public class ProcessAvatarSelection extends HttpServlet {
 
     @Override
@@ -32,7 +28,7 @@ public class ProcessAvatarSelection extends HttpServlet {
         UserDAO userDAO = new UserDAO();
         HttpSession session = request.getSession();
         try {
-            //true sẽ thay bằng điều kiện kích hoạt
+
             if(true){
                 userDAO.updateAvatarById(selectedAvatar, Integer.parseInt(id));
             }
@@ -46,10 +42,8 @@ public class ProcessAvatarSelection extends HttpServlet {
         }
     }
 
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
+
+
     @Override
     public String getServletInfo() {
         return "Short description";
