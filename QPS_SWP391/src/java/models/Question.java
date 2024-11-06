@@ -9,7 +9,8 @@ public class Question {
     private int chapterId;
     private int questionTypeId;
     private String question;
-private String questionTypeName;
+    private String questionTypeName;
+    private List<Option> options;
     // No-argument constructor if needed
     public Question() {
     }
@@ -63,7 +64,7 @@ private String questionTypeName;
     }
 
     private List<Question> questions;
-        private int totalCount; 
+    private int totalCount;
 
     public List<Question> getQuestions() {
         return questions;
@@ -80,13 +81,20 @@ private String questionTypeName;
     public void setTotalCount(int totalCount) {
         this.totalCount = totalCount;
     }
-    
-        public String getQuestionTypeName() {
+
+    public String getQuestionTypeName() {
         return questionTypeName;
     }
 
     public void setQuestionTypeName(String questionTypeName) {
         this.questionTypeName = questionTypeName;
     }
+    
+        public List<Option> getOptions() { // Sửa thành getOptions
+        return options;
+    }
 
+    public void setOptions(List<Option> options) { // Sửa thành setOptions
+        this.options = options;
+    }
 }

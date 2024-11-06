@@ -1,21 +1,26 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
 package controllers;
 
-import dal.SubjectDAO;
-import java.util.List;
+import dal.TestDAO;
+import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import models.subject;
+import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import models.TestResult;
 
 /**
  *
- * @author Admin
+ * @author dell
  */
-public class SubjectList extends HttpServlet {
+public class TestHistory extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,10 +39,10 @@ public class SubjectList extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SubjectList</title>");
+            out.println("<title>Servlet TestHistory</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SubjectList at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet TestHistory at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,30 +60,14 @@ public class SubjectList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
-        response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
+        int userId = (int) session.getAttribute("user_id");
 
-        final int PAGE_SIZE = 3;
-        int page = 1;
-        String pageStr = request.getParameter("page");
-        if (pageStr != null) {
-            page = Integer.parseInt(pageStr);
-        }
-        int totalSearch = new SubjectDAO().getTotalSubject();
-        int totalPage = totalSearch / PAGE_SIZE;
-        if (totalSearch % PAGE_SIZE != 0) {
-            totalPage += 1;
-        }
+        TestDAO testDAO = new TestDAO();
+        List<TestResult> testHistory = testDAO.getTestHistory(userId);
 
-        SubjectDAO subjectListDAO = new SubjectDAO();
-
-        List<subject> listSubjectsByPagging = subjectListDAO.getListSubjectsByPagging(page, PAGE_SIZE);
-        request.setAttribute("listSubjectsByPagging", listSubjectsByPagging);
-
-        request.setAttribute("page", page);
-        request.setAttribute("totalPage", totalPage);
-        request.setAttribute("pagination_url", "subject-list?");
-        request.getRequestDispatcher("subject.jsp").forward(request, response);
+        request.setAttribute("testHistory", testHistory);
+        request.getRequestDispatcher("testHistory.jsp").forward(request, response);
     }
 
     /**

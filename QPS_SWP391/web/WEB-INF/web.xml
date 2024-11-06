@@ -9,6 +9,18 @@
         <servlet-class>controllers.TermController</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>DoTestServlet</servlet-name>
+        <servlet-class>controllers.DoTestServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SubmitTestServlet</servlet-name>
+        <servlet-class>controllers.SubmitTestServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TestHistory</servlet-name>
+        <servlet-class>controllers.TestHistory</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>DeleteTestController</servlet-name>
         <servlet-class>controllers.DeleteTestController</servlet-class>
     </servlet>
@@ -29,6 +41,18 @@
         <url-pattern>/termlist</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>DoTestServlet</servlet-name>
+        <url-pattern>/do-test</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubmitTestServlet</servlet-name>
+        <url-pattern>/submitTest</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TestHistory</servlet-name>
+        <url-pattern>/testHistory</url-pattern>
+    </servlet-mapping>
+   <servlet-mapping>
         <servlet-name>DeleteTestController</servlet-name>
         <url-pattern>/deletetest</url-pattern>
     </servlet-mapping>

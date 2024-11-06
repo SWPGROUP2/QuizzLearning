@@ -8,6 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import models.Option;
+import models.TestResult;
 
 public class TestDAO extends MyDAO {
 
@@ -304,42 +308,42 @@ public class TestDAO extends MyDAO {
         }
         return questions;
     }
-    
+
     public List<Test> getAllTests(String searchQuery, String sortBy, String sortOrder) {
-    List<Test> tests = new ArrayList<>();
-    String sql = "SELECT t.TestID, t.TestName, t.Duration, t.ClassID, COUNT(tq.QuestionID) AS questionCount " +
-                 "FROM Tests t LEFT JOIN Test_Questions tq ON t.TestID = tq.TestID " +
-                 "WHERE t.TestName LIKE ? " + 
-                 "GROUP BY t.TestID, t.TestName, t.Duration, t.ClassID";
+        List<Test> tests = new ArrayList<>();
+        String sql = "SELECT t.TestID, t.TestName, t.Duration, t.ClassID, COUNT(tq.QuestionID) AS questionCount "
+                + "FROM Tests t LEFT JOIN Test_Questions tq ON t.TestID = tq.TestID "
+                + "WHERE t.TestName LIKE ? "
+                + "GROUP BY t.TestID, t.TestName, t.Duration, t.ClassID";
 
-    if (sortBy != null && sortOrder != null) {
-        sql += " ORDER BY " + sortBy + " " + sortOrder;
-    }
-
-    System.out.println("Executing SQL: " + sql); 
-
-    try (
-         PreparedStatement stmt = con.prepareStatement(sql)) {
-
-        stmt.setString(1, "%" + searchQuery + "%"); 
-
-        ResultSet rs = stmt.executeQuery();
-        while (rs.next()) {
-            Test test = new Test();
-            test.setTestID(rs.getInt("TestID"));
-            test.setTestName(rs.getString("TestName"));
-            test.setDuration(rs.getInt("Duration"));
-            test.setClassId(rs.getInt("ClassID"));
-            test.setQuestionCount(rs.getInt("questionCount"));
-            tests.add(test);
+        if (sortBy != null && sortOrder != null) {
+            sql += " ORDER BY " + sortBy + " " + sortOrder;
         }
-    } catch (SQLException e) {
-        e.printStackTrace(); 
-    }
 
-    System.out.println("Number of tests found: " + tests.size()); 
-    return tests;
-}
+        System.out.println("Executing SQL: " + sql);
+
+        try (
+                 PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, "%" + searchQuery + "%");
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Test test = new Test();
+                test.setTestID(rs.getInt("TestID"));
+                test.setTestName(rs.getString("TestName"));
+                test.setDuration(rs.getInt("Duration"));
+                test.setClassId(rs.getInt("ClassID"));
+                test.setQuestionCount(rs.getInt("questionCount"));
+                tests.add(test);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Number of tests found: " + tests.size());
+        return tests;
+    }
 
     public void updateTest(Test test) {
         String sql = "UPDATE Tests SET testName = ?, duration = ?, classId = ?, subjectId = ? WHERE testId = ?";
@@ -367,4 +371,109 @@ public class TestDAO extends MyDAO {
         }
     }
 
+    public boolean isCorrectOption(int questionId, int optionId) {
+        String query = "SELECT IsCorrect FROM Options WHERE QuestionID = ? AND OptionID = ?";
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, questionId);
+            statement.setInt(2, optionId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("IsCorrect") == 1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public void saveTestResult(int studentId, int testId, double score) throws SQLException {
+        String sql = "INSERT INTO TestResults (student_id, test_id, score) VALUES (?, ?, ?)";
+
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, studentId);
+            statement.setInt(2, testId);
+            statement.setDouble(3, score);
+            statement.executeUpdate();
+        }
+    }
+
+    public List<TestResult> getTestHistory(int userId) {
+        List<TestResult> testHistory = new ArrayList<>();
+        String sql = "SELECT t.TestName, r.score FROM Tests t "
+                + "JOIN TestResults r ON t.TestID = r.test_id "
+                + "WHERE r.student_id = ?";
+
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                TestResult result = new TestResult();
+                result.setTestName(rs.getString("testName"));
+                result.setScore(rs.getInt("score"));
+                testHistory.add(result);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return testHistory;
+    }
+
+    public List<Question> getQuestionsByTestId2(int testId) {
+        List<Question> questions = new ArrayList<>();
+
+        String query = "SELECT q.QuestionID, q.SubjectID, q.ChapterID, q.QuestionTypeID, q.Question, "
+                + "qt.QuestionTypeName FROM Questions q "
+                + "JOIN Test_Questions tq ON q.QuestionID = tq.QuestionID "
+                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
+                + "WHERE tq.TestID = ?";
+
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, testId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int questionID = resultSet.getInt("QuestionID");
+                int subjectId = resultSet.getInt("SubjectID");
+                int chapterId = resultSet.getInt("ChapterID");
+                int questionTypeId = resultSet.getInt("QuestionTypeID");
+                String questionText = resultSet.getString("Question");
+                String questionTypeName = resultSet.getString("QuestionTypeName");
+
+                Question question = new Question(questionID, subjectId, chapterId, questionText, questionTypeId, questionTypeName);
+                question.setOptions(getOptionsByQuestionId(questionID)); // Lấy các tùy chọn cho câu hỏi
+
+                questions.add(question);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return questions;
+    }
+
+    public List<Option> getOptionsByQuestionId(int questionId) {
+        List<Option> options = new ArrayList<>();
+
+        String query = "SELECT o.OptionID, o.QuestionID, o.OptionText, o.IsCorrect "
+                + "FROM Options o WHERE o.QuestionID = ?";
+
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, questionId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int optionId = resultSet.getInt("OptionID");
+                String optionText = resultSet.getString("OptionText");
+                int isCorrect = resultSet.getInt("IsCorrect");
+
+                Option option = new Option(questionId, optionId, optionText, isCorrect);
+                options.add(option);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return options;
+    }
 }

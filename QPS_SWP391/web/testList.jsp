@@ -23,7 +23,7 @@
             }
             .text-center {
                 text-align: center;
-                flex: 1; 
+                flex: 1;
             }
         </style>
     </head>
@@ -49,7 +49,11 @@
                         <a href="addtest" class="btn btn-primary">Add Test</a>
                     </c:if>
                 </div>
-
+                <c:if test="${sessionScope.account.roleId == 1}">
+                    <div class="d-flex justify-content-end mb-3">
+                        <a href="testHistory" class="btn btn-info">Test History</a>
+                    </div>
+                </c:if>
                 <form class="form-inline mb-4" action="test-list" method="GET">
                     <input type="text" name="searchQuery" value="${searchQuery}" placeholder="Search test by name" class="form-control mr-2"/>
                     <button class="btn btn-primary" type="submit">Search</button>
