@@ -32,7 +32,7 @@ public class TestList extends HttpServlet {
 
         if (searchQuery != null && !searchQuery.isEmpty()) {
             tests = testDAO.getAllTests(searchQuery, sortBy, sortOrder);
-    request.setAttribute("tests", tests);
+            request.setAttribute("tests", tests);
             totalTests = testDAO.countTestsByName(searchQuery);
         } else {
             tests = testDAO.getTestsPaginated(currentPage, testsPerPage, sortBy, sortOrder);
@@ -53,6 +53,6 @@ public class TestList extends HttpServlet {
         request.setAttribute("sortBy", sortBy);
         request.setAttribute("sortOrder", sortOrder);
 
-        request.getRequestDispatcher("testlist.jsp").forward(request, response);
+        request.getRequestDispatcher("testList.jsp").forward(request, response);
     }
 }

@@ -4,10 +4,6 @@
  */
 package controllers;
 
-import dal.ClassDAO;
-import dal.QuestionDAO;
-import dal.QuestionTypeDAO;
-import dal.SubjectDAO;
 import dal.TestDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,15 +11,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import models.Question;
-import models.Test;
 
 /**
  *
  * @author Admin
  */
-public class DetailTestController extends HttpServlet {
+public class DeleteTestController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +35,10 @@ public class DetailTestController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DetailTestController</title>");
+            out.println("<title>Servlet DeleteTestController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DetailTestController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DeleteTestController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,40 +56,7 @@ public class DetailTestController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            int testId = Integer.parseInt(request.getParameter("testId"));
-
-            TestDAO testdao = new TestDAO();
-            SubjectDAO subjectdao = new SubjectDAO();
-            ClassDAO classdao = new ClassDAO();
-
-            // Get test and its questions
-            Test test = testdao.getTestById(testId);
-            if (test == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                return;
-            }
-
-            List<Question> questions = testdao.getQuestionsByTestId(testId);
-
-            // Get additional information
-            String subjectname = subjectdao.getSubjectNameById(test.getSubjectId());
-            String classname = classdao.getClassNameById(test.getClassId());
-
-            // Set attributes
-            request.setAttribute("subjectName", subjectname);
-            request.setAttribute("className", classname);
-            request.setAttribute("test", test);
-            request.setAttribute("questions", questions);
-
-            request.getRequestDispatcher("detailtest.jsp").forward(request, response);
-            
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -110,7 +70,10 @@ public class DetailTestController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        int testId = Integer.parseInt(request.getParameter("testID"));
+        TestDAO testdao = new TestDAO();
+        testdao.deleteTest(testId);  // Assuming a method that deletes the test from the database
+        response.sendRedirect("test-list");  // 
     }
 
     /**

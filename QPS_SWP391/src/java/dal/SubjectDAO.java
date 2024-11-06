@@ -4,6 +4,9 @@
  */
 package dal;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -241,5 +244,19 @@ public class SubjectDAO extends MyDAO {
             }
         }
         return false;
+    }
+    public String getSubjectNameById(int subjectId) {
+        String subjectName = null;
+        try (PreparedStatement statement = connection.prepareStatement("SELECT SubjectName FROM Subject WHERE SubjectID = ?")) {
+            statement.setInt(1, subjectId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                subjectName = resultSet.getString("SubjectName");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return subjectName;
     }
 }
