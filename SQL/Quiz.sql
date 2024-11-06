@@ -115,9 +115,8 @@ CREATE TABLE Test_Questions (
     FOREIGN KEY (TestID) REFERENCES Tests(TestID),
     FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID)
 );
-
 INSERT INTO Test_Questions (TestID, QuestionID) 
-VALUES(1,3), (1,4), (1,5), (1,6), (1,7), (1,8), (1,9);
+VALUES(1,2),(1,3), (1,4), (1,5), (1,6), (1,7), (1,8), (1,9);
 
 INSERT INTO Test_Questions (TestID, QuestionID) 
 VALUES 
@@ -182,15 +181,3 @@ CREATE TABLE TestResults (
     FOREIGN KEY (test_id) REFERENCES Tests(TestID)
 );
 
-SELECT q.QuestionID, q.SubjectID, q.ChapterID, q.QuestionTypeID, q.Question,
-qt.QuestionTypeName FROM Questions q
-JOIN TestQuestions tq ON q.QuestionID = tq.QuestionID
-JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID
-WHERE tq.TestID = 1;
-
-SELECT t.TestName, tr.score 
-FROM TestResults tr
-JOIN Tests t ON tr.test_id = t.TestID
-WHERE tr.student_id = 1;
-
-select * from TestResults;

@@ -51,7 +51,7 @@ CREATE TABLE QuestionType (
     QuestionTypeName VARCHAR(255) CHARACTER SET utf8mb4
 );
 
-INSERT INTO QuestionType (QuestionTypeName) VALUES ('single-choice'), ('matching'), ('order');
+INSERT INTO QuestionType (QuestionTypeName) VALUES ('Multiple-choice'), ('Short-answer');
 
 CREATE TABLE Questions (
     QuestionID INT AUTO_INCREMENT PRIMARY KEY,
@@ -121,3 +121,36 @@ VALUES
 (1, 1), 
 (1, 2),
 (2, 2);
+
+CREATE TABLE TermSets (
+    TermSetID INT AUTO_INCREMENT PRIMARY KEY,
+    TermSetName VARCHAR(255) CHARACTER SET utf8mb4,
+	TermSetDescription VARCHAR(255) CHARACTER SET utf8mb4
+);
+
+INSERT INTO TermSets (TermSetName, TermSetDescription) VALUES
+('Chào hỏi trong tiếng Nhật', 'Một số câu chào hỏi cơ bản thường ngày trong tiếng Nhật');
+
+CREATE TABLE Terms (
+    TermID INT auto_increment PRIMARY KEY,
+    TermSetID INT,
+	Term VARCHAR(1000) CHARACTER SET utf8mb4, 
+    Definition VARCHAR(1000) CHARACTER SET utf8mb4,
+	FOREIGN KEY (TermSetID) REFERENCES TermSets(TermSetID)
+);
+
+INSERT INTO Terms (TermSetID, Term, Definition)
+VALUES 
+(1, 'おはようございます', 'Chào buổi sáng!'),
+(1, 'こんにちは', 'Chào buổi trưa!'),
+(1, 'こんばんは', 'Chào buổi tối!'),
+(1, 'すみません', 'Xin lỗi'),
+(1, 'どうも', 'Rất, xin chào, cảm ơn,...'),
+(1, 'ありがとう', 'Cảm ơn'),
+(1, 'どうもありがとうございます', 'Cảm ơn rất nhiều.'),
+(1, 'おやすみなさい', 'Chúc ngủ ngon.'),
+(1, 'さようなら', 'Tạm biệt.'),
+(1, 'わかりますか', 'Có hiểu không?'),
+(1, 'はい、わかりました', 'Vâng, tôi hiểu rồi'),
+(1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
+(1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');

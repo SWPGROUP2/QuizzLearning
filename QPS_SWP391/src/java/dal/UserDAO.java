@@ -165,7 +165,7 @@ public class UserDAO extends DBContext {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, newPassword);
             statement.setInt(2, userId);
-            int rowsAffected = statement.executeUpdate(); // Execute the update
+            int rowsAffected = statement.executeUpdate(); 
             return rowsAffected > 0;
         } catch (Exception ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);

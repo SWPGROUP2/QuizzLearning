@@ -81,11 +81,11 @@
         }
     </style>
     <body class="container-fluid">
-        <div class="row">
+        <div class="row" style="height: 639px;">
             <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
                 <%@include file="/Components/Sidebar.jsp" %>
             </div>
-            <main class="col-md-10 p-3">
+            <main class="col-md-10 px-10">
                 <div class="">
                     <h1>User Manager</h1>
                     <small>Home / User Manager</small>
