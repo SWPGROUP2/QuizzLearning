@@ -52,7 +52,7 @@
         <servlet-name>TestHistory</servlet-name>
         <url-pattern>/testHistory</url-pattern>
     </servlet-mapping>
-   <servlet-mapping>
+    <servlet-mapping>
         <servlet-name>DeleteTestController</servlet-name>
         <url-pattern>/deletetest</url-pattern>
     </servlet-mapping>
@@ -149,10 +149,6 @@
         <servlet-class>controllers.AddTestController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>QuestionService</servlet-name>
-        <servlet-class>controllers.QuestionService</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>DetailTestController</servlet-name>
         <servlet-class>controllers.DetailTestController</servlet-class>
     </servlet>
@@ -235,10 +231,6 @@
     <servlet-mapping>
         <servlet-name>AddTestController</servlet-name>
         <url-pattern>/addtest</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>QuestionService</servlet-name>
-        <url-pattern>/QuestionService</url-pattern>
     </servlet-mapping>
     <!--    <session-config>
         <session-timeout>1000</session-timeout>

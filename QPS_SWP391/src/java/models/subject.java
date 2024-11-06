@@ -1,24 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package models;
 
-import java.util.Date;
-
-/**
- *
- * @author Admin
- */
 public class subject {
     private int subjectId;
     private String subjectName;
     private String title;
     private String thumbnail;
 
+    // Default constructor
     public subject() {
     }
 
+    // Constructor for full details
     public subject(int subjectId, String subjectName, String title, String thumbnail) {
         this.subjectId = subjectId;
         this.subjectName = subjectName;
@@ -26,7 +18,13 @@ public class subject {
         this.thumbnail = thumbnail;
     }
 
+    // Constructor with only subjectId and subjectName
+    public subject(int subjectId, String subjectName) {
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
+    }
 
+    // Getters and Setters
     public int getSubjectId() {
         return subjectId;
     }
@@ -57,6 +55,5 @@ public class subject {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
-    }   
-
+    }
 }

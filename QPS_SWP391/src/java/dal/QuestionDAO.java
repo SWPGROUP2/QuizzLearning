@@ -3,97 +3,182 @@ package dal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import models.Question;
+import models.subject;
+import models.QuestionType;
 
 public class QuestionDAO extends MyDAO {
 
-    public List<Question> getQuestionsBySubjectId(int subjectId) {
-        String sql = "SELECT q.*, qt.QuestionTypeName "
-                + "FROM Questions q "
-                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
-                + "WHERE q.SubjectID = ?";
-        List<Question> qlist = new ArrayList<>();
+    public List<QuestionType> getAllQuestionTypes() {
+        List<QuestionType> questionTypeList = new ArrayList<>();
+        String query = "SELECT QuestionTypeId, QuestionTypeName FROM QuestionTypes";
+        try ( Statement statement = con.createStatement();  ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                int QuestionTypeId = resultSet.getInt("QuestionTypeId");
+                String QuestionTypeName = resultSet.getString("QuestionTypeName");
+                QuestionType questionType = new QuestionType(QuestionTypeId, QuestionTypeName);
+                questionTypeList.add(questionType);
+            }
 
-        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, subjectId);
-            try ( ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    qlist.add(new Question(
-                            rs.getInt("QuestionID"),
-                            rs.getInt("SubjectID"),
-                            rs.getInt("ChapterID"),
-                            rs.getString("Question"),
-                            rs.getInt("QuestionTypeID"),
-                            rs.getString("QuestionTypeName") // Retrieve questionTypeName
-                    ));
-                }
+        } catch (SQLException e) {
+            e.printStackTrace();  
+        }
+
+        return questionTypeList;
+    }
+
+    public List<subject> getAllSubjects() {
+        List<subject> subjectList = new ArrayList<>();
+        String query = "SELECT SubjectID, SubjectName FROM Subjects"; // Replace with your actual table name and column names
+
+        try (
+                 Statement statement = con.createStatement();  ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                int subjectId = resultSet.getInt("SubjectID");
+                String subjectName = resultSet.getString("SubjectName");
+
+                // Create a new Subject object and add it to the list
+                subject subject = new subject(subjectId, subjectName);
+                subjectList.add(subject);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();  // Handle exceptions as necessary
+        }
+
+        return subjectList;
+    }
+
+    public List<Question> getAllQuestions(int limit, int offset, String chapterId) {
+        List<Question> questionList = new ArrayList<>();
+        String query = "SELECT q.QuestionID, s.SubjectName, q.ChapterID, q.Question, qt.QuestionTypeName "
+                + "FROM Questions q "
+                + "JOIN Subject s ON q.SubjectID = s.SubjectID "
+                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
+                + "WHERE (? IS NULL OR q.ChapterID = ?) "
+                + "LIMIT ? OFFSET ?";
+
+        try ( PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, chapterId);  // Filter by chapter if provided
+            stmt.setString(2, chapterId);  // Filter by chapter if provided
+            stmt.setInt(3, limit);         // Set limit
+            stmt.setInt(4, offset);        // Set offset
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                // Create the Question object with the retrieved data
+                Question question = new Question(
+                        rs.getInt("QuestionID"),
+                        rs.getInt("ChapterID"),
+                        rs.getString("Question"),
+                        rs.getString("QuestionTypeName"),
+                        rs.getString("SubjectName")
+                );
+                questionList.add(question);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return qlist;
+        return questionList;
     }
 
-    public List<Question> getQuestionsBySubjectIdChapterIdSorted(int subjectId, String chapterId, String sort, String sortOrder) {
-        String sql = "SELECT q.*, qt.QuestionTypeName "
+    // Get filtered questions with pagination
+    public List<Question> getFilteredQuestions(String subjectId, String chapterId, String questionTypeId, int currentPage, int questionsPerPage) {
+        List<Question> questionList = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT q.QuestionID, s.SubjectName, q.ChapterID, q.Question, qt.QuestionTypeName "
                 + "FROM Questions q "
-                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
-                + "WHERE q.SubjectID = ?";
+                + "JOIN Subject s ON q.SubjectID = s.SubjectID "
+                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID WHERE 1=1");
+
+        if (subjectId != null && !subjectId.isEmpty()) {
+            query.append(" AND q.SubjectID = ? ");
+        }
         if (chapterId != null && !chapterId.isEmpty()) {
-            sql += " AND q.ChapterID = ?";
+            query.append(" AND q.ChapterID = ? ");
         }
-        sql += " ORDER BY " + sort + " " + (sortOrder.equals("desc") ? "DESC" : "ASC");
+        if (questionTypeId != null && !questionTypeId.isEmpty()) {
+            query.append(" AND q.QuestionTypeID = ? ");
+        }
 
-        List<Question> qlist = new ArrayList<>();
-        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, subjectId);
-            if (chapterId != null && !chapterId.isEmpty()) {
-                ps.setString(2, chapterId);
+        // Apply pagination
+        query.append(" LIMIT ?, ?");
+
+        try ( PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+            int index = 1;
+            if (subjectId != null && !subjectId.isEmpty()) {
+                stmt.setString(index++, subjectId);
             }
-            ResultSet rs = ps.executeQuery();
+            if (chapterId != null && !chapterId.isEmpty()) {
+                stmt.setString(index++, chapterId);
+            }
+            if (questionTypeId != null && !questionTypeId.isEmpty()) {
+                stmt.setString(index++, questionTypeId);
+            }
+
+            stmt.setInt(index++, (currentPage - 1) * questionsPerPage);
+            stmt.setInt(index, questionsPerPage);
+
+            ResultSet rs = stmt.executeQuery();
+
             while (rs.next()) {
-                qlist.add(new Question(
+                Question question = new Question(
                         rs.getInt("QuestionID"),
-                        subjectId,
                         rs.getInt("ChapterID"),
                         rs.getString("Question"),
-                        rs.getInt("QuestionTypeID"),
-                        rs.getString("QuestionTypeName")
-                ));
+                        rs.getString("QuestionTypeName"),
+                        rs.getString("SubjectName")
+                );
+                questionList.add(question);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return qlist;
+
+        return questionList;
     }
 
-    public List<Question> getQuestionsBySubjectIdQuestionTypeIdSorted(int subjectId, String chapterId, String sort, String sortOrder) {
-        String sql = "SELECT * FROM Questions WHERE SubjectID = ?";
+    public int getFilteredQuestionCount(String subjectId, String chapterId, String questionTypeId) {
+        int count = 0;
+        StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM Questions q "
+                + "JOIN Subject s ON q.SubjectID = s.SubjectID "
+                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID WHERE 1=1");
 
-        if ("questionType".equals(sort)) {
-            sql += " ORDER BY QuestionTypeId " + ("desc".equals(sortOrder) ? "DESC" : "ASC");
+        if (subjectId != null && !subjectId.isEmpty()) {
+            query.append(" AND q.SubjectID = ? ");
+        }
+        if (chapterId != null && !chapterId.isEmpty()) {
+            query.append(" AND q.ChapterID = ? ");
+        }
+        if (questionTypeId != null && !questionTypeId.isEmpty()) {
+            query.append(" AND q.QuestionTypeID = ? ");
         }
 
-        List<Question> qlist = new ArrayList<>();
-        try ( PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, subjectId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                qlist.add(new Question(
-                        rs.getInt("QuestionID"),
-                        subjectId,
-                        rs.getInt("ChapterID"),
-                        rs.getString("Question"),
-                        rs.getInt("QuestionTypeId"),
-                        rs.getString("QuestionTypeName")
-                ));
+        try ( PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+            int index = 1;
+            if (subjectId != null && !subjectId.isEmpty()) {
+                stmt.setString(index++, subjectId);
+            }
+            if (chapterId != null && !chapterId.isEmpty()) {
+                stmt.setString(index++, chapterId);
+            }
+            if (questionTypeId != null && !questionTypeId.isEmpty()) {
+                stmt.setString(index++, questionTypeId);
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return qlist;
+
+        return count;
     }
 
     public boolean deleteQuestion(int questionID) {
@@ -138,7 +223,8 @@ public class QuestionDAO extends MyDAO {
                             rs.getInt("ChapterID"),
                             rs.getString("Question"),
                             rs.getInt("QuestionTypeID"),
-                            rs.getString("QuestionTypeName")
+                            rs.getString("QuestionTypeName"),
+                            rs.getString("SubjectName")
                     );
                 }
             }
@@ -168,21 +254,59 @@ public class QuestionDAO extends MyDAO {
         return 0;
     }
 
-    public Set<Integer> getUniqueChapters(int subjectId) {
-        Set<Integer> chapterSet = new HashSet<>();
-        String query = "SELECT DISTINCT ChapterID FROM Questions WHERE SubjectID = ?";
-        try ( PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, subjectId);
-            try ( ResultSet result = stmt.executeQuery()) {
-                while (result.next()) {
-                    chapterSet.add(result.getInt("ChapterID"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+public Map<Integer, String> getUniqueSubjects() {
+    Map<Integer, String> uniqueSubjects = new LinkedHashMap<>();
+    String query = "SELECT DISTINCT SubjectName, SubjectID FROM Subject"; // Select both SubjectName and SubjectID
+    
+    try (PreparedStatement stmt = con.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery()) {
+             
+        while (rs.next()) {
+            int subjectId = rs.getInt("SubjectID");
+            String subjectName = rs.getString("SubjectName");
+            uniqueSubjects.put(subjectId, subjectName); // Store in map (ID -> Name)
         }
-        return chapterSet;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return uniqueSubjects;
+}
+
+public Set<Integer> getUniqueChapters() {
+    Set<Integer> uniqueChapters = new HashSet<>();
+    String query = "SELECT DISTINCT q.ChapterId FROM Questions q"; // Only select distinct ChapterId from Question table
+
+    try (PreparedStatement stmt = con.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            int chapterId = rs.getInt("ChapterId");
+            uniqueChapters.add(chapterId); // Add to the HashSet
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return uniqueChapters;
+}
+public Map<Integer, String> getUniqueQuestionTypes() {
+    Map<Integer, String> uniqueQuestionTypes = new LinkedHashMap<>();
+    String query = "SELECT DISTINCT q.QuestionTypeId, qt.QuestionTypeName " +
+                   "FROM Questions q " +
+                   "JOIN QuestionType qt ON q.QuestionTypeId = qt.QuestionTypeId"; // Join Question with QuestionType
+
+    try (PreparedStatement stmt = con.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            int questionTypeId = rs.getInt("QuestionTypeId");
+            String questionTypeName = rs.getString("QuestionTypeName");
+            uniqueQuestionTypes.put(questionTypeId, questionTypeName); // Store QuestionTypeId -> QuestionTypeName
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return uniqueQuestionTypes;
+}
 
     public boolean questionExists(int subjectId, String questionText) {
         String query = "SELECT COUNT(*) FROM Questions WHERE SubjectID = ? AND Question = ?";
@@ -200,47 +324,22 @@ public class QuestionDAO extends MyDAO {
         return false;
     }
 
-    public Question getQuestionsWithCount(int subjectId, int currentPage, int pageSize) {
-        Question result = new Question();
-        List<Question> questions = new ArrayList<>();
+    public int getTotalQuestions(String chapterId) {
+        int totalRecords = 0;
+        String countQuery = "SELECT COUNT(*) FROM Questions q WHERE (? IS NULL OR q.ChapterID = ?)";
 
-        String query = "SELECT q.*, qt.QuestionTypeName FROM Questions q JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID WHERE q.SubjectID = ? LIMIT ? OFFSET ?";
-        String countQuery = "SELECT COUNT(*) FROM Questions WHERE SubjectID = ?";
+        try ( PreparedStatement stmt = connection.prepareStatement(countQuery)) {
+            stmt.setString(1, chapterId);  // Filter by chapter if provided
+            stmt.setString(2, chapterId);  // Filter by chapter if provided
 
-        try (
-                 PreparedStatement countStmt = connection.prepareStatement(countQuery);  PreparedStatement queryStmt = connection.prepareStatement(query)) {
-            countStmt.setInt(1, subjectId);
-            try ( ResultSet countRs = countStmt.executeQuery()) {
-                if (countRs.next()) {
-                    result.setTotalCount(countRs.getInt(1));
-                }
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                totalRecords = rs.getInt(1);  // Get the total count of records
             }
-
-            int offset = (currentPage - 1) * pageSize;
-            queryStmt.setInt(1, subjectId);
-            queryStmt.setInt(2, pageSize);
-            queryStmt.setInt(3, offset);
-
-            try ( ResultSet rs = queryStmt.executeQuery()) {
-                while (rs.next()) {
-                    questions.add(new Question(
-                            rs.getInt("QuestionID"),
-                            rs.getInt("SubjectID"),
-                            rs.getInt("ChapterID"),
-                            rs.getString("Question"),
-                            rs.getInt("QuestionTypeID"),
-                            rs.getString("QuestionTypeName")
-                    ));
-                }
-            }
-            result.setQuestions(questions);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return result;
+        return totalRecords;
     }
-
-    
 
 }

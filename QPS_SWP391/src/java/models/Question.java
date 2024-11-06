@@ -1,9 +1,10 @@
 package models;
 
-import dal.QuestionDAO;
 import java.util.List;
+import models.Option;
 
 public class Question {
+
     private int questionID;
     private int subjectId;
     private int chapterId;
@@ -11,17 +12,37 @@ public class Question {
     private String question;
     private String questionTypeName;
     private List<Option> options;
+    private String subjectName;
+
     // No-argument constructor if needed
     public Question() {
     }
-    public Question(int questionID, int subjectId, int chapterId, String question, int questionTypeId, String questionTypeName) {
+
+    public Question(int questionID, int chapterId, String question, String questionTypeName, String subjectName) {
         this.questionID = questionID;
-        this.subjectId = subjectId;
         this.chapterId = chapterId;
         this.question = question;
-        this.questionTypeId = questionTypeId;
         this.questionTypeName = questionTypeName;
+        this.subjectName = subjectName;  // Initialize subjectName
     }
+public Question(int questionID, int subjectId, int chapterId, String question, int questionTypeId, String questionTypeName, String subjectName) {
+    this.questionID = questionID;
+    this.subjectId = subjectId;
+    this.chapterId = chapterId;
+    this.question = question;
+    this.questionTypeId = questionTypeId;
+    this.questionTypeName = questionTypeName;
+    this.subjectName = subjectName;
+}
+public Question(int questionID, int subjectId, int chapterId, String question, int questionTypeId, String questionTypeName) {
+    this.questionID = questionID;
+    this.subjectId = subjectId;
+    this.chapterId = chapterId;
+    this.question = question;
+    this.questionTypeId = questionTypeId;
+    this.questionTypeName = questionTypeName;
+}
+    
 
     public int getQuestionID() {
         return questionID;
@@ -63,25 +84,6 @@ public class Question {
         this.questionTypeId = questionTypeId;
     }
 
-    private List<Question> questions;
-    private int totalCount;
-
-    public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
-    }
-
-    public int getTotalCount() {
-        return totalCount;
-    }
-
-    public void setTotalCount(int totalCount) {
-        this.totalCount = totalCount;
-    }
-
     public String getQuestionTypeName() {
         return questionTypeName;
     }
@@ -89,12 +91,20 @@ public class Question {
     public void setQuestionTypeName(String questionTypeName) {
         this.questionTypeName = questionTypeName;
     }
-    
-        public List<Option> getOptions() { // Sửa thành getOptions
+
+    public List<Option> getOptions() { 
         return options;
     }
 
-    public void setOptions(List<Option> options) { // Sửa thành setOptions
+    public void setOptions(List<Option> options) {
         this.options = options;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 }
