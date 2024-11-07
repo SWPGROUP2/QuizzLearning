@@ -12,6 +12,33 @@ import models.subject;
 import models.QuestionType;
 
 public class QuestionDAO extends MyDAO {
+    
+        public List<Question> getQuestionsBySubjectId(int subjectId) {
+        String sql = "SELECT q.*, qt.QuestionTypeName "
+                + "FROM Questions q "
+                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
+                + "WHERE q.SubjectID = ?";
+        List<Question> qlist = new ArrayList<>();
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, subjectId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    qlist.add(new Question(
+                            rs.getInt("QuestionID"),
+                            rs.getInt("SubjectID"),
+                            rs.getInt("ChapterID"),
+                            rs.getString("Question"),
+                            rs.getInt("QuestionTypeID"),
+                            rs.getString("QuestionTypeName") // Retrieve questionTypeName
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return qlist;
+    }
 
     public List<QuestionType> getAllQuestionTypes() {
         List<QuestionType> questionTypeList = new ArrayList<>();
