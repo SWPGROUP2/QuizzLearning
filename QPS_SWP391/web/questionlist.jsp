@@ -12,73 +12,116 @@
             body {
                 font-family: Arial, sans-serif;
             }
+            .sidebar {
+                border-right: 1px solid #1a1e21;
+                background-color: #343a40;
+            }
+            .filter-form {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .filter-form label {
+                margin-right: 5px;
+            }
+            .filter-form .form-control {
+                width: auto;
+                min-width: 150px;
+            }
             table {
                 width: 100%;
                 border-collapse: collapse;
+                table-layout: fixed;
             }
             th, td {
                 padding: 10px;
                 text-align: left;
+                border: 1px solid #ddd;
+                word-wrap: break-word;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
             th {
                 background-color: #f2f2f2;
             }
+            .pagination a {
+                margin: 0 2px;
+            }
+            .table-actions {
+                display: flex;
+                gap: 5px;
+            }
+            .table-actions form {
+                display: inline;
+            }
         </style>
+        <script>
+            // Auto-submit the form when a filter dropdown changes
+            function autoSubmitForm() {
+                document.getElementById("filterForm").submit();
+            }
+        </script>
     </head>
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
+                <div class="col-md-2 sidebar">
                     <%@ include file="Components/Sidebar.jsp" %>
                 </div>
 
                 <div class="col-md-10">
                     <div class="d-flex align-items-center mb-2">
-                        <a href="teacherhome" class="btn btn-dark mr-8">Back to Homepage</a>
+                        <a href="teacherhome" class="btn btn-dark mr-2">Back to Homepage</a>
                         <h1 class="flex-grow-1 text-center mb-0">Question List</h1>
-                        <form action="questionlist" method="GET" class="form-inline mb-3">
-                            <label for="subjectFilter" class="mr-2">Subject:</label>
-                            <select id="subjectFilter" name="subjectId" class="form-control mr-2">
-                                <option value="">All Subjects</option>
-                                <c:forEach var="entry" items="${uniqueSubjects}">
-                                    <option value="${entry.key}" 
-                                            <c:if test="${param.subjectId  == entry.key}">selected</c:if>>
-                                        ${entry.value}
-                                    </option>
-                                </c:forEach>
-                            </select>
-
-
-                            <label for="chapterFilter" class="mr-2">Chapter:</label>
-                            <select id="chapterFilter" name="chapterId" class="form-control mr-2">
-                                <option value="">All Chapters</option>
-                                <c:forEach var="chapterId" items="${uniqueChapters}">
-                                    <option value="${chapterId}" 
-                                            <c:if test="${param.chapterId == chapterId}">selected</c:if>>
-                                        Chapter ${chapterId}
-                                    </option>
-                                </c:forEach>
-                            </select>
-
-                            <label for="questionTypeFilter" class="mr-2">Question Type:</label>
-                            <select id="questionTypeFilter" name="questionTypeId" class="form-control mr-2">
-                                <option value="">All Types</option>
-                                <c:forEach var="entry" items="${uniqueQuestionTypes}">
-                                    <option value="${entry.key}" 
-                                            <c:if test="${param.questionTypeId == entry.key}">selected</c:if>>
-                                        ${entry.value}
-                                    </option>
-                                </c:forEach>
-                            </select>
-
-                            <button type="submit" class="btn btn-primary">Filter</button>
-                        </form>
                     </div>
+                    
+                    <!-- Filter Form -->
+                    <form id="filterForm" action="questionlist" method="GET" class="filter-form mb-3">
+                        <label for="subjectFilter">Subject:</label>
+                        <select id="subjectFilter" name="subjectId" class="form-control" onchange="autoSubmitForm()">
+                            <option value="">All Subjects</option>
+                            <c:forEach var="entry" items="${uniqueSubjects}">
+                                <option value="${entry.key}" <c:if test="${param.subjectId  == entry.key}">selected</c:if>>
+                                    ${entry.value}
+                                </option>
+                            </c:forEach>
+                        </select>
+
+                        <label for="chapterFilter">Chapter:</label>
+                        <select id="chapterFilter" name="chapterId" class="form-control" onchange="autoSubmitForm()">
+                            <option value="">All Chapters</option>
+                            <c:forEach var="chapterId" items="${uniqueChapters}">
+                                <option value="${chapterId}" <c:if test="${param.chapterId == chapterId}">selected</c:if>>
+                                    Chapter ${chapterId}
+                                </option>
+                            </c:forEach>
+                        </select>
+
+                        <label for="questionTypeFilter">Question Type:</label>
+                        <select id="questionTypeFilter" name="questionTypeId" class="form-control" onchange="autoSubmitForm()">
+                            <option value="">All Types</option>
+                            <c:forEach var="entry" items="${uniqueQuestionTypes}">
+                                <option value="${entry.key}" <c:if test="${param.questionTypeId == entry.key}">selected</c:if>>
+                                    ${entry.value}
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </form>
+
+                    <!-- Separate Search Form -->
+                    <form action="questionlist" method="GET" class="mb-3">
+                        <label for="questionSearch">Search Question:</label>
+                        <input type="text" id="questionSearch" name="questionSearch" value="${param.questionSearch}" class="form-control d-inline-block" style="width: auto; min-width: 200px;" placeholder="Enter keyword">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <c:if test="${sessionScope.account.roleId != 1}">
-                            <a href="addquestion?subjectId=${param.id}" class="btn btn-primary">Add</a>
+                            <a href="addquestion?subjectId=${param.id}" class="btn btn-primary">Add Question</a>
                         </c:if>
                     </div>
+
                     <c:choose>
                         <c:when test="${questionList == null || questionList.size() == 0}">
                             <p>No questions found for this subject.</p>
@@ -87,12 +130,19 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Subject</th>
-                                        <th>Chapter</th>
-                                        <th>Questions</th>
-                                        <th>Question Type</th>
-                                        <th>Actions</th>
+                                                                                <th style="width: 3%;">
+                                            <a href="?sort=serial&order=${param.order == 'asc' ? 'desc' : 'asc'}&id=${param.id}">#
+                                                <c:choose>
+                                                    <c:when test="${param.sort == 'serial' && param.order == 'asc'}">▲</c:when>
+                                                    <c:when test="${param.sort == 'serial' && param.order == 'desc'}">▼</c:when>
+                                                </c:choose>
+                                            </a>
+                                        </th>
+                                        <th style="width: 8%;">Subject</th>
+                                        <th style="width: 4%;">Chapter</th>
+                                        <th style="width: 40%;">Questions</th>
+                                        <th style="width: 7%;">Question Type</th>
+                                        <th style="width: 10%;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -104,7 +154,7 @@
                                             <td>${q.chapterId}</td>
                                             <td>${q.question}</td>
                                             <td>${q.questionTypeName}</td>
-                                            <td>
+                                            <td class="table-actions">
                                                 <a href="editquestion?questionId=${q.questionID}&subjectId=${param.id}" class="btn btn-primary btn-sm">Edit</a>
                                                 <form action="DeleteQuestionServlet" method="POST" style="display:inline;">
                                                     <input type="hidden" name="id" value="${q.questionID}">

@@ -22,7 +22,7 @@ public class QuestionList extends HttpServlet {
         String chapterId = request.getParameter("chapterId");
         String questionTypeId = request.getParameter("questionTypeId");
         String currentPageParam = request.getParameter("page");
-
+         String questionSearch = request.getParameter("questionSearch");
         int currentPage = (currentPageParam != null) ? Integer.parseInt(currentPageParam) : 1;
         int questionsPerPage = 10;
         
@@ -40,9 +40,9 @@ public class QuestionList extends HttpServlet {
         int roleId = loggedInUser.getRoleId();  // Assuming `User` has `getRoleId()` method
         QuestionDAO questionDAO = new QuestionDAO();
 
-        List<Question> questionList = questionDAO.getFilteredQuestions(subjectId, chapterId, questionTypeId, currentPage, questionsPerPage, roleId, userId);
+        List<Question> questionList = questionDAO.getFilteredQuestions(subjectId, chapterId, questionTypeId, currentPage, questionsPerPage, roleId, userId, questionSearch);
 
-        Map<Integer, String> uniqueSubjects = questionDAO.getUniqueSubjects();
+        Map<Integer, String> uniqueSubjects = questionDAO.getUniqueSubjects(userId);
 Set<Integer> uniqueChapters = questionDAO.getUniqueChapters();
         List<QuestionType> questionTypeList = questionDAO.getAllQuestionTypes();
 Map<Integer, String> uniqueQuestionTypes = questionDAO.getUniqueQuestionTypes();

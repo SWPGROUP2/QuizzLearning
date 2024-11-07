@@ -82,23 +82,22 @@ public class QuestionDAO extends MyDAO {
     }
 
     // Get filtered questions with pagination
-public List<Question> getFilteredQuestions(String subjectId, String chapterId, String questionTypeId, int currentPage, int questionsPerPage, int roleId, int userId) {
+public List<Question> getFilteredQuestions(String subjectId, String chapterId, String questionTypeId, int currentPage, int questionsPerPage, int roleId, int userId, String questionSearch) {
     List<Question> questionList = new ArrayList<>();
 
-    // Ensure the user is a teacher (roleId = 3)
+    // Ensure the user is a teacher
     if (roleId != 3) {
         return questionList; // Return an empty list if the user is not a teacher
     }
 
-    // Building the SQL query
     StringBuilder query = new StringBuilder("SELECT q.QuestionID, s.SubjectName, q.ChapterID, q.Question, qt.QuestionTypeName "
             + "FROM Questions q "
             + "JOIN Subject s ON q.SubjectID = s.SubjectID "
             + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
             + "JOIN TeacherSubjects ts ON q.SubjectID = ts.SubjectID "
-            + "WHERE ts.UserID = ?"); // Ensures questions are only for subjects taught by this teacher
+            + "WHERE ts.UserID = ?"); // Ensures questions only for the subjects taught by this teacher
 
-    // Additional filtering based on user input
+    // Additional filtering
     if (subjectId != null && !subjectId.isEmpty()) {
         query.append(" AND q.SubjectID = ? ");
     }
@@ -108,15 +107,17 @@ public List<Question> getFilteredQuestions(String subjectId, String chapterId, S
     if (questionTypeId != null && !questionTypeId.isEmpty()) {
         query.append(" AND q.QuestionTypeID = ? ");
     }
+    if (questionSearch != null && !questionSearch.trim().isEmpty()) {
+        query.append(" AND q.Question LIKE ? ");
+    }
 
     // Apply pagination
     query.append(" LIMIT ?, ?");
 
     try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
         int index = 1;
-        stmt.setInt(index++, userId);  // Set teacher's user ID
+        stmt.setInt(index++, userId);  // Use the teacher's user ID
 
-        // Set parameters for subject, chapter, and question type if provided
         if (subjectId != null && !subjectId.isEmpty()) {
             stmt.setString(index++, subjectId);
         }
@@ -126,15 +127,15 @@ public List<Question> getFilteredQuestions(String subjectId, String chapterId, S
         if (questionTypeId != null && !questionTypeId.isEmpty()) {
             stmt.setString(index++, questionTypeId);
         }
+        if (questionSearch != null && !questionSearch.trim().isEmpty()) {
+            stmt.setString(index++, "%" + questionSearch.trim() + "%"); // Add search keyword with wildcards
+        }
 
-        // Set pagination values: offset and limit
-        stmt.setInt(index++, (currentPage - 1) * questionsPerPage); // offset
-        stmt.setInt(index, questionsPerPage); // limit
+        stmt.setInt(index++, (currentPage - 1) * questionsPerPage); // Set offset
+        stmt.setInt(index, questionsPerPage);                       // Set limit
 
-        // Execute the query
         ResultSet rs = stmt.executeQuery();
 
-        // Process the result set
         while (rs.next()) {
             Question question = new Question(
                     rs.getInt("QuestionID"),
@@ -154,12 +155,10 @@ public List<Question> getFilteredQuestions(String subjectId, String chapterId, S
 
 
 
-
-
 public int getFilteredQuestionCount(String subjectId, String chapterId, String questionTypeId, int userId) {
     int count = 0;
     StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM Questions q "
-  + "JOIN Subject s ON q.SubjectID = s.SubjectID "
+            + "JOIN Subject s ON q.SubjectID = s.SubjectID "
             + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
             + "JOIN TeacherSubjects ts ON q.SubjectID = ts.SubjectID "
             + "WHERE ts.UserID = ?"); // Ensures we count only the questions for subjects taught by the teacher
@@ -274,23 +273,29 @@ public int getFilteredQuestionCount(String subjectId, String chapterId, String q
         return 0;
     }
 
-public Map<Integer, String> getUniqueSubjects() {
+public Map<Integer, String> getUniqueSubjects(int userId) {
     Map<Integer, String> uniqueSubjects = new LinkedHashMap<>();
-    String query = "SELECT DISTINCT SubjectName, SubjectID FROM Subject"; // Select both SubjectName and SubjectID
+    String query = "SELECT DISTINCT s.SubjectName, s.SubjectID "
+                 + "FROM Subject s "
+                 + "JOIN TeacherSubjects ts ON s.SubjectID = ts.SubjectID "
+                 + "WHERE ts.UserID = ?";  // Filter by the current user's ID
     
-    try (PreparedStatement stmt = con.prepareStatement(query);
-         ResultSet rs = stmt.executeQuery()) {
-             
-        while (rs.next()) {
-            int subjectId = rs.getInt("SubjectID");
-            String subjectName = rs.getString("SubjectName");
-            uniqueSubjects.put(subjectId, subjectName); // Store in map (ID -> Name)
+    try (PreparedStatement stmt = con.prepareStatement(query)) {
+        stmt.setInt(1, userId);  // Set the current user's ID in the query
+        
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                int subjectId = rs.getInt("SubjectID");
+                String subjectName = rs.getString("SubjectName");
+                uniqueSubjects.put(subjectId, subjectName); // Store in map (ID -> Name)
+            }
         }
     } catch (SQLException e) {
         e.printStackTrace();
     }
     return uniqueSubjects;
 }
+
 
 public Set<Integer> getUniqueChapters() {
     Set<Integer> uniqueChapters = new HashSet<>();
