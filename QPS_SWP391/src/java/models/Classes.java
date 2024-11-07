@@ -4,10 +4,13 @@
  */
 package models;
 
+import java.util.Objects;
+
 public class Classes {
     private int classID;
     private String className;
     private int userId;
+     private subject subject;
 
     public Classes() {
     }
@@ -41,4 +44,16 @@ public class Classes {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+        public subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(subject subject) {
+        this.subject = subject;  // This is the setter for Subject
+    }
+@Override
+public int hashCode() {
+    return Objects.hash(classID); // Use classID for hash code
+}
+
 }

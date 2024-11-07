@@ -5,8 +5,6 @@
     <head>
         <meta charset="UTF-8">
         <title>Add Test</title>
-        <style>
-        </style>
     </head>
     <body class="container-fluid">
         <div class="row">
@@ -17,22 +15,26 @@
                 <h1 style="margin-bottom:20px">Add Test</h1>
 
                 <form action="addtest" method="post">
+                    <!-- Filtered Subjects: Show only subjects assigned to the teacher -->
                     <div class="form-group">
                         <label for="subject">Subject:</label>
                         <select class="form-control" id="subject" name="subjectId" required>
-                            <c:forEach var="subject" items="${subjects}">
+                            <c:forEach var="subject" items="${uniqueSubjects}">
                                 <option value="${subject.subjectId}">${subject.subjectName}</option>
                             </c:forEach>
                         </select>
                     </div>
+
+                    <!-- Filtered Classes: Show only classes assigned to the teacher -->
                     <div class="form-group">
                         <label for="class">Class:</label>
-                        <select class="form-control" id="class" name="class" required>
-                            <c:forEach var="classlist" items="${classlist}">
-                                <option value="${classlist.classID}">${classlist.className}</option>
+                        <select class="form-control" id="class" name="classId" required>
+                            <c:forEach var="classData" items="${uniqueClasses}">
+                                <option value="${classData.classID}">${classData.className}</option>
                             </c:forEach>
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label for="questionType">Question Type:</label>
                         <select class="form-control" id="questionType" name="questionTypeId" required>
@@ -41,11 +43,11 @@
                             </c:forEach>
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label for="testName">Test Name:</label>
                         <input type="text" class="form-control" id="testName" name="testName" required>
                     </div>
-
 
                     <div class="form-group">
                         <label for="duration">Duration (minutes):</label>

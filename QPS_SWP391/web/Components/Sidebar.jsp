@@ -53,7 +53,7 @@
         <nav class="sidebar p-3">
             <div class="text-center mb-4">
                 <h3>QPS03</h3>
-                <%
+                <% 
                     User account = (User) session.getAttribute("account");
                     String avatarUrl = (account != null && account.getAvatar() != null) ? account.getAvatar() : "assets/avatar/default-image.png";
                 %>
@@ -63,7 +63,11 @@
             </div>
             <ul class="list-unstyled">
                 <li class="nav-item">
-                    <a class="btn" href="<%= ((User) session.getAttribute("account")).getRoleId() == 1 ? "studenthome" : ((User) session.getAttribute("account")).getRoleId() == 2 ? "adminhome" : "teacherhome" %>">
+                    <a class="btn" href="<%= 
+                        (account != null) ? 
+                        (account.getRoleId() == 1 ? "studenthome" : 
+                        (account.getRoleId() == 2 ? "adminhome" : "teacherhome")) : 
+                        "#" %>">
                         Homepage
                     </a>
                 </li>
@@ -82,7 +86,7 @@
                         } else if (roleId == 2) {
                 %>
                             <li class="nav-item">
-                                <a class="btn" href="subject-list">Term Set List</a>
+                                <a class="btn" href="subject-list">Subject List</a>
                             </li>
                 <% 
                         } else if (roleId == 3) {
