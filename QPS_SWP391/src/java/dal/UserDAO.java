@@ -127,7 +127,7 @@ public User getUserById(int id) {
                 user.setAvatar(rs.getString("Avatar"));
                 user.setFullName(rs.getString("FullName"));
                 user.setDob(rs.getDate("DoB"));
-                user.setStatus(rs.getString("Status")); // Assuming Status is a boolean
+                user.setStatus(rs.getString("Status")); 
                 user.setStartDate(rs.getDate("StartDate"));
                 user.setEndDate(rs.getDate("EndDate"));
             }
