@@ -75,7 +75,7 @@
                         <a href="teacherhome" class="btn btn-dark mr-2">Back to Homepage</a>
                         <h1 class="flex-grow-1 text-center mb-0">Question List</h1>
                     </div>
-                    
+
                     <!-- Filter Form -->
                     <form id="filterForm" action="questionlist" method="GET" class="filter-form mb-3">
                         <label for="subjectFilter">Subject:</label>
@@ -130,7 +130,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                                                                <th style="width: 3%;">
+                                        <th style="width: 3%;">
                                             <a href="?sort=serial&order=${param.order == 'asc' ? 'desc' : 'asc'}&id=${param.id}">#
                                                 <c:choose>
                                                     <c:when test="${param.sort == 'serial' && param.order == 'asc'}">▲</c:when>

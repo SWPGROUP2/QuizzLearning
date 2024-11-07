@@ -23,17 +23,25 @@ CREATE TABLE Users (
     Avatar VARCHAR(5000) DEFAULT 'https://i.pinimg.com/originals/26/82/bf/2682bf05bc23c0b6a1145ab9c966374b.png',
     FullName VARCHAR(100) CHARACTER SET utf8mb4,
     DoB DATE,
-    PlaceWork VARCHAR(255) CHARACTER SET utf8mb4,
     UserCode VARCHAR(255) CHARACTER SET utf8mb4,
+    StartDate DATE,  -- New column for contract start date
+    EndDate DATE,    -- New column for contract end date
+    Status ENUM('Active', 'Inactive') DEFAULT 'Active',
     FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
 );
 
-INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, FullName, DoB, PlaceWork, UserCode)
+INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, FullName, DoB, StartDate, EndDate, Status)
 VALUES 
-('teacherjpen', 3, 'teacherjpen@example.com', '1', '0123456789', 'Nguyen Van jpen', '1980-01-01', 'Fu-Hoa Lac', 'HE123456'),
-('admin', 2, 'admin@example.com', '1', '0987654321', 'Nguyen Van B', '1980-01-01', 'Fu-Hoa Lac', 'HE123456'),
-('student', 1, 'student@example.com', '1', '045632789', 'Nguyen Van C', '2000-01-01', 'Fu-Hoa Lac', 'HE123456'),
-('teacherkr', 3, 'teacherkr@example.com', '1', '0123456789', 'Nguyen Van kr', '1980-01-01', 'Fu-Hoa Lac', 'HE123456');
+('user1', 1, 'student@example.com', '1', '0123456789', 'Student One', '2000-01-01', '2024-01-01', '2025-01-01', 'Active'),
+('user2', 2, 'admin@example.com', '1', '0987654321', 'Admin One', '1985-05-15', '2024-01-01', '2025-01-01', 'Active'),
+('user3', 3, 'teacher@example.com', '1', '0112233445', 'Teacher One', '1978-08-23', '2024-01-01', '2025-01-01', 'Active'),
+('user4', 1, 'student1@example.com', '1', '0109876543', 'Student Two', '2001-03-12', '2024-01-01', '2025-01-01', 'Active'),
+('user5', 2, 'admin1@example.com', '1', '0192837465', 'Admin Two', '1990-07-30', '2024-01-01', '2025-01-01', 'Active'),
+('user6', 3, 'teacher1@example.com', '1', '0223456789', 'Teacher Two', '1982-02-14', '2024-01-01', '2025-01-01', 'Active'),
+('user7', 1, 'student2@example.com', '1', '0334455667', 'Student Three', '1999-09-09', '2022-11-06', '2023-01-01', 'Active'),
+('user8', 2, 'admin2@example.com', '1', '0445566778', 'Admin Three', '1983-11-11', '2024-01-01', '2025-01-01', 'Active'),
+('user9', 3, 'teacher2@example.com', '1', '0556677889', 'Teacher Three', '1986-04-04', '2024-01-01', '2025-01-01', 'Active'),
+('user10', 1, 'student3@example.com', '1', '0667788990', 'Student Four', '2002-12-22', '2024-11-09', '2025-01-01', 'Inactive');
 
 -- Create Subject table
 CREATE TABLE Subject (
@@ -75,12 +83,11 @@ CREATE TABLE ClassMembers (
 -- Assign teacher and student to Class A (ClassID = 1)
 INSERT INTO ClassMembers (ClassID, UserID, RoleID) 
 VALUES 
-(1, 1, 3),
-(3, 1, 3),
-(2, 1, 3),
-(2, 4, 3),
- -- Assign Teacher with UserID=1 and RoleID=3 to Class A
-(1, 3, 1); -- Assign Student with UserID=3 and RoleID=1 to Class A
+(1, 3, 3),
+(3, 3, 3),
+(2, 3, 3),
+(2, 4, 1),
+(1, 1, 1); -- Assign Student with UserID=1 and RoleID=1 to Class A
 
 -- Create TeacherSubjects table
 CREATE TABLE TeacherSubjects (
@@ -94,9 +101,9 @@ CREATE TABLE TeacherSubjects (
 
 INSERT INTO TeacherSubjects (UserID, SubjectID)
 VALUES 
-(1, 1), -- Teacher with UserID 1 can teach Japanese
-(1, 2), -- Teacher with UserID 1 can also teach English
-(4, 3); -- Teacher with UserID 4 can teach Korean
+(3, 1), -- Teacher with UserID 3 can teach Japanese
+(3, 2), -- Teacher with UserID 3 can also teach English
+(6, 3); -- Teacher with UserID 6 can teach Korean
 
 -- Create QuestionType table
 CREATE TABLE QuestionType (
@@ -274,6 +281,7 @@ VALUES
 (1, 'はい、わかりました', 'Vâng, tôi hiểu rồi'),
 (1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
+
 
 
 

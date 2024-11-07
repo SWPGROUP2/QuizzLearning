@@ -82,7 +82,7 @@ public class QuestionDAO extends MyDAO {
     }
 
     // Get filtered questions with pagination
-public List<Question> getFilteredQuestions(String subjectId, String chapterId, String questionTypeId, int currentPage, int questionsPerPage, int roleId, int userId, String questionSearch) {
+public List<Question> getFilteredQuestions(String subjectId, String chapterId, String questionTypeId, int currentPage, int questionsPerPage, int roleId, int userId, String questionSearch, String sortOrder) {
     List<Question> questionList = new ArrayList<>();
 
     // Ensure the user is a teacher
@@ -150,8 +150,11 @@ public List<Question> getFilteredQuestions(String subjectId, String chapterId, S
         e.printStackTrace();
     }
 
+   
+
     return questionList;
 }
+
 
 
 
