@@ -29,17 +29,6 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public boolean isUserCodeExists(String userCode) throws SQLException {
-        String sql = "SELECT * FROM Users WHERE userCode = ?";
-        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, userCode);
-            ResultSet rs = statement.executeQuery();
-            return rs.next();
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error checking user code existence", e);
-            throw e;
-        }
-    }
 
     public void addUser(User user) throws Exception {
         try {
@@ -59,30 +48,41 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public List<User> getUser() throws Exception {
-        List<User> user = new ArrayList<>();
-        try {
-            String sqlQuery = "SELECT u.UserID, u.UserName, u.RoleID , u.Email, u.Password,r.Role\n"
-                    + "FROM Users u, Roles r\n"
-                    + "WHERE u.RoleID = r.RoleID";
-            PreparedStatement stm = connection.prepareStatement(sqlQuery);
-            ResultSet rs = stm.executeQuery();
+public List<User> getUser() throws Exception {
+    List<User> users = new ArrayList<>();
+    try {
+        // Updated SQL query to include Status
+        String sqlQuery = "SELECT u.UserID, u.UserName, u.RoleID, u.Email, u.Password, r.Role, u.StartDate, u.EndDate, u.Status "
+                        + "FROM Users u "
+                        + "JOIN Roles r ON u.RoleID = r.RoleID"; // Using JOIN for better readability
 
-            while (rs.next()) {
-                User u = new User();
-                u.setUserId(rs.getInt("UserID"));
-                u.setUserName(rs.getString("UserName"));
-                u.setRoleId(rs.getInt("RoleID"));
-                u.setEmail(rs.getString("Email"));
-                u.setPassword(rs.getString("Password"));
-                u.setRole(rs.getString("Role"));
-                user.add(u);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
+        PreparedStatement stm = connection.prepareStatement(sqlQuery);
+        ResultSet rs = stm.executeQuery();
+
+        while (rs.next()) {
+            User u = new User();
+            u.setUserId(rs.getInt("UserID"));
+            u.setUserName(rs.getString("UserName"));
+            u.setRoleId(rs.getInt("RoleID"));
+            u.setEmail(rs.getString("Email"));
+            u.setPassword(rs.getString("Password"));
+            u.setRole(rs.getString("Role"));
+            
+            // Setting the startDate and endDate
+            u.setStartDate(rs.getDate("StartDate"));
+            u.setEndDate(rs.getDate("EndDate"));
+
+            // Setting the status
+            u.setStatus(rs.getString("Status"));
+
+            users.add(u);
         }
-        return user;
+    } catch (SQLException ex) {
+        Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
     }
+    return users;
+}
+
 
     public List<User> getTop5NewestUser() throws Exception {
         List<User> top5UserList = new ArrayList<>();
@@ -107,34 +107,37 @@ public class UserDAO extends DBContext {
         return top5UserList;
     }
 
-    public User getUserById(int id) {
-        User user = null;
-        String query = "SELECT UserID, UserName, RoleID, Email, Password, PhoneNumber, Avatar, FullName, DoB, PlaceWork, UserCode "
-                + "FROM Users "
-                + "WHERE UserID = ?";
-        try ( PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, id);
-            try ( ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    user = new User();
-                    user.setUserId(rs.getInt("UserID"));
-                    user.setUserName(rs.getString("UserName"));
-                    user.setRoleId(rs.getInt("RoleID"));
-                    user.setEmail(rs.getString("Email"));
-                    user.setPassword(rs.getString("Password"));
-                    user.setPhoneNumber(rs.getString("PhoneNumber"));
-                    user.setAvatar(rs.getString("Avatar"));
-                    user.setFullName(rs.getString("FullName"));
-                    user.setDob(rs.getDate("DoB"));
-                    user.setPlace(rs.getString("PlaceWork"));
-                    user.setUserCode(rs.getString("UserCode"));
-                }
+public User getUserById(int id) {
+    User user = null;
+    String query = "SELECT UserID, UserName, RoleID, Email, Password, PhoneNumber, Avatar, FullName, "
+                 + "DoB, Status, StartDate, EndDate "
+                 + "FROM Users "
+                 + "WHERE UserID = ?";
+    try (PreparedStatement ps = connection.prepareStatement(query)) {
+        ps.setInt(1, id);
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                user = new User();
+                user.setUserId(rs.getInt("UserID"));
+                user.setUserName(rs.getString("UserName"));
+                user.setRoleId(rs.getInt("RoleID"));
+                user.setEmail(rs.getString("Email"));
+                user.setPassword(rs.getString("Password"));
+                user.setPhoneNumber(rs.getString("PhoneNumber"));
+                user.setAvatar(rs.getString("Avatar"));
+                user.setFullName(rs.getString("FullName"));
+                user.setDob(rs.getDate("DoB"));
+                user.setStatus(rs.getString("Status")); // Assuming Status is a boolean
+                user.setStartDate(rs.getDate("StartDate"));
+                user.setEndDate(rs.getDate("EndDate"));
             }
-        } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Error executing query", ex);
         }
-        return user;
+    } catch (SQLException ex) {
+        LOGGER.log(Level.SEVERE, "Error executing query", ex);
     }
+    return user;
+}
+
 
     public User getUserByEmail(String email) throws Exception {
         String sql = "SELECT u.UserID,  u.UserName, u.RoleID , u.Email, u.Password,r.Role\n"
