@@ -1,8 +1,10 @@
+-- Drop the existing database if it exists and create a fresh one
 DROP DATABASE IF EXISTS SWPQuiz;
 CREATE DATABASE SWPQuiz;
 
 USE SWPQuiz;
 
+-- Create Roles table
 CREATE TABLE Roles (
     RoleID INT AUTO_INCREMENT PRIMARY KEY,
     Role VARCHAR(255) CHARACTER SET utf8mb4
@@ -10,11 +12,12 @@ CREATE TABLE Roles (
 
 INSERT INTO Roles (Role) VALUES ('student'), ('admin'), ('teacher');
 
+-- Create Users table with proper data types for users
 CREATE TABLE Users (
     UserID INT AUTO_INCREMENT PRIMARY KEY,
     UserName VARCHAR(255) CHARACTER SET utf8mb4,
     RoleID INT,
-    Email VARCHAR(255) CHARACTER SET utf8mb4,
+    Email VARCHAR(255) CHARACTER SET utf8mb4 UNIQUE,  -- Ensure email is unique
     Password VARCHAR(255) CHARACTER SET utf8mb4,
     PhoneNumber VARCHAR(15),
     Avatar VARCHAR(5000) DEFAULT 'https://i.pinimg.com/originals/26/82/bf/2682bf05bc23c0b6a1145ab9c966374b.png',
@@ -32,6 +35,7 @@ VALUES
 ('student', 1, 'student@example.com', '1', '045632789', 'Nguyen Van C', '2000-01-01', 'Fu-Hoa Lac', 'HE123456'),
 ('teacherkr', 3, 'teacherkr@example.com', '1', '0123456789', 'Nguyen Van kr', '1980-01-01', 'Fu-Hoa Lac', 'HE123456');
 
+-- Create Subject table
 CREATE TABLE Subject (
     SubjectID INT AUTO_INCREMENT PRIMARY KEY,
     SubjectName VARCHAR(255) CHARACTER SET utf8mb4,
@@ -46,13 +50,46 @@ VALUES
 ('TOPIK', 'Korean', 'https://cf.quizizz.com/img/course-assets/title_imgs/3%20-%20Social%20Studies.png'),
 ('Test', 'World Languages', 'https://cf.quizizz.com/img/course-assets/title_imgs/5-%20World%20Languages.png');
 
+-- Create Class table
+CREATE TABLE Class (
+    ClassID INT AUTO_INCREMENT PRIMARY KEY,
+    ClassName VARCHAR(255) CHARACTER SET utf8mb4,
+    UserID INT,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID) -- This assumes the class is created by a teacher
+);
+
+INSERT INTO Class (ClassName, UserID) VALUES ('Class A', 1), ('Class B', 2), ('Class C', 3);
+
+-- Create ClassMembers table
+CREATE TABLE ClassMembers (
+    ClassMemberID INT AUTO_INCREMENT PRIMARY KEY,
+    ClassID INT,
+    UserID INT,
+    RoleID INT,
+    FOREIGN KEY (ClassID) REFERENCES Class(ClassID) ON DELETE CASCADE,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE,
+    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID),
+    UNIQUE (ClassID, UserID)  -- Ensures that each user can only be assigned to a class once
+);
+
+-- Assign teacher and student to Class A (ClassID = 1)
+INSERT INTO ClassMembers (ClassID, UserID, RoleID) 
+VALUES 
+(1, 1, 3),
+(3, 1, 3),
+(2, 1, 3),
+(2, 4, 3),
+ -- Assign Teacher with UserID=1 and RoleID=3 to Class A
+(1, 3, 1); -- Assign Student with UserID=3 and RoleID=1 to Class A
+
+-- Create TeacherSubjects table
 CREATE TABLE TeacherSubjects (
     TeacherSubjectID INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT,
     SubjectID INT,
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID),
-    UNIQUE (UserID, SubjectID) -- ensures each teacher can teach each subject only once
+    UNIQUE (UserID, SubjectID)  -- Ensures each teacher can teach each subject only once
 );
 
 INSERT INTO TeacherSubjects (UserID, SubjectID)
@@ -61,6 +98,7 @@ VALUES
 (1, 2), -- Teacher with UserID 1 can also teach English
 (4, 3); -- Teacher with UserID 4 can teach Korean
 
+-- Create QuestionType table
 CREATE TABLE QuestionType (
     QuestionTypeID INT AUTO_INCREMENT PRIMARY KEY,	
     QuestionTypeName VARCHAR(255) CHARACTER SET utf8mb4
@@ -68,14 +106,88 @@ CREATE TABLE QuestionType (
 
 INSERT INTO QuestionType (QuestionTypeName) VALUES ('Multiple-choice'), ('Short-answer');
 
+-- Create Questions table
 CREATE TABLE Questions (
     QuestionID INT AUTO_INCREMENT PRIMARY KEY,
     SubjectID INT,
     ChapterID INT,
     QuestionTypeID INT,
     Question VARCHAR(255) CHARACTER SET utf8mb4, 
-    foreign key (QuestionTypeID) references QuestionType(QuestionTypeID) ON DELETE CASCADE,
+    FOREIGN KEY (QuestionTypeID) REFERENCES QuestionType(QuestionTypeID) ON DELETE CASCADE,
     FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID) ON DELETE CASCADE
+);
+
+-- Create Options table
+CREATE TABLE Options (
+    OptionID INT AUTO_INCREMENT PRIMARY KEY,
+    QuestionID INT,
+    OptionText VARCHAR(1000) CHARACTER SET utf8mb4,
+    IsCorrect BIT,
+    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID) ON DELETE CASCADE
+);
+
+-- Create Tests table
+CREATE TABLE Tests (
+    TestID INT AUTO_INCREMENT PRIMARY KEY,
+    SubjectID INT,
+    TestName VARCHAR(255) CHARACTER SET utf8mb4,
+    Duration INT,
+    ClassID INT,
+    QuestionTypeID INT,
+    FOREIGN KEY (QuestionTypeID) REFERENCES QuestionType(QuestionTypeID),
+    FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID),
+    FOREIGN KEY (ClassID) REFERENCES Class(ClassID)
+);
+
+-- Create Test_Questions table
+CREATE TABLE Test_Questions (
+    TestQuestionsID INT AUTO_INCREMENT PRIMARY KEY,
+    TestID INT,
+    QuestionID INT,
+    FOREIGN KEY (TestID) REFERENCES Tests(TestID) ON DELETE CASCADE,
+    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID) ON DELETE CASCADE
+);
+
+-- Create TermSets table
+CREATE TABLE TermSets (
+    TermSetID INT AUTO_INCREMENT PRIMARY KEY,
+    TermSetName VARCHAR(255) CHARACTER SET utf8mb4,
+    TermSetDescription VARCHAR(255) CHARACTER SET utf8mb4
+);
+
+-- Create Terms table
+CREATE TABLE Terms (
+    TermID INT auto_increment PRIMARY KEY,
+    TermSetID INT,
+    Term VARCHAR(1000) CHARACTER SET utf8mb4, 
+    Definition VARCHAR(1000) CHARACTER SET utf8mb4,
+    FOREIGN KEY (TermSetID) REFERENCES TermSets(TermSetID)
+);
+
+-- Create StudentAnswers table
+CREATE TABLE StudentAnswers (
+    answer_id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT,
+    test_id INT,
+    question_id INT,
+    option_id INT,
+    answer_text TEXT,  -- For short answer type questions
+    answered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES Users(UserID),
+    FOREIGN KEY (test_id) REFERENCES Tests(TestID),
+    FOREIGN KEY (question_id) REFERENCES Questions(QuestionID),
+    FOREIGN KEY (option_id) REFERENCES Options(OptionID)
+);
+
+-- Create TestResults table
+CREATE TABLE TestResults (
+    result_id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT,
+    test_id INT,
+    score DECIMAL(5, 2),
+    completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES Users(UserID),
+    FOREIGN KEY (test_id) REFERENCES Tests(TestID)
 );
 
 INSERT INTO Questions (SubjectID, ChapterID, QuestionTypeID, Question) 
@@ -100,14 +212,6 @@ VALUES
 (3, 2, 2, 'Describe your daily routine in Korean.'),  
 (3, 2, 1, 'What is the traditional food of Korea?'),  
 (3, 2, 2, 'Write a short paragraph about your favorite Korean drama.');  
-
-CREATE TABLE Options (
-    OptionID INT AUTO_INCREMENT PRIMARY KEY,
-    QuestionID INT,
-    OptionText VARCHAR(1000) CHARACTER SET utf8mb4,
-    IsCorrect BIT,
-    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID) ON DELETE CASCADE
-);
 
 INSERT INTO Options (QuestionID, OptionText, IsCorrect) 
 VALUES 
@@ -139,27 +243,6 @@ VALUES
 (9, 'I don’t like spicy food.', 0),
 (10, 'I like playing soccer.', 1);
 
-CREATE TABLE Class (
-    ClassID INT AUTO_INCREMENT PRIMARY KEY,
-    ClassName VARCHAR(255) CHARACTER SET utf8mb4,
-    UserID INT,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID)
-);
-
-INSERT INTO Class (ClassName, UserID) VALUES ('Class A', 1), ('Class B', 2), ('Class C', 3);
-
-CREATE TABLE Tests (
-    TestID INT AUTO_INCREMENT PRIMARY KEY,
-    SubjectID INT,
-    TestName VARCHAR(255) CHARACTER SET utf8mb4,
-    Duration INT,
-    ClassID INT,
-    QuestionTypeID INT,
-    FOREIGN KEY (QuestionTypeID) REFERENCES QuestionType(QuestionTypeID),
-    FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID),
-    FOREIGN KEY (ClassID) REFERENCES Class(ClassID)
-);
-
 INSERT INTO Tests (SubjectID, TestName, Duration, ClassID, QuestionTypeID) 
 VALUES 
 (1, 'Japanese Test 1', 60, 1, 1),  
@@ -167,39 +250,14 @@ VALUES
 (3, 'Korean Test 1', 30, 3, 1),    
 (1, 'Japanese Test 2', 75, 1, 2);  
 
-CREATE TABLE Test_Questions (
-    TestQuestionsID INT AUTO_INCREMENT PRIMARY KEY,
-    TestID INT,
-    QuestionID INT,
-    FOREIGN KEY (TestID) REFERENCES Tests(TestID) ON DELETE CASCADE,
-    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID) ON DELETE CASCADE
-);
-
 INSERT INTO Test_Questions (TestID, QuestionID) 
 VALUES 
 (1, 1), (1, 2), (1, 3), (1, 4), (1, 5),  -- Câu hỏi cho bài kiểm tra Nhật Bản 1
 (2, 6), (2, 7), (2, 8), (2, 9), (2, 10),  -- Câu hỏi cho bài kiểm tra tiếng Anh 1
 (3, 11), (3, 12), (3, 13), (3, 14), (3, 15);  -- Câu hỏi cho bài kiểm tra tiếng Hàn 1
 
-
-
-
-CREATE TABLE TermSets (
-    TermSetID INT AUTO_INCREMENT PRIMARY KEY,
-    TermSetName VARCHAR(255) CHARACTER SET utf8mb4,
-	TermSetDescription VARCHAR(255) CHARACTER SET utf8mb4
-);
-
 INSERT INTO TermSets (TermSetName, TermSetDescription) VALUES
 ('Chào hỏi trong tiếng Nhật', 'Một số câu chào hỏi cơ bản thường ngày trong tiếng Nhật');
-
-CREATE TABLE Terms (
-    TermID INT auto_increment PRIMARY KEY,
-    TermSetID INT,
-	Term VARCHAR(1000) CHARACTER SET utf8mb4, 
-    Definition VARCHAR(1000) CHARACTER SET utf8mb4,
-	FOREIGN KEY (TermSetID) REFERENCES TermSets(TermSetID)
-);
 
 INSERT INTO Terms (TermSetID, Term, Definition)
 VALUES 
@@ -218,26 +276,6 @@ VALUES
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
 
 
-CREATE TABLE StudentAnswers (
-    answer_id INT PRIMARY KEY AUTO_INCREMENT,
-    student_id INT,
-    test_id INT,
-    question_id INT,
-    option_id INT,
-    answer_text TEXT, -- dành cho câu trả lời dạng tự luận
-    answered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES Users(UserID),
-    FOREIGN KEY (test_id) REFERENCES Tests(TestID),
-    FOREIGN KEY (question_id) REFERENCES Questions(QuestionID),
-    FOREIGN KEY (option_id) REFERENCES Options(OptionID)
-);
 
-CREATE TABLE TestResults (
-    result_id INT PRIMARY KEY AUTO_INCREMENT,
-    student_id INT,
-    test_id INT,
-    score DECIMAL(5, 2),
-    completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES Users(UserID),
-    FOREIGN KEY (test_id) REFERENCES Tests(TestID)
-);
+
+
