@@ -8,8 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import models.Classes;
+import models.subject;
 
 /**
  *
@@ -63,6 +66,63 @@ public class ClassDAO extends MyDAO {
             System.out.println("getClassNameById: " + e.getMessage());
         }
         return null;
+    }
+
+    public List<Classes> getTeacherClasses(int userId) {
+        // List to hold unique classes
+        List<Classes> uniqueClasses = new ArrayList<>();
+
+        // SQL query to get classes
+        String sql = "SELECT DISTINCT c.ClassID, c.ClassName "
+                + "FROM Class c "
+                + "JOIN ClassMembers cm ON cm.ClassID = c.ClassID "
+                + "JOIN TeacherSubjects ts ON ts.UserID = cm.UserID "
+                + "WHERE cm.UserID = ?";
+
+        try ( PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Add to unique classes list
+                Classes classObj = new Classes();
+                classObj.setClassID(rs.getInt("ClassID"));
+                classObj.setClassName(rs.getString("ClassName"));
+                uniqueClasses.add(classObj);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return uniqueClasses;
+    }
+
+    public List<subject> getTeacherSubjects(int userId) {
+        // List to hold unique subjects
+        List<subject> uniqueSubjects = new ArrayList<>();
+
+        // SQL query to get subjects
+        String sql = "SELECT DISTINCT s.SubjectID, s.SubjectName "
+                + "FROM Subject s "
+                + "JOIN TeacherSubjects ts ON ts.SubjectID = s.SubjectID "
+                + "WHERE ts.UserID = ?";
+
+        try ( PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Add to unique subjects list
+                subject subjectObj = new subject();
+                subjectObj.setSubjectId(rs.getInt("SubjectID"));
+                subjectObj.setSubjectName(rs.getString("SubjectName"));
+                uniqueSubjects.add(subjectObj);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return uniqueSubjects;
     }
 
 }

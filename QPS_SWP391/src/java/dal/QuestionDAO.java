@@ -12,6 +12,33 @@ import models.subject;
 import models.QuestionType;
 
 public class QuestionDAO extends MyDAO {
+    
+        public List<Question> getQuestionsBySubjectId(int subjectId) {
+        String sql = "SELECT q.*, qt.QuestionTypeName "
+                + "FROM Questions q "
+                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
+                + "WHERE q.SubjectID = ?";
+        List<Question> qlist = new ArrayList<>();
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, subjectId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    qlist.add(new Question(
+                            rs.getInt("QuestionID"),
+                            rs.getInt("SubjectID"),
+                            rs.getInt("ChapterID"),
+                            rs.getString("Question"),
+                            rs.getInt("QuestionTypeID"),
+                            rs.getString("QuestionTypeName") // Retrieve questionTypeName
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return qlist;
+    }
 
     public List<QuestionType> getAllQuestionTypes() {
         List<QuestionType> questionTypeList = new ArrayList<>();
@@ -58,19 +85,20 @@ public class QuestionDAO extends MyDAO {
 public List<Question> getFilteredQuestions(String subjectId, String chapterId, String questionTypeId, int currentPage, int questionsPerPage, int roleId, int userId) {
     List<Question> questionList = new ArrayList<>();
 
-    // Ensure the user is a teacher
+    // Ensure the user is a teacher (roleId = 3)
     if (roleId != 3) {
         return questionList; // Return an empty list if the user is not a teacher
     }
 
+    // Building the SQL query
     StringBuilder query = new StringBuilder("SELECT q.QuestionID, s.SubjectName, q.ChapterID, q.Question, qt.QuestionTypeName "
             + "FROM Questions q "
             + "JOIN Subject s ON q.SubjectID = s.SubjectID "
             + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
             + "JOIN TeacherSubjects ts ON q.SubjectID = ts.SubjectID "
-            + "WHERE ts.UserID = ?"); // Ensures questions only for the subjects taught by this teacher
+            + "WHERE ts.UserID = ?"); // Ensures questions are only for subjects taught by this teacher
 
-    // Additional filtering
+    // Additional filtering based on user input
     if (subjectId != null && !subjectId.isEmpty()) {
         query.append(" AND q.SubjectID = ? ");
     }
@@ -86,8 +114,9 @@ public List<Question> getFilteredQuestions(String subjectId, String chapterId, S
 
     try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
         int index = 1;
-        stmt.setInt(index++, userId);  // Use the teacher's user ID
+        stmt.setInt(index++, userId);  // Set teacher's user ID
 
+        // Set parameters for subject, chapter, and question type if provided
         if (subjectId != null && !subjectId.isEmpty()) {
             stmt.setString(index++, subjectId);
         }
@@ -98,11 +127,14 @@ public List<Question> getFilteredQuestions(String subjectId, String chapterId, S
             stmt.setString(index++, questionTypeId);
         }
 
-        stmt.setInt(index++, (currentPage - 1) * questionsPerPage); // Set offset
-        stmt.setInt(index, questionsPerPage);                       // Set limit
+        // Set pagination values: offset and limit
+        stmt.setInt(index++, (currentPage - 1) * questionsPerPage); // offset
+        stmt.setInt(index, questionsPerPage); // limit
 
+        // Execute the query
         ResultSet rs = stmt.executeQuery();
 
+        // Process the result set
         while (rs.next()) {
             Question question = new Question(
                     rs.getInt("QuestionID"),
@@ -121,10 +153,13 @@ public List<Question> getFilteredQuestions(String subjectId, String chapterId, S
 }
 
 
+
+
+
 public int getFilteredQuestionCount(String subjectId, String chapterId, String questionTypeId, int userId) {
     int count = 0;
     StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM Questions q "
-            + "JOIN Subject s ON q.SubjectID = s.SubjectID "
+  + "JOIN Subject s ON q.SubjectID = s.SubjectID "
             + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
             + "JOIN TeacherSubjects ts ON q.SubjectID = ts.SubjectID "
             + "WHERE ts.UserID = ?"); // Ensures we count only the questions for subjects taught by the teacher
