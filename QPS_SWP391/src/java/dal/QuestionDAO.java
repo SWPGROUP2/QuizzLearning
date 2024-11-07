@@ -54,132 +54,117 @@ public class QuestionDAO extends MyDAO {
         return subjectList;
     }
 
-    public List<Question> getAllQuestions(int limit, int offset, String chapterId) {
-        List<Question> questionList = new ArrayList<>();
-        String query = "SELECT q.QuestionID, s.SubjectName, q.ChapterID, q.Question, qt.QuestionTypeName "
-                + "FROM Questions q "
-                + "JOIN Subject s ON q.SubjectID = s.SubjectID "
-                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
-                + "WHERE (? IS NULL OR q.ChapterID = ?) "
-                + "LIMIT ? OFFSET ?";
-
-        try ( PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, chapterId);  // Filter by chapter if provided
-            stmt.setString(2, chapterId);  // Filter by chapter if provided
-            stmt.setInt(3, limit);         // Set limit
-            stmt.setInt(4, offset);        // Set offset
-
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                // Create the Question object with the retrieved data
-                Question question = new Question(
-                        rs.getInt("QuestionID"),
-                        rs.getInt("ChapterID"),
-                        rs.getString("Question"),
-                        rs.getString("QuestionTypeName"),
-                        rs.getString("SubjectName")
-                );
-                questionList.add(question);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return questionList;
-    }
-
     // Get filtered questions with pagination
-    public List<Question> getFilteredQuestions(String subjectId, String chapterId, String questionTypeId, int currentPage, int questionsPerPage) {
-        List<Question> questionList = new ArrayList<>();
-        StringBuilder query = new StringBuilder("SELECT q.QuestionID, s.SubjectName, q.ChapterID, q.Question, qt.QuestionTypeName "
-                + "FROM Questions q "
-                + "JOIN Subject s ON q.SubjectID = s.SubjectID "
-                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID WHERE 1=1");
+public List<Question> getFilteredQuestions(String subjectId, String chapterId, String questionTypeId, int currentPage, int questionsPerPage, int roleId, int userId) {
+    List<Question> questionList = new ArrayList<>();
 
-        if (subjectId != null && !subjectId.isEmpty()) {
-            query.append(" AND q.SubjectID = ? ");
-        }
-        if (chapterId != null && !chapterId.isEmpty()) {
-            query.append(" AND q.ChapterID = ? ");
-        }
-        if (questionTypeId != null && !questionTypeId.isEmpty()) {
-            query.append(" AND q.QuestionTypeID = ? ");
-        }
-
-        // Apply pagination
-        query.append(" LIMIT ?, ?");
-
-        try ( PreparedStatement stmt = connection.prepareStatement(query.toString())) {
-            int index = 1;
-            if (subjectId != null && !subjectId.isEmpty()) {
-                stmt.setString(index++, subjectId);
-            }
-            if (chapterId != null && !chapterId.isEmpty()) {
-                stmt.setString(index++, chapterId);
-            }
-            if (questionTypeId != null && !questionTypeId.isEmpty()) {
-                stmt.setString(index++, questionTypeId);
-            }
-
-            stmt.setInt(index++, (currentPage - 1) * questionsPerPage);
-            stmt.setInt(index, questionsPerPage);
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Question question = new Question(
-                        rs.getInt("QuestionID"),
-                        rs.getInt("ChapterID"),
-                        rs.getString("Question"),
-                        rs.getString("QuestionTypeName"),
-                        rs.getString("SubjectName")
-                );
-                questionList.add(question);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return questionList;
+    // Ensure the user is a teacher
+    if (roleId != 3) {
+        return questionList; // Return an empty list if the user is not a teacher
     }
 
-    public int getFilteredQuestionCount(String subjectId, String chapterId, String questionTypeId) {
-        int count = 0;
-        StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM Questions q "
-                + "JOIN Subject s ON q.SubjectID = s.SubjectID "
-                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID WHERE 1=1");
+    StringBuilder query = new StringBuilder("SELECT q.QuestionID, s.SubjectName, q.ChapterID, q.Question, qt.QuestionTypeName "
+            + "FROM Questions q "
+            + "JOIN Subject s ON q.SubjectID = s.SubjectID "
+            + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
+            + "JOIN TeacherSubjects ts ON q.SubjectID = ts.SubjectID "
+            + "WHERE ts.UserID = ?"); // Ensures questions only for the subjects taught by this teacher
+
+    // Additional filtering
+    if (subjectId != null && !subjectId.isEmpty()) {
+        query.append(" AND q.SubjectID = ? ");
+    }
+    if (chapterId != null && !chapterId.isEmpty()) {
+        query.append(" AND q.ChapterID = ? ");
+    }
+    if (questionTypeId != null && !questionTypeId.isEmpty()) {
+        query.append(" AND q.QuestionTypeID = ? ");
+    }
+
+    // Apply pagination
+    query.append(" LIMIT ?, ?");
+
+    try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+        int index = 1;
+        stmt.setInt(index++, userId);  // Use the teacher's user ID
 
         if (subjectId != null && !subjectId.isEmpty()) {
-            query.append(" AND q.SubjectID = ? ");
+            stmt.setString(index++, subjectId);
         }
         if (chapterId != null && !chapterId.isEmpty()) {
-            query.append(" AND q.ChapterID = ? ");
+            stmt.setString(index++, chapterId);
         }
         if (questionTypeId != null && !questionTypeId.isEmpty()) {
-            query.append(" AND q.QuestionTypeID = ? ");
+            stmt.setString(index++, questionTypeId);
         }
 
-        try ( PreparedStatement stmt = connection.prepareStatement(query.toString())) {
-            int index = 1;
-            if (subjectId != null && !subjectId.isEmpty()) {
-                stmt.setString(index++, subjectId);
-            }
-            if (chapterId != null && !chapterId.isEmpty()) {
-                stmt.setString(index++, chapterId);
-            }
-            if (questionTypeId != null && !questionTypeId.isEmpty()) {
-                stmt.setString(index++, questionTypeId);
-            }
+        stmt.setInt(index++, (currentPage - 1) * questionsPerPage); // Set offset
+        stmt.setInt(index, questionsPerPage);                       // Set limit
 
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                count = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            Question question = new Question(
+                    rs.getInt("QuestionID"),
+                    rs.getInt("ChapterID"),
+                    rs.getString("Question"),
+                    rs.getString("QuestionTypeName"),
+                    rs.getString("SubjectName")
+            );
+            questionList.add(question);
         }
-
-        return count;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return questionList;
+}
+
+
+public int getFilteredQuestionCount(String subjectId, String chapterId, String questionTypeId, int userId) {
+    int count = 0;
+    StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM Questions q "
+            + "JOIN Subject s ON q.SubjectID = s.SubjectID "
+            + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
+            + "JOIN TeacherSubjects ts ON q.SubjectID = ts.SubjectID "
+            + "WHERE ts.UserID = ?"); // Ensures we count only the questions for subjects taught by the teacher
+
+    // Additional filtering for subject, chapter, and question type
+    if (subjectId != null && !subjectId.isEmpty()) {
+        query.append(" AND q.SubjectID = ? ");
+    }
+    if (chapterId != null && !chapterId.isEmpty()) {
+        query.append(" AND q.ChapterID = ? ");
+    }
+    if (questionTypeId != null && !questionTypeId.isEmpty()) {
+        query.append(" AND q.QuestionTypeID = ? ");
+    }
+
+    try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+        int index = 1;
+        stmt.setInt(index++, userId);  // Filter by teacher's userId
+
+        if (subjectId != null && !subjectId.isEmpty()) {
+            stmt.setString(index++, subjectId);
+        }
+        if (chapterId != null && !chapterId.isEmpty()) {
+            stmt.setString(index++, chapterId);
+        }
+        if (questionTypeId != null && !questionTypeId.isEmpty()) {
+            stmt.setString(index++, questionTypeId);
+        }
+
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            count = rs.getInt(1);  // Get the count of matching questions
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return count;
+}
+
 
     public boolean deleteQuestion(int questionID) {
         String deleteQuery = "DELETE FROM Questions WHERE QuestionID = ?";

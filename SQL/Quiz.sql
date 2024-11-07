@@ -27,9 +27,10 @@ CREATE TABLE Users (
 
 INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, FullName, DoB, PlaceWork, UserCode)
 VALUES 
-('teacher', 3, 'teacher@example.com', '1', '0123456789', 'Nguyen Van A', '1980-01-01', 'Fu-Hoa Lac', 'HE123456'),
+('teacherjpen', 3, 'teacherjpen@example.com', '1', '0123456789', 'Nguyen Van jpen', '1980-01-01', 'Fu-Hoa Lac', 'HE123456'),
 ('admin', 2, 'admin@example.com', '1', '0987654321', 'Nguyen Van B', '1980-01-01', 'Fu-Hoa Lac', 'HE123456'),
-('student', 1, 'student@example.com', '1', '045632789', 'Nguyen Van C', '2000-01-01', 'Fu-Hoa Lac', 'HE123456');
+('student', 1, 'student@example.com', '1', '045632789', 'Nguyen Van C', '2000-01-01', 'Fu-Hoa Lac', 'HE123456'),
+('teacherkr', 3, 'teacherkr@example.com', '1', '0123456789', 'Nguyen Van kr', '1980-01-01', 'Fu-Hoa Lac', 'HE123456');
 
 CREATE TABLE Subject (
     SubjectID INT AUTO_INCREMENT PRIMARY KEY,
@@ -44,6 +45,21 @@ VALUES
 ('IELTS', 'English', 'https://cf.quizizz.com/img/course-assets/title_imgs/1%20-%20English%20and%20Language%20Arts.png'),
 ('TOPIK', 'Korean', 'https://cf.quizizz.com/img/course-assets/title_imgs/3%20-%20Social%20Studies.png'),
 ('Test', 'World Languages', 'https://cf.quizizz.com/img/course-assets/title_imgs/5-%20World%20Languages.png');
+
+CREATE TABLE TeacherSubjects (
+    TeacherSubjectID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    SubjectID INT,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID),
+    UNIQUE (UserID, SubjectID) -- ensures each teacher can teach each subject only once
+);
+
+INSERT INTO TeacherSubjects (UserID, SubjectID)
+VALUES 
+(1, 1), -- Teacher with UserID 1 can teach Japanese
+(1, 2), -- Teacher with UserID 1 can also teach English
+(4, 3); -- Teacher with UserID 4 can teach Korean
 
 CREATE TABLE QuestionType (
     QuestionTypeID INT AUTO_INCREMENT PRIMARY KEY,	
@@ -74,7 +90,7 @@ VALUES
 -- Các câu hỏi cho môn Anh
 (2, 1, 1, 'What is the capital of the UK?'),  
 (2, 1, 1, 'What is the largest city in the UK?'),  
-(2, 2, 2, 'Write an essay about your favorite book.'),  
+(2, 2, 2, 'Write an essay about your favorite book.'),  	
 (2, 2, 1, 'What is the most famous landmark in London?'),  
 (2, 2, 2, 'Describe your daily routine in English.'), 
 
