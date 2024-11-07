@@ -38,9 +38,9 @@ VALUES
 ('user4', 1, 'student1@example.com', '1', '0109876543', 'Student Two', '2001-03-12', '2024-01-01', '2025-01-01', 'Active'),
 ('user5', 2, 'admin1@example.com', '1', '0192837465', 'Admin Two', '1990-07-30', '2024-01-01', '2025-01-01', 'Active'),
 ('user6', 3, 'teacher1@example.com', '1', '0223456789', 'Teacher Two', '1982-02-14', '2024-01-01', '2025-01-01', 'Active'),
-('user7', 1, 'student2@example.com', '1', '0334455667', 'Student Three', '1999-09-09', '2022-11-06', '2023-01-01', 'Active'),
+('user7', 1, 'student2@example.com', '1', '0334455667', 'Student Three', '1999-09-09', '2024-11-06', '2023-01-01', 'Active'),
 ('user8', 2, 'admin2@example.com', '1', '0445566778', 'Admin Three', '1983-11-11', '2024-01-01', '2025-01-01', 'Active'),
-('user9', 3, 'teacher2@example.com', '1', '0556677889', 'Teacher Three', '1986-04-04', '2024-01-01', '2025-01-01', 'Active'),
+('user9', 3, 'teacher2@example.com', '1', '0556677889', 'Teacher Three', '1986-04-04', '2024-01-01', '2025-01-01', 'Inactive'),
 ('user10', 1, 'student3@example.com', '1', '0667788990', 'Student Four', '2002-12-22', '2024-11-09', '2025-01-01', 'Inactive');
 
 -- Create Subject table
@@ -281,6 +281,7 @@ VALUES
 (1, 'はい、わかりました', 'Vâng, tôi hiểu rồi'),
 (1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
+
 
 
 
