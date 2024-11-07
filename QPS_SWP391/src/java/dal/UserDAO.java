@@ -165,7 +165,7 @@ public class UserDAO extends DBContext {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, newPassword);
             statement.setInt(2, userId);
-            int rowsAffected = statement.executeUpdate(); 
+            int rowsAffected = statement.executeUpdate();
             return rowsAffected > 0;
         } catch (Exception ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -281,6 +281,27 @@ public class UserDAO extends DBContext {
             }
         }
         return false;
+    }
+
+    public List<User> getAllTeachers() {
+        List<User> teachers = new ArrayList<>();
+        String sql = "SELECT * FROM Users WHERE RoleID = 2";
+
+        try {
+            ps = connection.prepareStatement(sql);  
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                User teacher = new User();
+                teacher.setUserId(rs.getInt("UserID")); 
+                teacher.setFullName(rs.getString("FullName"));
+                teachers.add(teacher);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // In ra log lỗi để kiểm tra
+        }
+
+        return teachers;
     }
 
     public static void main(String[] args) {

@@ -27,7 +27,7 @@
                 <div id="" class="mb-4">
                     <div id="">
                         <div class="container-fluid px-4 px-lg-5 row" style="margin-top: 10px">
-                            <a href="teacherhome" class="btn btn-dark">Back to Homepage</a> 
+                            <a href="adminhome" class="btn btn-dark">Back to Homepage</a> 
                             <h1>Subject List</h1>
 
                             <div class="mt-3 col-md-12">
@@ -40,9 +40,11 @@
                                             </div>
                                         </div>
                                     </form>
-                                    <div class="col-md-6 d-flex justify-content-end mb-4">
-                                        <a href="add-subject" class="btn btn-primary" type="submit">Add Subject</a>
-                                    </div>
+                                    <c:if test="${sessionScope.account.roleId == 2}">
+                                        <div class="col-md-6 d-flex justify-content-end mb-4">
+                                            <a href="add-subject" class="btn btn-primary" type="submit">Add Subject</a>
+                                        </div>
+                                    </c:if>
                                 </div>
                                 <c:forEach var="s" items="${listSubjectsByPagging}">
                                     <div class="col-md-12 mb-3 shadow bg-white rounded border" style="border-radius: 8px; width: 100%">
@@ -63,19 +65,28 @@
                                                 <!-- Cột: Nút Detail và Delete nằm cạnh nhau -->
                                                 <div class="col-md-5 text-center">
                                                     <!-- Form View List Question -->
-                                                    <form action="subject-list" method="POST" style="display:inline;">
-                                                        <a href="questionlist?id=${s.getSubjectId()}" class="btn btn-primary btn-lg">List Question</a>
-                                                    </form>
-                                                    
-                                                    <form action="edit-subject" method="POST" style="display:inline;">
-                                                        <input type="hidden" name="subjectId" value="${s.getSubjectId()}"/>
-                                                        <button type="submit" class="btn btn-primary btn-lg">Edit</button>
-                                                    </form>
-                                                    <!-- Form Delete -->
-                                                    <form action="delete-subject" method="POST" style="display:inline;">
-                                                        <input type="hidden" name="subjectId" value="${s.getSubjectId()}"/>
-                                                        <button type="submit" class="btn btn-danger btn-lg">Delete</button>
-                                                    </form>
+                                                    <c:if test="${sessionScope.account.roleId == 3}">
+                                                        <form action="subject-list" method="POST" style="display:inline;">
+                                                            <a href="questionlist?id=${s.getSubjectId()}" class="btn btn-primary btn-lg">List Question</a>
+                                                        </form>
+                                                    </c:if>
+                                                    <c:if test="${sessionScope.account.roleId == 2}">
+                                                        <form action="assign-teacher" method="GET" style="display:inline;">
+                                                            <input type="hidden" name="subjectId" value="${s.getSubjectId()}"/>
+                                                            <button type="submit" class="btn btn-primary btn-lg">Assign</button>
+                                                        </form>
+                                                    </c:if>
+                                                    <c:if test="${sessionScope.account.roleId == 2}">
+                                                        <form action="edit-subject" method="POST" style="display:inline;">
+                                                            <input type="hidden" name="subjectId" value="${s.getSubjectId()}"/>
+                                                            <button type="submit" class="btn btn-primary btn-lg">Edit</button>
+                                                        </form>
+                                                        <!-- Form Delete -->
+                                                        <form action="delete-subject" method="POST" style="display:inline;">
+                                                            <input type="hidden" name="subjectId" value="${s.getSubjectId()}"/>
+                                                            <button type="submit" class="btn btn-danger btn-lg">Delete</button>
+                                                        </form>
+                                                    </c:if>
                                                 </div>
                                             </div>
                                         </div>

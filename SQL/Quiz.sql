@@ -154,16 +154,15 @@ CREATE TABLE Test_Questions (
 
 INSERT INTO Test_Questions (TestID, QuestionID) 
 VALUES 
-(1, 1), (1, 2), (1, 3), (1, 4), (1, 5),  -- Câu hỏi cho bài kiểm tra Nhật Bản 1
-(2, 6), (2, 7), (2, 8), (2, 9), (2, 10),  -- Câu hỏi cho bài kiểm tra tiếng Anh 1
-(3, 11), (3, 12), (3, 13), (3, 14), (3, 15);  -- Câu hỏi cho bài kiểm tra tiếng Hàn 1
-
+(1, 1), (1, 2), (1, 6), (1, 4), (1, 7),  -- Câu hỏi cho bài kiểm tra Nhật Bản 1
+(2, 6), (2, 10), (2, 8), (2, 9), (2, 11),  -- Câu hỏi cho bài kiểm tra tiếng Anh 1
+(3, 11), (3, 12), (3, 9), (3, 14), (3, 8);  -- Câu hỏi cho bài kiểm tra tiếng Hàn 1
 CREATE TABLE TermSets (
     TermSetID INT AUTO_INCREMENT PRIMARY KEY,
     TermSetName VARCHAR(255) CHARACTER SET utf8mb4,
 	TermSetDescription VARCHAR(255) CHARACTER SET utf8mb4
 );
-
+delete from Test_Questions where TestQuestionsID = 11;
 INSERT INTO TermSets (TermSetName, TermSetDescription) VALUES
 ('Chào hỏi trong tiếng Nhật', 'Một số câu chào hỏi cơ bản thường ngày trong tiếng Nhật');
 
@@ -215,3 +214,12 @@ CREATE TABLE TestResults (
     FOREIGN KEY (test_id) REFERENCES Tests(TestID)
 );
 
+CREATE TABLE Subject_Teachers (
+    SubjectTeacherID INT PRIMARY KEY AUTO_INCREMENT,
+    SubjectID INT,
+    UserID INT,
+    AssignedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+SELECT * FROM Users WHERE RoleID = 3
