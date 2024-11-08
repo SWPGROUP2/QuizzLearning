@@ -26,7 +26,7 @@
 
                     <div class="form-group">
                         <label for="class">Class:</label>
-                        <select class="form-control" id="class" name="class" required>
+                        <select class="form-control" id="class" name="classId" required>
                             <c:forEach var="classItem" items="${teacherClasses}">
                                 <option value="${classItem.classID}">${classItem.className}</option>
                             </c:forEach>
