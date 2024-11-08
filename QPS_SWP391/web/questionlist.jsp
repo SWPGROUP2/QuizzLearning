@@ -130,14 +130,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th style="width: 3%;">
-                                            <a href="?sort=serial&order=${param.order == 'asc' ? 'desc' : 'asc'}&id=${param.id}">#
-                                                <c:choose>
-                                                    <c:when test="${param.sort == 'serial' && param.order == 'asc'}">▲</c:when>
-                                                    <c:when test="${param.sort == 'serial' && param.order == 'desc'}">▼</c:when>
-                                                </c:choose>
-                                            </a>
-                                        </th>
+                                        <th style="width: 3%;">#</th>
                                         <th style="width: 8%;">Subject</th>
                                         <th style="width: 4%;">Chapter</th>
                                         <th style="width: 40%;">Questions</th>

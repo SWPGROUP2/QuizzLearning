@@ -56,7 +56,7 @@ public class QuestionList extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("uniqueSubjects", uniqueSubjects);
         request.setAttribute("uniqueChapters", uniqueChapters);
-        request.setAttribute("uniqueQuestionTypes", uniqueQuestionTypes);// Pass unique subjects
+        request.setAttribute("uniqueQuestionTypes", uniqueQuestionTypes);
         request.setAttribute("questionTypeList", questionTypeList);
         request.setAttribute("sortOrder", sortOrder);
         request.getRequestDispatcher("/questionlist.jsp").forward(request, response);
