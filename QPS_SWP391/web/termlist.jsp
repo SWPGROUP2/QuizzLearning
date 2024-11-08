@@ -36,7 +36,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <a href="termset" class="btn btn-dark mr-8">Back to Term set</a>
                         <h2>Terms List</h2>
-                        <a href="addterm" class="btn btn-primary">Add Term</a>
+                        <a href="addterm?termSetId=${param.termSetId}" class="btn btn-primary">Add Term</a>
                     </div>
                     <table class="table table-bordered">
                         <thead>
@@ -58,8 +58,8 @@
                                 <td><%= term.getTerm() %></td>
                                 <td><%= term.getDefinition() %></td>
                                 <td>
-                                    <a href="terms?action=edit&id=<%= term.getTermId() %>" class="btn btn-primary">Edit</a>
-                                    <a href="terms?action=delete&id=<%= term.getTermId() %>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this term?');">Delete</a>
+                                    <a href="editterm?termId=<%= term.getTermId() %>" class="btn btn-primary">Edit</a>
+                                    <a href="deleteterm?termId=<%= term.getTermId() %>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this term?');">Delete</a>
                                 </td>
                             </tr>
                             <%

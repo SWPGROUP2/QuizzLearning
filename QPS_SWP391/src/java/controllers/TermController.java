@@ -8,18 +8,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import models.Term;
 
-
 import java.io.IOException;
 import java.util.List;
 
 public class TermController extends HttpServlet {
-
-    private TermDAO termDAO;
-
-    @Override
-    public void init() {
-        termDAO = new TermDAO();
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -34,12 +26,12 @@ public class TermController extends HttpServlet {
     }
 
     private void listTerms(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        TermDAO termDAO = new TermDAO();
+
         List<Term> terms = termDAO.getAllTerms();
         request.setAttribute("terms", terms);
-        request.getRequestDispatcher("terms.jsp").forward(request, response);
+        request.getRequestDispatcher("termlist.jsp").forward(request, response);
     }
-
-
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");

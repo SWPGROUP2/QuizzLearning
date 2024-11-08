@@ -24,6 +24,18 @@
         <servlet-name>DeleteTestController</servlet-name>
         <servlet-class>controllers.DeleteTestController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddTermController</servlet-name>
+        <servlet-class>controllers.AddTermController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditTermController</servlet-name>
+        <servlet-class>controllers.EditTermController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteTermController</servlet-name>
+        <servlet-class>controllers.DeleteTermController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DetailTestController</servlet-name>
         <url-pattern>/detailtest</url-pattern>
@@ -55,6 +67,18 @@
     <servlet-mapping>
         <servlet-name>DeleteTestController</servlet-name>
         <url-pattern>/deletetest</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddTermController</servlet-name>
+        <url-pattern>/addterm</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditTermController</servlet-name>
+        <url-pattern>/editterm</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteTermController</servlet-name>
+        <url-pattern>/deleteterm</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>

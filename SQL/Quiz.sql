@@ -119,11 +119,9 @@ CREATE TABLE Tests (
     TestName VARCHAR(255) CHARACTER SET utf8mb4,
     Duration INT,
     ClassID INT,
-    QuestionTypeID INT,
-    test_startDate TIMESTAMP,
-    test_endDate TIMESTAMP,
+    test_startTime TIMESTAMP,
+    test_endTime TIMESTAMP,
     test_status INT DEFAULT 0,
-    FOREIGN KEY (QuestionTypeID) REFERENCES QuestionType(QuestionTypeID),
     FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID),
     FOREIGN KEY (ClassID) REFERENCES Class(ClassID)
 );
@@ -232,14 +230,14 @@ VALUES
 (9, 'I don’t like spicy food.', 0),
 (10, 'I like playing soccer.', 1);
 
--- Giả sử bảng Subject, Class, và QuestionType đã có dữ liệu. Chúng tôi sẽ dùng các ID giả cho các trường khóa ngoại
-INSERT INTO Tests (SubjectID, TestName, Duration, ClassID, QuestionTypeID, test_startDate, test_endDate, test_status) 
-VALUES
-(1, 'Korean Language Test 1', 60, 1, 1, '2024-11-10 08:00:00', '2024-11-10 09:00:00', 1),  -- Tiếng Hàn, Test active
-(2, 'Japanese Midterm Exam', 90, 2, 2, '2024-11-12 10:00:00', '2024-11-12 11:30:00', 0),    -- Tiếng Nhật, Test inactive
-(3, 'English Final Exam', 120, 1, 1, '2024-12-01 13:00:00', '2024-12-01 15:00:00', 1), -- Tiếng Anh, Test active
-(1, 'Korean Vocabulary Test', 45, 3, 2, '2024-11-15 09:00:00', '2024-11-15 09:45:00', 0),  -- Tiếng Hàn, Test inactive
-(2, 'Japanese Reading Test', 60, 2, 1, '2024-11-18 14:00:00', '2024-11-18 15:00:00', 1);   -- Tiếng Nhật, Test active
+INSERT INTO Tests (SubjectID, TestName, Duration, ClassID, test_startTime, test_endTime, test_status) 
+VALUES 
+(1, 'English Midterm Test', 90, 1, '2024-11-15 09:00:00', '2024-11-15 10:30:00', 0),
+(1, 'English Final Exam', 120, 2, '2024-12-20 09:00:00', '2024-12-20 11:00:00', 0),
+(2, 'Japanese Language Test N5', 102, 3, '2024-11-16 10:00:00', '2024-11-16 11:00:00', 0),
+(2, 'Japanese Final Exam', 120, 1, '2024-12-22 13:00:00', '2024-12-22 15:00:00', 0),
+(3, 'Korean Proficiency Test', 100, 2, '2024-11-18 14:00:00', '2024-11-18 15:15:00', 0),
+(3, 'Korean Final Exam', 120, 3, '2024-12-23 08:30:00', '2024-12-23 10:30:00', 0);
 
 
 INSERT INTO Test_Questions (TestID, QuestionID) 
@@ -268,4 +266,3 @@ VALUES
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
 
 
-      SELECT * FROM Class WHERE UserID = 3

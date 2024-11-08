@@ -16,8 +16,7 @@ public class TermSetController extends HttpServlet {
         TermSetDAO termSetDAO = new TermSetDAO();
         List<TermSet> termSets = termSetDAO.getAllTermSets();
 
-        // Check if termSets is empty and log it
-        System.out.println("Term sets in controller: " + termSets.size());
+        
 
         request.setAttribute("termSets", termSets);
         request.getRequestDispatcher("termsetlist.jsp").forward(request, response);

@@ -63,31 +63,10 @@ CREATE TABLE Class (
     ClassID INT AUTO_INCREMENT PRIMARY KEY,
     ClassName VARCHAR(255) CHARACTER SET utf8mb4,
     UserID INT,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID) -- This assumes the class is created by a teacher
+    FOREIGN KEY (UserID) REFERENCES Users(UserID) 
 );
 
-INSERT INTO Class (ClassName, UserID) VALUES ('Class A', 1), ('Class B', 2), ('Class C', 3);
-
--- Create ClassMembers table
-CREATE TABLE ClassMembers (
-    ClassMemberID INT AUTO_INCREMENT PRIMARY KEY,
-    ClassID INT,
-    UserID INT,
-    RoleID INT,
-    FOREIGN KEY (ClassID) REFERENCES Class(ClassID) ON DELETE CASCADE,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE,
-    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID),
-    UNIQUE (ClassID, UserID)  -- Ensures that each user can only be assigned to a class once
-);
-
--- Assign teacher and student to Class A (ClassID = 1)
-INSERT INTO ClassMembers (ClassID, UserID, RoleID) 
-VALUES 
-(1, 3, 3),
-(3, 3, 3),
-(2, 3, 3),
-(2, 4, 1),
-(1, 1, 1); -- Assign Student with UserID=1 and RoleID=1 to Class A
+INSERT INTO Class (ClassName, UserID) VALUES ('Class A', 1), ('Class B', 3), ('Class C', 3);
 
 -- Create TeacherSubjects table
 CREATE TABLE TeacherSubjects (
@@ -141,6 +120,9 @@ CREATE TABLE Tests (
     Duration INT,
     ClassID INT,
     QuestionTypeID INT,
+    test_startDate TIMESTAMP,
+    test_endDate TIMESTAMP,
+    test_status INT DEFAULT 0,
     FOREIGN KEY (QuestionTypeID) REFERENCES QuestionType(QuestionTypeID),
     FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID),
     FOREIGN KEY (ClassID) REFERENCES Class(ClassID)
@@ -250,12 +232,15 @@ VALUES
 (9, 'I don’t like spicy food.', 0),
 (10, 'I like playing soccer.', 1);
 
-INSERT INTO Tests (SubjectID, TestName, Duration, ClassID, QuestionTypeID) 
-VALUES 
-(1, 'Japanese Test 1', 60, 1, 1),  
-(2, 'English Test 1', 45, 2, 1),   
-(3, 'Korean Test 1', 30, 3, 1),    
-(1, 'Japanese Test 2', 75, 1, 2);  
+-- Giả sử bảng Subject, Class, và QuestionType đã có dữ liệu. Chúng tôi sẽ dùng các ID giả cho các trường khóa ngoại
+INSERT INTO Tests (SubjectID, TestName, Duration, ClassID, QuestionTypeID, test_startDate, test_endDate, test_status) 
+VALUES
+(1, 'Korean Language Test 1', 60, 1, 1, '2024-11-10 08:00:00', '2024-11-10 09:00:00', 1),  -- Tiếng Hàn, Test active
+(2, 'Japanese Midterm Exam', 90, 2, 2, '2024-11-12 10:00:00', '2024-11-12 11:30:00', 0),    -- Tiếng Nhật, Test inactive
+(3, 'English Final Exam', 120, 1, 1, '2024-12-01 13:00:00', '2024-12-01 15:00:00', 1), -- Tiếng Anh, Test active
+(1, 'Korean Vocabulary Test', 45, 3, 2, '2024-11-15 09:00:00', '2024-11-15 09:45:00', 0),  -- Tiếng Hàn, Test inactive
+(2, 'Japanese Reading Test', 60, 2, 1, '2024-11-18 14:00:00', '2024-11-18 15:00:00', 1);   -- Tiếng Nhật, Test active
+
 
 INSERT INTO Test_Questions (TestID, QuestionID) 
 VALUES 
@@ -283,8 +268,4 @@ VALUES
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
 
 
-
-
-
-
-
+      SELECT * FROM Class WHERE UserID = 3
