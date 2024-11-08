@@ -15,31 +15,20 @@
                 <h1 style="margin-bottom:20px">Add Test</h1>
 
                 <form action="addtest" method="post">
-                    <!-- Filtered Subjects: Show only subjects assigned to the teacher -->
                     <div class="form-group">
                         <label for="subject">Subject:</label>
                         <select class="form-control" id="subject" name="subjectId" required>
-                            <c:forEach var="subject" items="${uniqueSubjects}">
+                            <c:forEach var="subject" items="${teacherSubjects}">
                                 <option value="${subject.subjectId}">${subject.subjectName}</option>
                             </c:forEach>
                         </select>
                     </div>
 
-                    <!-- Filtered Classes: Show only classes assigned to the teacher -->
                     <div class="form-group">
                         <label for="class">Class:</label>
-                        <select class="form-control" id="class" name="classId" required>
-                            <c:forEach var="classData" items="${uniqueClasses}">
-                                <option value="${classData.classID}">${classData.className}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="questionType">Question Type:</label>
-                        <select class="form-control" id="questionType" name="questionTypeId" required>
-                            <c:forEach var="questionType" items="${questionTypes}">
-                                <option value="${questionType.questionTypeId}">${questionType.questionTypeName}</option>
+                        <select class="form-control" id="class" name="class" required>
+                            <c:forEach var="classItem" items="${teacherClasses}">
+                                <option value="${classItem.classID}">${classItem.className}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -53,6 +42,17 @@
                         <label for="duration">Duration (minutes):</label>
                         <input type="number" class="form-control" id="duration" name="duration" required>
                     </div>
+
+                    <div class="form-group">
+                        <label for="testStartDate">Test Start Time:</label>
+                        <input type="datetime-local" class="form-control" id="testStartDate" name="testStartDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="testEndDate">Test End Time:</label>
+                        <input type="datetime-local" class="form-control" id="testEndDate" name="testEndDate" required>
+                    </div>
+
                     <button type="submit" class="btn btn-primary">Continue</button>
                 </form>
             </div>
