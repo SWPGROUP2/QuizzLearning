@@ -13,7 +13,6 @@
                 font-family: Arial, sans-serif;
             }
             .sidebar {
-                border-right: 1px solid #1a1e21;
                 background-color: #343a40;
             }
             .filter-form {
@@ -75,7 +74,7 @@
                         <a href="teacherhome" class="btn btn-dark mr-2">Back to Homepage</a>
                         <h1 class="flex-grow-1 text-center mb-0">Question List</h1>
                     </div>
-                    
+
                     <!-- Filter Form -->
                     <form id="filterForm" action="questionlist" method="GET" class="filter-form mb-3">
                         <label for="subjectFilter">Subject:</label>
@@ -130,14 +129,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                                                                <th style="width: 3%;">
-                                            <a href="?sort=serial&order=${param.order == 'asc' ? 'desc' : 'asc'}&id=${param.id}">#
-                                                <c:choose>
-                                                    <c:when test="${param.sort == 'serial' && param.order == 'asc'}">▲</c:when>
-                                                    <c:when test="${param.sort == 'serial' && param.order == 'desc'}">▼</c:when>
-                                                </c:choose>
-                                            </a>
-                                        </th>
+                                        <th style="width: 3%;">#</th>
                                         <th style="width: 8%;">Subject</th>
                                         <th style="width: 4%;">Chapter</th>
                                         <th style="width: 40%;">Questions</th>
@@ -155,13 +147,13 @@
                                             <td>${q.question}</td>
                                             <td>${q.questionTypeName}</td>
                                             <td class="table-actions">
-                                                <a href="editquestion?questionId=${q.questionID}&subjectId=${param.id}" class="btn btn-primary btn-sm">Edit</a>
+                                                <a href="editquestion?questionId=${q.questionID}" class="btn btn-primary btn-sm">Edit</a>
                                                 <form action="DeleteQuestionServlet" method="POST" style="display:inline;">
                                                     <input type="hidden" name="id" value="${q.questionID}">
                                                     <input type="hidden" name="subjectId" value="${param.id}">
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
                                                 </form>
-                                                <a href="detailquestion?questionId=${q.questionID}&subjectId=${param.id}" class="btn btn-info btn-sm">Detail</a>
+                                                <a href="detailquestion?questionId=${q.questionID}" class="btn btn-info btn-sm">Detail</a>
                                             </td>
                                         </tr>
                                     </c:forEach>

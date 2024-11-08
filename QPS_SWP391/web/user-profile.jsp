@@ -39,9 +39,9 @@
                                 %>
                                 <input type="radio" id="<%= relativePath %>" name="selectedAvatar" value="<%= relativePath %>">
                                 <label for="<%= relativePath %>" style="cursor: pointer;"><img src="<%= relativePath %>" alt="<%= relativePath %>"></label>
-                                <%
-                                    }
-                                %>
+                                    <%
+                                        }
+                                    %>
                                 <input type="hidden" id="hiddenId" name="userId" value="${sessionScope.account.userId}">
                                 <br>
                                 <button type="submit">Submit</button>
@@ -71,9 +71,14 @@
                                 <input type="date" id="dob" name="dob" value="${sessionScope.account.dob}">
 
                                 <div style="margin-bottom: 8px;font-weight: bold;">
-                                    Student/Teacher ID:
+                                    Start Date:
                                 </div>
-                                <input type="text" id="schoolId" name="schoolId" value="${sessionScope.account.userCode}" readonly>
+                                <input type="date" id="startDate" name="startDate" value="${sessionScope.account.startDate != null ? sessionScope.account.startDate : ''}"readonly>
+
+                                <div style="margin-bottom: 8px;font-weight: bold;">
+                                    End Date:
+                                </div>
+                                <input type="date" id="endDate" name="endDate" value="${sessionScope.account.endDate != null ? sessionScope.account.endDate : ''}"readonly>
 
                                 <input type="hidden" id="hiddenId" name="userId" value="${sessionScope.account.userId}">
                                 <div><h3 style="color: red">${requestScope.mess}</h3></div>

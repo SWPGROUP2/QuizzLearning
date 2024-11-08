@@ -9,6 +9,9 @@ public class Test {
     private int questionTypeId;
     private int questionCount;
     private String subjectName;
+        private int classID;
+    private String className;
+    
 
     public Test(int testId, int subjectId, String testName, int duration, int classId, int questionTypeId, int questionCount, String subjectName) {
         this.testId = testId;
@@ -30,13 +33,22 @@ public class Test {
         this.subjectName = subjectName;
     }
 
-    public Test(int testID, int subjectId, String testName, int duration, int classID, int questionCount) {
+    public Test(int testId, int subjectId, String testName, int duration, int classId, int questionCount) {
         this.testId = testId;
         this.subjectId = subjectId;
         this.testName = testName;
         this.duration = duration;
         this.classId = classId;
         this.questionCount = questionCount;
+    }
+
+    public Test(int testId, String testName, int subjectId, String subjectName, int classId, String className) {
+        this.testId = testId;
+        this.testName = testName;
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
+        this.classID = classId;
+        this.className = className;
     }
 
     public int getQuestionTypeId() {
@@ -112,5 +124,21 @@ public class Test {
 
     public void setSubjectName(String subjectName) {
         this.subjectName = subjectName;
+    }
+
+    public int getClassID() {
+        return classID;
+    }
+
+    public void setClassID(int classID) {
+        this.classID = classID;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }

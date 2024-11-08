@@ -74,124 +74,104 @@ public class TestDAO extends MyDAO {
         return qlist;
     }
 
-    public List<Test> getAllTests() {
-        List<Test> testList = new ArrayList<>();
-        xSql = "SELECT * FROM Tests";
-        try {
-            ps = con.prepareStatement(xSql);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                Test test = new Test();
-                test.setTestID(rs.getInt("TestID"));
-                test.setTestName(rs.getString("TestName"));
-                test.setDuration(rs.getInt("Duration"));
-                test.setSubjectId(rs.getInt("SubjectID"));
-                test.setClassId(rs.getInt("ClassID"));
-                testList.add(test);
+    public List<Test> getAllTestTeacher(int userId, String subjectId, String classId, String searchQuery, int page, int testsPerPage) {
+        List<Test> tests = new ArrayList<>();
+
+
+        StringBuilder query = new StringBuilder("SELECT t.TestID, t.TestName, t.SubjectID, s.SubjectName, t.ClassID, c.ClassName "
+                + "FROM Tests t "
+                + "JOIN TeacherSubjects ts ON t.SubjectID = ts.SubjectID "
+                + "JOIN Subject s ON t.SubjectID = s.SubjectID "
+                + "JOIN Class c ON t.ClassID = c.ClassID "
+                + "WHERE ts.UserID = ?");
+
+
+        if (subjectId != null && !subjectId.isEmpty()) {
+            query.append(" AND t.SubjectID = ?");
+        }
+        if (classId != null && !classId.isEmpty()) {
+            query.append(" AND t.ClassID = ?");
+        }
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            query.append(" AND t.TestName LIKE ?");
+        }
+
+
+        query.append(" LIMIT ? OFFSET ?");
+
+        try ( PreparedStatement stmt = con.prepareStatement(query.toString())) {
+            int index = 1;
+            stmt.setInt(index++, userId);
+
+
+            if (subjectId != null && !subjectId.isEmpty()) {
+                stmt.setString(index++, subjectId);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return testList;
-    }
-
-    public List<Test> searchTestsByName(String testName, int page, int testsPerPage, String sortBy, String sortOrder) {
-        List<Test> testList = new ArrayList<>();
-
-        String sortColumn = "TestID";
-        if ("questionCount".equals(sortBy)) {
-            sortColumn = "(SELECT COUNT(*) FROM TestQuestions WHERE TestQuestions.testID = Tests.TestID)";
-        }
-
-        String order = "ASC".equalsIgnoreCase(sortOrder) ? "ASC" : "DESC";
-
-        int offset = (page - 1) * testsPerPage;
-
-        xSql = "SELECT * FROM Tests WHERE TestName LIKE ? ORDER BY " + sortColumn + " " + order + " LIMIT ? OFFSET ?";
-
-        try {
-            ps = con.prepareStatement(xSql);
-            ps.setString(1, "%" + testName + "%");
-            ps.setInt(2, testsPerPage);
-            ps.setInt(3, offset);
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Test test = new Test();
-                test.setTestID(rs.getInt("TestID"));
-                test.setTestName(rs.getString("TestName"));
-                test.setDuration(rs.getInt("Duration"));
-                test.setSubjectId(rs.getInt("SubjectID"));
-                test.setClassId(rs.getInt("ClassID"));
-                testList.add(test);
+            if (classId != null && !classId.isEmpty()) {
+                stmt.setString(index++, classId);
+            }
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                stmt.setString(index++, "%" + searchQuery.trim() + "%");
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return testList;
-    }
-
-    public List<Test> getTestsPaginated(int page, int testsPerPage, String sortBy, String sortOrder) {
-        List<Test> testList = new ArrayList<>();
-        String sortColumn = "TestID";
-        if ("questionCount".equals(sortBy)) {
-            sortColumn = "(SELECT COUNT(*) FROM TestQuestions WHERE TestQuestions.testID = Tests.TestID)";
-        }
-        String order = "ASC".equalsIgnoreCase(sortOrder) ? "ASC" : "DESC";
-
-        int offset = (page - 1) * testsPerPage;
-        xSql = "SELECT * FROM Tests ORDER BY " + sortColumn + " " + order + " LIMIT ? OFFSET ?";
-
-        try {
-            ps = con.prepareStatement(xSql);
-            ps.setInt(1, testsPerPage);
-            ps.setInt(2, offset);
-            rs = ps.executeQuery();
-
+            stmt.setInt(index++, testsPerPage); 
+            stmt.setInt(index, (page - 1) * testsPerPage); 
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                Test test = new Test();
-                test.setTestID(rs.getInt("TestID"));
-                test.setTestName(rs.getString("TestName"));
-                test.setDuration(rs.getInt("Duration"));
-                test.setSubjectId(rs.getInt("SubjectID"));
-                test.setClassId(rs.getInt("ClassID"));
-                testList.add(test);
+                Test test = new Test(
+                        rs.getInt("TestID"),
+                        rs.getString("TestName"),
+                        rs.getInt("SubjectID"),
+                        rs.getString("SubjectName"),
+                        rs.getInt("ClassID"),
+                        rs.getString("ClassName")
+                );
+                tests.add(test);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return testList;
+
+        return tests;
     }
 
-    public int countAllTests() {
-        xSql = "SELECT COUNT(*) FROM Tests";
+    public int countTotalTests(int userId, String subjectId, String classId, String searchQuery) {
         int count = 0;
-        try {
-            ps = con.prepareStatement(xSql);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                count = rs.getInt(1);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return count;
-    }
+        StringBuilder query = new StringBuilder("SELECT COUNT(*) AS total FROM Tests t "
+                + "JOIN TeacherSubjects ts ON t.SubjectID = ts.SubjectID "
+                + "WHERE ts.UserID = ?");
 
-    public int countTestsByName(String testName) {
-        xSql = "SELECT COUNT(*) FROM Tests WHERE TestName LIKE ?";
-        int count = 0;
-        try {
-            ps = con.prepareStatement(xSql);
-            ps.setString(1, "%" + testName + "%");
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                count = rs.getInt(1);
+        if (subjectId != null && !subjectId.isEmpty()) {
+            query.append(" AND t.SubjectID = ?");
+        }
+        if (classId != null && !classId.isEmpty()) {
+            query.append(" AND t.ClassID = ?");
+        }
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            query.append(" AND t.TestName LIKE ?");
+        }
+
+        try ( PreparedStatement stmt = con.prepareStatement(query.toString())) {
+            int index = 1;
+            stmt.setInt(index++, userId);
+            if (subjectId != null && !subjectId.isEmpty()) {
+                stmt.setString(index++, subjectId);
             }
-        } catch (Exception e) {
+            if (classId != null && !classId.isEmpty()) {
+                stmt.setString(index++, classId);
+            }
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                stmt.setString(index++, "%" + searchQuery.trim() + "%");
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return count;
     }
 
@@ -309,42 +289,6 @@ public class TestDAO extends MyDAO {
         return questions;
     }
 
-    public List<Test> getAllTests(String searchQuery, String sortBy, String sortOrder) {
-        List<Test> tests = new ArrayList<>();
-        String sql = "SELECT t.TestID, t.TestName, t.Duration, t.ClassID, COUNT(tq.QuestionID) AS questionCount "
-                + "FROM Tests t LEFT JOIN Test_Questions tq ON t.TestID = tq.TestID "
-                + "WHERE t.TestName LIKE ? "
-                + "GROUP BY t.TestID, t.TestName, t.Duration, t.ClassID";
-
-        if (sortBy != null && sortOrder != null) {
-            sql += " ORDER BY " + sortBy + " " + sortOrder;
-        }
-
-        System.out.println("Executing SQL: " + sql);
-
-        try (
-                 PreparedStatement stmt = con.prepareStatement(sql)) {
-
-            stmt.setString(1, "%" + searchQuery + "%");
-
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Test test = new Test();
-                test.setTestID(rs.getInt("TestID"));
-                test.setTestName(rs.getString("TestName"));
-                test.setDuration(rs.getInt("Duration"));
-                test.setClassId(rs.getInt("ClassID"));
-                test.setQuestionCount(rs.getInt("questionCount"));
-                tests.add(test);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Number of tests found: " + tests.size());
-        return tests;
-    }
-
     public void updateTest(Test test) {
         String sql = "UPDATE Tests SET testName = ?, duration = ?, classId = ?, subjectId = ? WHERE testId = ?";
         try ( PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -443,7 +387,7 @@ public class TestDAO extends MyDAO {
                 String questionTypeName = resultSet.getString("QuestionTypeName");
 
                 Question question = new Question(questionID, subjectId, chapterId, questionText, questionTypeId, questionTypeName);
-                question.setOptions(getOptionsByQuestionId(questionID)); // Lấy các tùy chọn cho câu hỏi
+                question.setOptions(getOptionsByQuestionId(questionID)); 
 
                 questions.add(question);
             }

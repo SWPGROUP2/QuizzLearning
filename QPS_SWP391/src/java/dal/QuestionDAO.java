@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import models.Option;
 import models.Question;
 import models.subject;
 import models.QuestionType;
@@ -82,7 +83,7 @@ public class QuestionDAO extends MyDAO {
     }
 
     // Get filtered questions with pagination
-public List<Question> getFilteredQuestions(String subjectId, String chapterId, String questionTypeId, int currentPage, int questionsPerPage, int roleId, int userId, String questionSearch) {
+public List<Question> getFilteredQuestions(String subjectId, String chapterId, String questionTypeId, int currentPage, int questionsPerPage, int roleId, int userId, String questionSearch, String sortOrder) {
     List<Question> questionList = new ArrayList<>();
 
     // Ensure the user is a teacher
@@ -150,8 +151,11 @@ public List<Question> getFilteredQuestions(String subjectId, String chapterId, S
         e.printStackTrace();
     }
 
+   
+
     return questionList;
 }
+
 
 
 
@@ -202,7 +206,7 @@ public int getFilteredQuestionCount(String subjectId, String chapterId, String q
 
     public boolean deleteQuestion(int questionID) {
         String deleteQuery = "DELETE FROM Questions WHERE QuestionID = ?";
-        try ( PreparedStatement pstmt = connection.prepareStatement(deleteQuery)) {
+        try ( PreparedStatement pstmt = con.prepareStatement(deleteQuery)) {
             pstmt.setInt(1, questionID);
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -214,7 +218,7 @@ public int getFilteredQuestionCount(String subjectId, String chapterId, String q
     public void updateQuestion(Question question) {
         String sql = "UPDATE Questions SET subjectId = ?, chapterId = ?, question = ?, questionTypeId = ? WHERE questionID = ?";
         try {
-            PreparedStatement ps = connection.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, question.getSubjectId());
             ps.setInt(2, question.getChapterId());
             ps.setString(3, question.getQuestion());
@@ -229,28 +233,59 @@ public int getFilteredQuestionCount(String subjectId, String chapterId, String q
     }
 
     public Question getQuestionById(int questionId) {
-        String sql = "SELECT q.*, qt.QuestionTypeName FROM Questions q JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID WHERE q.QuestionID = ?";
+        String sql = "SELECT q.QuestionID, q.SubjectID, q.ChapterID, q.Question, q.QuestionTypeID, s.SubjectName " +
+                     "FROM Questions q JOIN Subject s ON q.SubjectID = s.SubjectID WHERE q.QuestionID = ?";
         Question question = null;
+        
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, questionId);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                // Extract the fields from the result set
+                int id = rs.getInt("QuestionID");
+                int subjectId = rs.getInt("SubjectID");
+                int chapterId = rs.getInt("ChapterID");
+                String questionText = rs.getString("Question");
+                                String subjectName = rs.getString("SubjectName");
+                int questionTypeId = rs.getInt("QuestionTypeID");
 
-        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, questionId);
-            try ( ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    question = new Question(
-                            rs.getInt("QuestionID"),
-                            rs.getInt("SubjectID"),
-                            rs.getInt("ChapterID"),
-                            rs.getString("Question"),
-                            rs.getInt("QuestionTypeID"),
-                            rs.getString("QuestionTypeName"),
-                            rs.getString("SubjectName")
-                    );
-                }
+
+                // Create the question object
+                question = new Question(id, subjectId, chapterId, questionText, subjectName, questionTypeId);
+
+                // Fetch the options related to this question
+                List<Option> options = getOptionsForQuestion(questionId);
+                question.setOptions(options);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return question;
+    }
+
+    private List<Option> getOptionsForQuestion(int questionId) {
+        List<Option> options = new ArrayList<>();
+        String sql = "SELECT OptionID, OptionText, IsCorrect FROM Options WHERE QuestionID = ?";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, questionId);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                int optionId = rs.getInt("OptionID");
+                String optionText = rs.getString("OptionText");
+                int isCorrect = rs.getInt("IsCorrect");
+
+                Option option = new Option(optionId, optionText, isCorrect);
+                options.add(option);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return options;
     }
 
     public int addQuestion(Question question) {
@@ -366,5 +401,17 @@ public Map<Integer, String> getUniqueQuestionTypes() {
         }
         return totalRecords;
     }
-
+public boolean isQuestionExists(int subjectId, int chapterId, String questionText) throws SQLException {
+        String query = "SELECT COUNT(*) FROM Questions WHERE subjectId = ? AND chapterId = ? AND question = ?";
+        try ( PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, subjectId);
+            stmt.setInt(2, chapterId);
+            stmt.setString(3, questionText.trim());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        return false;
+    }
 }

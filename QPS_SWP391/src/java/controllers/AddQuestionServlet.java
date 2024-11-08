@@ -2,23 +2,56 @@ package controllers;
 
 import dal.OptionDAO;
 import dal.QuestionDAO;
+import dal.SubjectDAO;
+import dal.TeacherSubjectsDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import models.Option;
 import models.Question;
+import models.User;
+import models.subject;
 
 public class AddQuestionServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+<<<<<<< HEAD
         String subjectIdStr = request.getParameter("subjectId");
         request.setAttribute("subjectId", subjectIdStr);
 
         
+=======
+        try {
+            HttpSession session = request.getSession();
+            User loggedInUser = (User) session.getAttribute("account");
+            int userId = loggedInUser.getUserId();
+
+            SubjectDAO subjectDAO = new SubjectDAO();
+            TeacherSubjectsDAO teachersubjectdao = new TeacherSubjectsDAO();
+
+            List<subject> allSubjects = subjectDAO.getAllSubject();
+            List<Integer> assignedSubjectIds = teachersubjectdao.getAssignedSubjectIdsByTeacherId(userId);
+
+            List<subject> teacherSubjects = new ArrayList<>();
+            for (subject subjects : allSubjects) {
+                if (assignedSubjectIds.contains(subjects.getSubjectId())) {
+                    teacherSubjects.add(subjects);
+                }
+            }
+
+            request.setAttribute("teacherSubjects", teacherSubjects);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+>>>>>>> 533e5aca70751c87f79c8544576c554cd452aebe
         request.getRequestDispatcher("addquestion.jsp").forward(request, response);
     }
 
@@ -31,48 +64,40 @@ public class AddQuestionServlet extends HttpServlet {
 
         boolean hasError = false;
 
-        request.setAttribute("subjectId", subjectIdStr);
-        request.setAttribute("chapterId", chapterIdStr);
-        request.setAttribute("question", questionText);
-        request.setAttribute("questionTypeId", questionTypeIdStr);
-
+        if (subjectIdStr == null || subjectIdStr.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Vui lòng chọn môn học");
+            hasError = true;
+        }
+        if (chapterIdStr == null || chapterIdStr.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Vui lòng chọn chương");
+            hasError = true;
+        }
         if (questionText == null || questionText.trim().isEmpty()) {
-            request.setAttribute("questionError", "Question can not be empty");
+            request.setAttribute("questionError", "Nội dung câu hỏi không được để trống");
+            hasError = true;
+        }
+        if (questionTypeIdStr == null || questionTypeIdStr.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Vui lòng chọn loại câu hỏi");
             hasError = true;
         }
 
-        int questionTypeId = Integer.parseInt(questionTypeIdStr);
-        if (questionTypeId == 1) {
-            for (int i = 1; i <= 4; i++) {
-                String optionText = request.getParameter("optionText" + i);
-                boolean isCorrect = request.getParameter("isCorrect" + i) != null;
-
-                request.setAttribute("optionText" + i, optionText);
-                request.setAttribute("isCorrect" + i, isCorrect);
-
-                if (optionText == null || optionText.trim().isEmpty()) {
-                    request.setAttribute("optionError" + i, "Option " + i + " can not be empty");
-                    hasError = true;
-                }
-            }
-        } else if (questionTypeId == 2) {
-            String matchingText = request.getParameter("optionText");
-            request.setAttribute("optionText", matchingText);
-
-            if (matchingText == null || matchingText.trim().isEmpty()) {
-                request.setAttribute("matchingError", "Option can not be empty");
-                hasError = true;
-            }
-        }
-
         if (hasError) {
-            request.getRequestDispatcher("addquestion.jsp").forward(request, response);
+            doGet(request, response);
             return;
         }
 
         try {
             int subjectId = Integer.parseInt(subjectIdStr);
             int chapterId = Integer.parseInt(chapterIdStr);
+            int questionTypeId = Integer.parseInt(questionTypeIdStr);
+
+            QuestionDAO quesdao = new QuestionDAO();
+
+            if (quesdao.isQuestionExists(subjectId, chapterId, questionText)) {
+                request.setAttribute("errorMessage", "Câu hỏi này đã tồn tại trong danh sách.");
+                doGet(request, response);
+                return;
+            }
 
             Question question = new Question();
             question.setSubjectId(subjectId);
@@ -80,9 +105,8 @@ public class AddQuestionServlet extends HttpServlet {
             question.setQuestion(questionText.trim());
             question.setQuestionTypeId(questionTypeId);
 
-            QuestionDAO quesdao = new QuestionDAO();
-            OptionDAO opdao = new OptionDAO();
             int questionId = quesdao.addQuestion(question);
+            OptionDAO opdao = new OptionDAO();
 
             if (questionTypeId == 1) {
                 for (int i = 1; i <= 4; i++) {
@@ -104,10 +128,17 @@ public class AddQuestionServlet extends HttpServlet {
                 opdao.addOption(option);
             }
 
+<<<<<<< HEAD
             response.sendRedirect("questionlist.jsp");
+=======
+            response.sendRedirect(request.getContextPath() + "/questionlist");
+>>>>>>> 533e5aca70751c87f79c8544576c554cd452aebe
 
+        } catch (NumberFormatException e) {
+            doGet(request, response);
         } catch (Exception e) {
-            request.getRequestDispatcher("addquestion.jsp").forward(request, response);
+            e.printStackTrace();
+            doGet(request, response);
         }
     }
 

@@ -58,6 +58,7 @@
                         </c:if>
 
                         <form action="addquestion" method="post">
+<<<<<<< HEAD
                             <input type="hidden" name="subjectId" value="${subjectId}" />
                             <div class="form-group">
                                 <label for="subjectId">Subject</label>
@@ -67,6 +68,18 @@
                                     </c:forEach>
                                 </select>
                             </div>
+=======
+                            <div class="form-group">
+                                <label for="subjectId">Subject</label>
+                                <select class="form-control" id="subjectId" name="subjectId" required>
+                                    <c:forEach var="subject" items="${teacherSubjects}">
+                                        <option value="${subject.subjectId}">${subject.subjectName}</option>
+                                    </c:forEach>
+
+                                </select>
+                            </div>
+
+>>>>>>> 533e5aca70751c87f79c8544576c554cd452aebe
 
                             <div class="form-group">
                                 <label for="chapterId">Chapter</label>
@@ -105,7 +118,10 @@
                                 </div>
                             </div>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 533e5aca70751c87f79c8544576c554cd452aebe
                             <div id="singleChoiceOptions" style="display:none;">
                                 <div class="form-group">
                                     <label>Options</label>

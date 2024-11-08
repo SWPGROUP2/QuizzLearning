@@ -69,10 +69,8 @@ public class ClassDAO extends MyDAO {
     }
 
     public List<Classes> getTeacherClasses(int userId) {
-        // List to hold unique classes
         List<Classes> uniqueClasses = new ArrayList<>();
-
-        // SQL query to get classes
+        
         String sql = "SELECT DISTINCT c.ClassID, c.ClassName "
                 + "FROM Class c "
                 + "JOIN ClassMembers cm ON cm.ClassID = c.ClassID "
@@ -97,10 +95,8 @@ public class ClassDAO extends MyDAO {
     }
 
     public List<subject> getTeacherSubjects(int userId) {
-        // List to hold unique subjects
         List<subject> uniqueSubjects = new ArrayList<>();
 
-        // SQL query to get subjects
         String sql = "SELECT DISTINCT s.SubjectID, s.SubjectName "
                 + "FROM Subject s "
                 + "JOIN TeacherSubjects ts ON ts.SubjectID = s.SubjectID "
