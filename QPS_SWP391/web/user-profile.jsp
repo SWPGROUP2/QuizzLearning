@@ -1,7 +1,6 @@
-<%@page import="java.util.ArrayList"%>
-<%@page import="models.User"%>
-<%@ page import="java.io.File" %>
-<%@ page import="java.util.Arrays" %>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,9 +70,21 @@
                                 <input type="date" id="dob" name="dob" value="${sessionScope.account.dob}">
 
                                 <div style="margin-bottom: 8px;font-weight: bold;">
-                                    Student/Teacher ID:
+                                    Start Date:
                                 </div>
-                                <input type="text" id="schoolId" name="schoolId" value="${sessionScope.account.userCode}" readonly>
+                                <%
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                    String startDate = (sessionScope.account.startDate != null) ? sdf.format(sessionScope.account.startDate) : "";
+                                %>
+                                <input type="text" id="startDate" name="startDate" value="<%= startDate %>" readonly>
+
+                                <div style="margin-bottom: 8px;font-weight: bold;">
+                                    End Date:
+                                </div>
+                                <%
+                                    String endDate = (sessionScope.account.endDate != null) ? sdf.format(sessionScope.account.endDate) : "";
+                                %>
+                                <input type="text" id="endDate" name="endDate" value="<%= endDate %>" readonly>
 
                                 <input type="hidden" id="hiddenId" name="userId" value="${sessionScope.account.userId}">
                                 <div><h3 style="color: red">${requestScope.mess}</h3></div>

@@ -32,12 +32,15 @@ public class UpdateUserProfile extends HttpServlet {
     } 
 
     @Override
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         String fullName = request.getParameter("fullName");
         String userName = request.getParameter("userName");
         String phoneNumber = request.getParameter("phoneNumber");
         String dob = request.getParameter("dob");
+        String startDate = request.getParameter("startDate");  // Added startDate
+        String endDate = request.getParameter("endDate");      // Added endDate
         String id = request.getParameter("userId");
         String placeWork = request.getParameter("placeWork");
         String schoolId = request.getParameter("schoolId");
@@ -46,7 +49,7 @@ public class UpdateUserProfile extends HttpServlet {
         try {
             if (isBlank(fullName) || isBlank(userName) || isBlank(phoneNumber) || 
                 isBlank(dob)) {
-                request.setAttribute("mess", "No blank");
+                request.setAttribute("mess", "No blank fields allowed");
                 request.getRequestDispatcher("user-profile.jsp").forward(request, response);
                 return;
             }
@@ -61,20 +64,42 @@ public class UpdateUserProfile extends HttpServlet {
                 request.setAttribute("mess", "You're not old enough (>15Y)");
                 request.getRequestDispatcher("user-profile.jsp").forward(request, response);
                 return;
-            } else {
-                userDAO.updateUserById(fullName, userName, phoneNumber, dob, Integer.parseInt(id), placeWork, schoolId);              
             }
+
+            // Parse startDate and endDate if they are not empty or null
+            Date start = parseDate(startDate);
+            Date end = parseDate(endDate);
             
+            // Convert java.util.Date to java.sql.Date for database update
+            java.sql.Date sqlStartDate = (start != null) ? new java.sql.Date(start.getTime()) : null;
+            java.sql.Date sqlEndDate = (end != null) ? new java.sql.Date(end.getTime()) : null;
+
+            // Update the user profile including the startDate and endDate
+            userDAO.updateUserById(fullName, userName, phoneNumber, dob, Integer.parseInt(id), placeWork, schoolId, sqlStartDate, sqlEndDate);              
+
+            // Redirect based on user role
             if (userDAO.getUserById(Integer.parseInt(id)).getRoleId() == 1) {
                 response.sendRedirect("studenthome");
             } else if (userDAO.getUserById(Integer.parseInt(id)).getRoleId() == 3) {
                 response.sendRedirect("teacherhome");
             } else if (userDAO.getUserById(Integer.parseInt(id)).getRoleId() == 2) {
-                 response.sendRedirect("adminhome");
+                response.sendRedirect("adminhome");
             }
         } catch (ServletException | IOException | NumberFormatException ex) {
             Logger.getLogger(UpdateUserProfile.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private Date parseDate(String dateString) {
+        if (dateString != null && !dateString.trim().isEmpty()) {
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                return dateFormat.parse(dateString);
+            } catch (ParseException e) {
+                return null; // Return null if the date is invalid
+            }
+        }
+        return null; // Return null if the date string is empty or null
     }
 
     private boolean isValidPhoneNumber(String phoneNumber) {
@@ -99,7 +124,7 @@ public class UpdateUserProfile extends HttpServlet {
     private boolean isBlank(String str) {
         return str == null || str.trim().isEmpty();
     }
-    
+
     @Override
     public String getServletInfo() {
         return "Short description";

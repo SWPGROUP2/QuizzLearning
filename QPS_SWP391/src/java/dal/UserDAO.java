@@ -1,5 +1,6 @@
 package dal;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -203,31 +204,50 @@ public User getUserById(int id) {
         return rs.next();
     }
 
-    public void updateUserById(String fullName, String userName, String phoneNumber, String dob, int id, String placeWork, String userCode) {
-        String sql = "update Users\n"
-                + "set FullName=?,\n"
-                + "UserName=?,\n"
-                + "PhoneNumber=?,\n"
-                + "DoB=?,\n"
-                + "PlaceWork=?,\n"
-                + "UserCode=?\n"
-                + "where UserID=?";
-        try {
-            PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, fullName);
-            stm.setString(2, userName);
-            stm.setString(3, phoneNumber);
-            stm.setString(4, dob);
-            stm.setString(5, placeWork);
-            stm.setString(6, userCode);
-            stm.setInt(7, id);
-
-            stm.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println(e);
+public void updateUserById(String fullName, String userName, String phoneNumber, String dob, int id, String placeWork, String userCode, Date startDate, Date endDate) {
+    String sql = "UPDATE Users\n"
+            + "SET FullName=?,\n"
+            + "UserName=?,\n"
+            + "PhoneNumber=?,\n"
+            + "DoB=?,\n"
+            + "PlaceWork=?,\n"
+            + "UserCode=?,\n"
+            + "StartDate=?,\n"
+            + "EndDate=?\n"
+            + "WHERE UserID=?";
+    try {
+        PreparedStatement stm = connection.prepareStatement(sql);
+        stm.setString(1, fullName);
+        stm.setString(2, userName);
+        stm.setString(3, phoneNumber);
+        stm.setString(4, dob);
+        stm.setString(5, placeWork);
+        stm.setString(6, userCode);
+        
+        // Set the start and end dates if not null
+        if (startDate != null) {
+            stm.setDate(7, new java.sql.Date(startDate.getTime()));
+        } else {
+            stm.setNull(7, java.sql.Types.DATE);
         }
+
+        if (endDate != null) {
+            stm.setDate(8, new java.sql.Date(endDate.getTime()));
+        } else {
+            stm.setNull(8, java.sql.Types.DATE);
+        }
+
+        // Set the user ID for the WHERE clause
+        stm.setInt(9, id);
+
+        // Execute the update
+        stm.executeUpdate();
+
+    } catch (SQLException e) {
+        System.out.println(e);
     }
+}
+
 
     public void updateAvatarById(String selectedAvatar, int id) {
         String sql = "update Users\n"
