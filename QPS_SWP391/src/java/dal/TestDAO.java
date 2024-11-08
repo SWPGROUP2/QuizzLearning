@@ -77,14 +77,12 @@ public class TestDAO extends MyDAO {
     public List<Test> getAllTestTeacher(int userId, String subjectId, String classId, String searchQuery, int page, int testsPerPage) {
         List<Test> tests = new ArrayList<>();
 
-
         StringBuilder query = new StringBuilder("SELECT t.TestID, t.TestName, t.SubjectID, s.SubjectName, t.ClassID,t.Duration, c.ClassName "
                 + "FROM Tests t "
                 + "JOIN TeacherSubjects ts ON t.SubjectID = ts.SubjectID "
                 + "JOIN Subject s ON t.SubjectID = s.SubjectID "
                 + "JOIN Class c ON t.ClassID = c.ClassID "
                 + "WHERE ts.UserID = ?");
-
 
         if (subjectId != null && !subjectId.isEmpty()) {
             query.append(" AND t.SubjectID = ?");
@@ -102,7 +100,6 @@ public class TestDAO extends MyDAO {
             int index = 1;
             stmt.setInt(index++, userId);
 
-
             if (subjectId != null && !subjectId.isEmpty()) {
                 stmt.setString(index++, subjectId);
             }
@@ -113,8 +110,8 @@ public class TestDAO extends MyDAO {
                 stmt.setString(index++, "%" + searchQuery.trim() + "%");
             }
 
-            stmt.setInt(index++, testsPerPage); 
-            stmt.setInt(index, (page - 1) * testsPerPage); 
+            stmt.setInt(index++, testsPerPage);
+            stmt.setInt(index, (page - 1) * testsPerPage);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Test test = new Test(
@@ -134,84 +131,84 @@ public class TestDAO extends MyDAO {
 
         return tests;
     }
-    
-public List<Test> getAllTestStudent(int userId, String subjectId, String classId, String searchQuery, int currentPage, int testsPerPage) {
-    List<Test> tests = new ArrayList<>();
 
-    StringBuilder query = new StringBuilder("SELECT " +
-             "t.TestID, " +
-             "t.SubjectID, " +
-             "t.TestName, " +
-             "t.Duration, " +
-             "t.ClassID, " +
-             "t.QuestionTypeID, " +
-             "s.SubjectName, " +
-             "qt.QuestionTypeName, " +
-             "c.ClassName " +
-             "FROM Tests t " +
-             "JOIN Class c ON t.ClassID = c.ClassID " +
-             "JOIN Users u ON u.UserID = c.UserID " +
-             "JOIN Subject s ON t.SubjectID = s.SubjectID " +
-             "JOIN QuestionType qt ON t.QuestionTypeID = qt.QuestionTypeID " +
-             "WHERE u.UserID = ? " +  // Placeholder for userID
-             "AND u.RoleID = 1");  // Only filter by RoleID for student
+    public List<Test> getAllTestStudent(int userId, String subjectId, String classId, String searchQuery, int currentPage, int testsPerPage) {
+        List<Test> tests = new ArrayList<>();
 
-    // Optional filters for subject, class, and search query
-    if (subjectId != null && !subjectId.isEmpty()) {
-        query.append(" AND t.SubjectID = ?");
-    }
-    if (classId != null && !classId.isEmpty()) {
-        query.append(" AND t.ClassID = ?");
-    }
-    if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-        query.append(" AND t.TestName LIKE ?");
-    }
+        StringBuilder query = new StringBuilder("SELECT "
+                + "t.TestID, "
+                + "t.SubjectID, "
+                + "t.TestName, "
+                + "t.Duration, "
+                + "t.ClassID, "
+                + "t.QuestionTypeID, "
+                + "s.SubjectName, "
+                + "qt.QuestionTypeName, "
+                + "c.ClassName "
+                + "FROM Tests t "
+                + "JOIN Class c ON t.ClassID = c.ClassID "
+                + "JOIN Users u ON u.UserID = c.UserID "
+                + "JOIN Subject s ON t.SubjectID = s.SubjectID "
+                + "JOIN QuestionType qt ON t.QuestionTypeID = qt.QuestionTypeID "
+                + "WHERE u.UserID = ? "
+                + // Placeholder for userID
+                "AND u.RoleID = 1");  // Only filter by RoleID for student
 
-    // Pagination (LIMIT and OFFSET)
-    query.append(" LIMIT ? OFFSET ?");
-
-    try (PreparedStatement stmt = con.prepareStatement(query.toString())) {
-        int index = 1;
-
-        // Set userId (for student) parameter
-        stmt.setInt(index++, userId);
-
-        // Set optional filters if provided
+        // Optional filters for subject, class, and search query
         if (subjectId != null && !subjectId.isEmpty()) {
-            stmt.setString(index++, subjectId);  // Set subjectId filter
+            query.append(" AND t.SubjectID = ?");
         }
         if (classId != null && !classId.isEmpty()) {
-            stmt.setString(index++, classId);  // Set classId filter
+            query.append(" AND t.ClassID = ?");
         }
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-            stmt.setString(index++, "%" + searchQuery.trim() + "%");  // Set searchQuery filter
+            query.append(" AND t.TestName LIKE ?");
         }
 
-        // Set pagination parameters
-        stmt.setInt(index++, testsPerPage);  // Set testsPerPage limit
-        stmt.setInt(index, (currentPage - 1) * testsPerPage);  // Set the OFFSET for pagination
+        // Pagination (LIMIT and OFFSET)
+        query.append(" LIMIT ? OFFSET ?");
 
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                Test test = new Test(
-                        rs.getInt("TestID"),
-                        rs.getString("TestName"),
-                        rs.getInt("SubjectID"),
-                        rs.getString("SubjectName"),
-                        rs.getInt("ClassID"),
-                        rs.getInt("Duration"),
-                        rs.getString("ClassName")
-                );
-                tests.add(test);
+        try ( PreparedStatement stmt = con.prepareStatement(query.toString())) {
+            int index = 1;
+
+            // Set userId (for student) parameter
+            stmt.setInt(index++, userId);
+
+            // Set optional filters if provided
+            if (subjectId != null && !subjectId.isEmpty()) {
+                stmt.setString(index++, subjectId);  // Set subjectId filter
             }
+            if (classId != null && !classId.isEmpty()) {
+                stmt.setString(index++, classId);  // Set classId filter
+            }
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                stmt.setString(index++, "%" + searchQuery.trim() + "%");  // Set searchQuery filter
+            }
+
+            // Set pagination parameters
+            stmt.setInt(index++, testsPerPage);  // Set testsPerPage limit
+            stmt.setInt(index, (currentPage - 1) * testsPerPage);  // Set the OFFSET for pagination
+
+            try ( ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Test test = new Test(
+                            rs.getInt("TestID"),
+                            rs.getString("TestName"),
+                            rs.getInt("SubjectID"),
+                            rs.getString("SubjectName"),
+                            rs.getInt("ClassID"),
+                            rs.getInt("Duration"),
+                            rs.getString("ClassName")
+                    );
+                    tests.add(test);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();  // Handle exceptions
         }
-    } catch (SQLException e) {
-        e.printStackTrace();  // Handle exceptions
+
+        return tests;  // Return the list of tests
     }
-
-    return tests;  // Return the list of tests
-}
-
 
     public int countTotalTests(int userId, String subjectId, String classId, String searchQuery) {
         int count = 0;
@@ -272,17 +269,20 @@ public List<Test> getAllTestStudent(int userId, String subjectId, String classId
     }
 
     public boolean addTest(Test test) {
-        String sql = "INSERT INTO Tests (SubjectID, TestName, Duration, ClassID) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Tests (SubjectID, TestName, Duration, ClassID, test_startTime, test_endTime, test_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             ps = con.prepareStatement(sql);
             ps.setInt(1, test.getSubjectId());
             ps.setString(2, test.getTestName());
             ps.setInt(3, test.getDuration());
             ps.setInt(4, test.getClassId());
+            ps.setTimestamp(5, test.getTestStartTime());
+            ps.setTimestamp(6, test.getTestEndTime());
+            ps.setInt(7, 1);
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-
+            e.printStackTrace();
             return false;
         } finally {
             try {
@@ -319,25 +319,28 @@ public List<Test> getAllTestStudent(int userId, String subjectId, String classId
     }
 
     public Test getTestById(int testId) {
+        Test test = null;
         String sql = "SELECT * FROM Tests WHERE TestID = ?";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, testId);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                Test test = new Test();
-                test.setTestID(rs.getInt("TestID"));
-                test.setSubjectId(rs.getInt("SubjectID"));
-                test.setTestName(rs.getString("TestName"));
-                test.setDuration(rs.getInt("Duration"));
-                test.setClassId(rs.getInt("ClassID"));
-                test.setQuestionTypeId(rs.getInt("QuestionTypeID"));
-                return test;
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, testId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    test = new Test();
+                    test.setTestID(rs.getInt("TestID"));
+                    test.setTestName(rs.getString("TestName"));
+                    test.setDuration(rs.getInt("Duration"));
+                    test.setClassId(rs.getInt("ClassID"));
+                    test.setSubjectId(rs.getInt("SubjectID"));
+                    test.setTestStartTime(rs.getTimestamp("test_startTime"));
+                    test.setTestEndTime(rs.getTimestamp("test_endTime"));
+                    test.setStatus(rs.getInt("test_status"));
+                }
             }
         } catch (SQLException e) {
-            System.out.println("getTestById: " + e.getMessage());
+            e.printStackTrace();
+
         }
-        return null;
+        return test;
     }
 
     public List<Question> getQuestionsByTestId(int testId) {
@@ -368,16 +371,17 @@ public List<Test> getAllTestStudent(int userId, String subjectId, String classId
     }
 
     public void updateTest(Test test) {
-        String sql = "UPDATE Tests SET testName = ?, duration = ?, classId = ?, subjectId = ? WHERE testId = ?";
-        try ( PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        String sql = "UPDATE Tests SET TestName = ?, Duration = ?, ClassID = ?, test_startTime = ?, test_endTime = ?, test_status = ? WHERE TestID = ?";
 
-            pstmt.setString(1, test.getTestName());
-            pstmt.setInt(2, test.getDuration());
-            pstmt.setInt(3, test.getClassId());
-            pstmt.setInt(4, test.getSubjectId());
-            pstmt.setInt(5, test.getTestId());
-
-            pstmt.executeUpdate();
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, test.getTestName());
+            ps.setInt(2, test.getDuration());
+            ps.setInt(3, test.getClassId());
+            ps.setTimestamp(4, test.getTestStartTime());
+            ps.setTimestamp(5, test.getTestEndTime());
+            ps.setInt(6, test.getStatus());
+            ps.setInt(7, test.getTestId());
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -465,7 +469,7 @@ public List<Test> getAllTestStudent(int userId, String subjectId, String classId
                 String questionTypeName = resultSet.getString("QuestionTypeName");
 
                 Question question = new Question(questionID, subjectId, chapterId, questionText, questionTypeId, questionTypeName);
-                question.setOptions(getOptionsByQuestionId(questionID)); 
+                question.setOptions(getOptionsByQuestionId(questionID));
 
                 questions.add(question);
             }
