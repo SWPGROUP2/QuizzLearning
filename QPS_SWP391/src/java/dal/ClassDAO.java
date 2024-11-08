@@ -84,7 +84,6 @@ public class ClassDAO extends MyDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                // Add to unique classes list
                 Classes classObj = new Classes();
                 classObj.setClassID(rs.getInt("ClassID"));
                 classObj.setClassName(rs.getString("ClassName"));

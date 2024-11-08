@@ -17,6 +17,8 @@ public class AddQuestionServlet extends HttpServlet {
             throws ServletException, IOException {
         String subjectIdStr = request.getParameter("subjectId");
         request.setAttribute("subjectId", subjectIdStr);
+
+        
         request.getRequestDispatcher("addquestion.jsp").forward(request, response);
     }
 
@@ -102,7 +104,7 @@ public class AddQuestionServlet extends HttpServlet {
                 opdao.addOption(option);
             }
 
-            response.sendRedirect("questionlist?id=" + subjectId);
+            response.sendRedirect("questionlist.jsp");
 
         } catch (Exception e) {
             request.getRequestDispatcher("addquestion.jsp").forward(request, response);

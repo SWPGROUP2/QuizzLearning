@@ -24,24 +24,14 @@ public class AddTestController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Retrieve logged-in teacher's UserID from session
         HttpSession session = request.getSession();
         User loggedInUser = (User) session.getAttribute("account");
 
-        // If the user is not logged in, redirect to login page
-        if (loggedInUser == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        // Retrieve the userId from the logged-in user
         int userId = loggedInUser.getUserId();
 
-        // Create DAO instances
         ClassDAO classDAO = new ClassDAO();
         QuestionTypeDAO questionTypeDAO = new QuestionTypeDAO();
 
-        // Get the teacher's assigned classes and subjects by calling separate methods
         List<Classes> uniqueClasses = classDAO.getTeacherClasses(userId);
         List<subject> uniqueSubjects = classDAO.getTeacherSubjects(userId);
 

@@ -118,7 +118,7 @@
 
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <c:if test="${sessionScope.account.roleId != 1}">
-                            <a href="addquestion?subjectId=${param.id}" class="btn btn-primary">Add Question</a>
+                            <a href="addquestion" class="btn btn-primary">Add Question</a>
                         </c:if>
                     </div>
 

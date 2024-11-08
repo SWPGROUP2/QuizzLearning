@@ -59,6 +59,14 @@
 
                         <form action="addquestion" method="post">
                             <input type="hidden" name="subjectId" value="${subjectId}" />
+                            <div class="form-group">
+                                <label for="subjectId">Subject</label>
+                                <select class="form-control" id="subjectId" name="subjectId" required>
+                                    <c:forEach var="subjects" items="${subjectId}">
+                                        <option value="${subjects.subjectId}">${subjects.subjectName}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
 
                             <div class="form-group">
                                 <label for="chapterId">Chapter</label>
@@ -88,16 +96,16 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="questionTypeId" id="singleChoice" value="1" 
                                            ${param.questionTypeId == '1' ? 'checked' : ''} onchange="showOptions()">
-                                    <label class="form-check-label" for="singleChoice">Multiple Choice</label>
+                                    <label class="form-check-label" for="singleChoice">Single Choice</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="questionTypeId" id="matching" value="2" 
                                            ${empty param.questionTypeId || param.questionTypeId == '2' ? 'checked' : ''} onchange="showOptions()">
-                                    <label class="form-check-label" for="matching">Short Answer</label>
+                                    <label class="form-check-label" for="matching">Matching</label>
                                 </div>
                             </div>
 
-                            
+
                             <div id="singleChoiceOptions" style="display:none;">
                                 <div class="form-group">
                                     <label>Options</label>
@@ -126,11 +134,11 @@
 
                             <div id="matchingOptions" style="display:none;">
                                 <div class="form-group">
-                                    <label for="optionText">Short Answer Option</label>
+                                    <label for="optionText">Matching Option</label>
                                     <input type="text" 
                                            class="form-control ${not empty matchingError ? 'is-invalid' : ''}" 
                                            id="optionText" name="optionText" 
-                                           placeholder="Enter short answer" 
+                                           placeholder="Enter matching option" 
                                            value="${optionText}">
                                     <c:if test="${not empty matchingError}">
                                         <div class="invalid-feedback">
