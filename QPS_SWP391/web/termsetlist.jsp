@@ -35,7 +35,8 @@
                                     <h5 class="card-title">${termSet.termSetName}</h5>
                                     <p class="card-text">Description: ${termSet.termSetDescription}</p>
                                     <a href="termlist?termSetId=${termSet.termSetId}" class="btn btn-primary">View Details</a>
-                                    <a href="deleteTermSet.jsp?id=${termSet.termSetId}" class="btn btn-danger float-right">Delete</a>
+                                    <a href="deletetermset?id=${termSet.termSetId}" class="btn btn-danger float-right">Delete</a>
+                                    <a href="updatetermset?id=${termSet.termSetId}" class="btn btn-primary float-right" style="margin-right:10px">Edit</a>
                                 </div>
                             </div>
                         </div>
