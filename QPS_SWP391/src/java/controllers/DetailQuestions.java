@@ -29,7 +29,7 @@ public class DetailQuestions extends HttpServlet {
 
         question = questionDAO.getQuestionById(questionId);
 
-        question = questionDAO.getQuestionById(questionId);
+
 
         OptionDAO optionDAO = new OptionDAO();
         List<Option> options = optionDAO.getOptionsByQuestionId(questionId);

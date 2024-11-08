@@ -13,7 +13,6 @@
                 font-family: Arial, sans-serif;
             }
             .sidebar {
-                border-right: 1px solid #1a1e21;
                 background-color: #343a40;
             }
             .filter-form {
@@ -154,7 +153,7 @@
                                                     <input type="hidden" name="subjectId" value="${param.id}">
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
                                                 </form>
-                                                <a href="detailquestion?questionId=${q.questionID}&subjectId=${param.id}" class="btn btn-info btn-sm">Detail</a>
+                                                <a href="detailquestion?questionId=${q.questionID}" class="btn btn-info btn-sm">Detail</a>
                                             </td>
                                         </tr>
                                     </c:forEach>

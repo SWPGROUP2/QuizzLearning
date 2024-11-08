@@ -11,7 +11,6 @@
             font-family: Arial, sans-serif;
         }
         .sidebar {
-            border-right: 1px solid #1a1e21;
             background-color: #343a40;
         }
         .filter-form {
