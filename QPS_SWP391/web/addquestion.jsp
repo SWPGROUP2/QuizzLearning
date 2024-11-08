@@ -58,6 +58,9 @@
                         </c:if>
 
                         <form action="addquestion" method="post">
+                            <input type="hidden" name="subjectId" value="${subjectId}" />
+                      
+
                             <div class="form-group">
                                 <label for="subjectId">Subject</label>
                                 <select class="form-control" id="subjectId" name="subjectId" required>
@@ -105,6 +108,8 @@
                                     <label class="form-check-label" for="matching">Matching</label>
                                 </div>
                             </div>
+
+
 
                             <div id="singleChoiceOptions" style="display:none;">
                                 <div class="form-group">

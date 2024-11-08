@@ -1,164 +1,146 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
 package controllers;
 
 import dal.ClassDAO;
 import dal.QuestionTypeDAO;
 import dal.TestDAO;
+import dal.SubjectDAO;
+import dal.TeacherSubjectsDAO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import javax.security.auth.Subject;
 import models.Classes;
 import models.QuestionType;
 import models.Test;
 import models.User;
 import models.subject;
 
+/**
+ *
+ * @author Admin
+ */
 public class AddTestController extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try ( PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet AddTestController</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet AddTestController at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Retrieve logged-in teacher's UserID from session
         HttpSession session = request.getSession();
         User loggedInUser = (User) session.getAttribute("account");
-
-        // If the user is not logged in, redirect to login page
-        if (loggedInUser == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        // Retrieve the userId from the logged-in user
         int userId = loggedInUser.getUserId();
 
-        // Create DAO instances
-        ClassDAO classDAO = new ClassDAO();
-        QuestionTypeDAO questionTypeDAO = new QuestionTypeDAO();
+        SubjectDAO subjecdao = new SubjectDAO();
+        TeacherSubjectsDAO teachersubjectdao = new TeacherSubjectsDAO();
+        ClassDAO classdao = new ClassDAO();
 
-        // Get the teacher's assigned classes and subjects by calling separate methods
-        List<Classes> uniqueClasses = classDAO.getTeacherClasses(userId);
-        List<subject> uniqueSubjects = classDAO.getTeacherSubjects(userId);
+        List<subject> allsubject = subjecdao.getAllSubject();
+        List<Integer> assignedSubjectIds = teachersubjectdao.getAssignedSubjectIdsByTeacherId(userId);
+        List<Classes> teacherClasses = classdao.getClassesByTeacherId(userId);
 
-        // Remove duplicates from the unique classes list if any
-        Set<Classes> uniqueClassSet = new HashSet<>(uniqueClasses);
-        uniqueClasses.clear();
-        uniqueClasses.addAll(uniqueClassSet);
-
-        // Log the classes (optional)
-        for (Classes c : uniqueClasses) {
-            System.out.println("Class ID: " + c.getClassID() + " Name: " + c.getClassName());
+        List<subject> teacherSubjects = new ArrayList<>();
+        for (subject subjects : allsubject) {
+            if (assignedSubjectIds.contains(subjects.getSubjectId())) {
+                teacherSubjects.add(subjects);
+            }
         }
 
-        // Assuming you fetch all question types for the test creation
-        List<QuestionType> questionTypes = questionTypeDAO.getAllQuestionTypes();
+        request.setAttribute("teacherSubjects", teacherSubjects);
+        request.setAttribute("teacherClasses", teacherClasses);
 
-        // Set the teacher-specific classes (which already include the subjects) as request attributes
-        request.setAttribute("uniqueClasses", uniqueClasses);
-        request.setAttribute("uniqueSubjects", uniqueSubjects);
-        request.setAttribute("questionTypes", questionTypes);
-
-        // Forward to the addtest.jsp page
         request.getRequestDispatcher("addtest.jsp").forward(request, response);
     }
 
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Initialize variables for form parameters
-        int subjectId = -1;
-        int classId = -1;
-        int duration = -1;
-        int questionTypeId = -1;
+        int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+        int classId = Integer.parseInt(request.getParameter("class"));
         String testName = request.getParameter("testName");
+        int duration = Integer.parseInt(request.getParameter("duration"));
+        int questionTypeId = Integer.parseInt(request.getParameter("questionTypeId"));
 
-        try {
-            // Retrieve parameters from the form and safely parse them
-            if (request.getParameter("subjectId") != null && !request.getParameter("subjectId").isEmpty()) {
-                subjectId = Integer.parseInt(request.getParameter("subjectId"));
-            }
-            if (request.getParameter("class") != null && !request.getParameter("class").isEmpty()) {
-                classId = Integer.parseInt(request.getParameter("class"));
-            }
-            if (request.getParameter("duration") != null && !request.getParameter("duration").isEmpty()) {
-                duration = Integer.parseInt(request.getParameter("duration"));
-            }
-            if (request.getParameter("questionTypeId") != null && !request.getParameter("questionTypeId").isEmpty()) {
-                questionTypeId = Integer.parseInt(request.getParameter("questionTypeId"));
-            }
-
-        } catch (NumberFormatException e) {
-            // Handle invalid number format by setting an error message
-            request.setAttribute("errorMessage", "Invalid input detected. Please ensure all fields are filled correctly.");
-            forwardToAddTestPageWithError(request, response);
-            return;
-        }
-
-        // Check if any of the required fields are missing
-        if (subjectId == -1 || classId == -1 || duration == -1 || questionTypeId == -1 || testName == null || testName.isEmpty()) {
-            // Set error message and forward back to the form
-            request.setAttribute("errorMessage", "All fields are required. Please fill in all the details.");
-            forwardToAddTestPageWithError(request, response);
-            return;
-        }
-
-        // Create a new test object and set the form parameters
         Test test = new Test();
         test.setSubjectId(subjectId);
         test.setClassId(classId);
         test.setTestName(testName);
         test.setDuration(duration);
-        test.setQuestionTypeId(questionTypeId);        
+        test.setQuestionTypeId(questionTypeId);
 
-        // Instantiate TestDAO to add the test to the database
-        TestDAO testDAO = new TestDAO();
-        boolean success = testDAO.addTest(test);
+        TestDAO testdao = new TestDAO();
+        boolean success = testdao.addTest(test);
 
         if (success) {
-            // Retrieve the testId after successful insertion and redirect to the edit page
-            int testId = testDAO.getTestId(testName, subjectId, classId, duration);
+            int testId = testdao.getTestId(testName, subjectId, classId, duration);
             if (testId > 0) {
                 response.sendRedirect("edittest?testId=" + testId + "&subjectId=" + subjectId);
             } else {
                 response.sendRedirect("addtest.jsp");
             }
         } else {
-            // Re-fetch the teacher-specific classes and subjects in case of failure
-            forwardToAddTestPageWithError(request, response);
+
+            SubjectDAO subjecdao = new SubjectDAO();
+            ClassDAO classdao = new ClassDAO();
+            List<subject> subjects = subjecdao.getAllSubject();
+            List<Classes> classlist = classdao.getAllClasses();
+
+            request.setAttribute("subjects", subjects);
+            request.setAttribute("classlist", classlist);
+
+            request.getRequestDispatcher("addtest.jsp").forward(request, response);
         }
     }
 
-    private void forwardToAddTestPageWithError(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // Re-fetch the teacher's classes and subjects and set them as request attributes
-        HttpSession session = request.getSession();
-        User loggedInUser = (User) session.getAttribute("account");
-
-        if (loggedInUser == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        // Get teacher's classes and subjects by userId
-        ClassDAO classDAO = new ClassDAO();
-        List<Classes> uniqueClasses = classDAO.getTeacherClasses(loggedInUser.getUserId());
-        List<subject> uniqueSubjects = classDAO.getTeacherSubjects(loggedInUser.getUserId());
-
-        // Set the error message and classes and subjects for re-rendering
-        request.setAttribute("uniqueClasses", uniqueClasses);
-        request.setAttribute("uniqueSubjects", uniqueSubjects);
-
-        // Forward the request to the addtest.jsp page with the error message
-        request.getRequestDispatcher("addtest.jsp").forward(request, response);
-    }
-
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
     @Override
     public String getServletInfo() {
-        return "Servlet to handle adding tests for a teacher";
-    }
+        return "Short description";
+    }// </editor-fold>
+
 }

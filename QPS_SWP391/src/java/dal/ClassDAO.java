@@ -119,5 +119,25 @@ public class ClassDAO extends MyDAO {
 
         return uniqueSubjects;
     }
+    
+    public List<Classes> getClassesByTeacherId(int userId) {
+        List<Classes> classList = new ArrayList<>();
+        String sql = "SELECT * FROM Class WHERE UserID = ?";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Classes cls = new Classes();
+                    cls.setClassID(rs.getInt("ClassID"));
+                    cls.setClassName(rs.getString("ClassName"));
+                    classList.add(cls);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return classList;
+    }
 
 }
