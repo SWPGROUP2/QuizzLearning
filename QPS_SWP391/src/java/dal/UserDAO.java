@@ -18,29 +18,29 @@ public class UserDAO extends DBContext {
     private PreparedStatement ps;
     private ResultSet rs;
 
-        public User getUserWithStatus(String email, String password) {
+    public User getUserWithStatus(String email, String password) {
         User user = null;
         String query = "SELECT u.UserID, "
-                     + "u.UserName, "
-                     + "u.RoleID, "
-                     + "u.Email, "
-                     + "u.Password, "
-                     + "r.Role, "
-                     + "u.StartDate, "
-                     + "u.EndDate, "
-                     + "CASE "
-                     + "WHEN u.StartDate > CURDATE() OR (u.EndDate IS NOT NULL AND u.EndDate < CURDATE()) THEN 'Inactive' "
-                     + "ELSE u.Status "
-                     + "END AS Status "
-                     + "FROM Users u "
-                     + "JOIN Roles r ON u.RoleID = r.RoleID "
-                     + "WHERE u.Email = ? AND u.Password = ?";
-        
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
+                + "u.UserName, "
+                + "u.RoleID, "
+                + "u.Email, "
+                + "u.Password, "
+                + "r.Role, "
+                + "u.StartDate, "
+                + "u.EndDate, "
+                + "CASE "
+                + "WHEN u.StartDate > CURDATE() OR (u.EndDate IS NOT NULL AND u.EndDate < CURDATE()) THEN 'Inactive' "
+                + "ELSE u.Status "
+                + "END AS Status "
+                + "FROM Users u "
+                + "JOIN Roles r ON u.RoleID = r.RoleID "
+                + "WHERE u.Email = ? AND u.Password = ?";
+
+        try ( PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, email);
             ps.setString(2, password);
 
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     user = new User();
                     user.setUserId(rs.getInt("UserID"));
@@ -60,9 +60,9 @@ public class UserDAO extends DBContext {
         return user;
     }
 
-        public void updateUserStatus(int userId, String status) {
+    public void updateUserStatus(int userId, String status) {
         String query = "UPDATE Users SET Status = ? WHERE UserID = ?";
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
+        try ( PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, status);
             ps.setInt(2, userId);
             ps.executeUpdate();
@@ -83,7 +83,6 @@ public class UserDAO extends DBContext {
             throw e;
         }
     }
-
 
     public void addUser(User user) throws Exception {
         try {
@@ -126,37 +125,36 @@ public class UserDAO extends DBContext {
         return top5UserList;
     }
 
-public User getUserById(int id) {
-    User user = null;
-    String query = "SELECT UserID, UserName, RoleID, Email, Password, PhoneNumber, Avatar, FullName, "
-                 + "DoB, Status, StartDate, EndDate "
-                 + "FROM Users "
-                 + "WHERE UserID = ?";
-    try (PreparedStatement ps = connection.prepareStatement(query)) {
-        ps.setInt(1, id);
-        try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                user = new User();
-                user.setUserId(rs.getInt("UserID"));
-                user.setUserName(rs.getString("UserName"));
-                user.setRoleId(rs.getInt("RoleID"));
-                user.setEmail(rs.getString("Email"));
-                user.setPassword(rs.getString("Password"));
-                user.setPhoneNumber(rs.getString("PhoneNumber"));
-                user.setAvatar(rs.getString("Avatar"));
-                user.setFullName(rs.getString("FullName"));
-                user.setDob(rs.getDate("DoB"));
-                user.setStatus(rs.getString("Status")); 
-                user.setStartDate(rs.getDate("StartDate"));
-                user.setEndDate(rs.getDate("EndDate"));
+    public User getUserById(int id) {
+        User user = null;
+        String query = "SELECT UserID, UserName, RoleID, Email, Password, PhoneNumber, Avatar, FullName, "
+                + "DoB, Status, StartDate, EndDate "
+                + "FROM Users "
+                + "WHERE UserID = ?";
+        try ( PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, id);
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    user = new User();
+                    user.setUserId(rs.getInt("UserID"));
+                    user.setUserName(rs.getString("UserName"));
+                    user.setRoleId(rs.getInt("RoleID"));
+                    user.setEmail(rs.getString("Email"));
+                    user.setPassword(rs.getString("Password"));
+                    user.setPhoneNumber(rs.getString("PhoneNumber"));
+                    user.setAvatar(rs.getString("Avatar"));
+                    user.setFullName(rs.getString("FullName"));
+                    user.setDob(rs.getDate("DoB"));
+                    user.setStatus(rs.getString("Status"));
+                    user.setStartDate(rs.getDate("StartDate"));
+                    user.setEndDate(rs.getDate("EndDate"));
+                }
             }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Error executing query", ex);
         }
-    } catch (SQLException ex) {
-        LOGGER.log(Level.SEVERE, "Error executing query", ex);
+        return user;
     }
-    return user;
-}
-
 
     public User getUserByEmail(String email) throws Exception {
         String sql = "SELECT u.UserID,  u.UserName, u.RoleID , u.Email, u.Password,r.Role\n"
@@ -187,7 +185,7 @@ public User getUserById(int id) {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, newPassword);
             statement.setInt(2, userId);
-            int rowsAffected = statement.executeUpdate(); 
+            int rowsAffected = statement.executeUpdate();
             return rowsAffected > 0;
         } catch (Exception ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -204,50 +202,49 @@ public User getUserById(int id) {
         return rs.next();
     }
 
-public void updateUserById(String fullName, String userName, String phoneNumber, String dob, int id, String placeWork, String userCode, Date startDate, Date endDate) {
-    String sql = "UPDATE Users\n"
-            + "SET FullName=?,\n"
-            + "UserName=?,\n"
-            + "PhoneNumber=?,\n"
-            + "DoB=?,\n"
-            + "PlaceWork=?,\n"
-            + "UserCode=?,\n"
-            + "StartDate=?,\n"
-            + "EndDate=?\n"
-            + "WHERE UserID=?";
-    try {
-        PreparedStatement stm = connection.prepareStatement(sql);
-        stm.setString(1, fullName);
-        stm.setString(2, userName);
-        stm.setString(3, phoneNumber);
-        stm.setString(4, dob);
-        stm.setString(5, placeWork);
-        stm.setString(6, userCode);
-        
-        // Set the start and end dates if not null
-        if (startDate != null) {
-            stm.setDate(7, new java.sql.Date(startDate.getTime()));
-        } else {
-            stm.setNull(7, java.sql.Types.DATE);
+    public void updateUserById(String fullName, String userName, String phoneNumber, String dob, int id, String placeWork, String userCode, Date startDate, Date endDate) {
+        String sql = "UPDATE Users\n"
+                + "SET FullName=?,\n"
+                + "UserName=?,\n"
+                + "PhoneNumber=?,\n"
+                + "DoB=?,\n"
+                + "PlaceWork=?,\n"
+                + "UserCode=?,\n"
+                + "StartDate=?,\n"
+                + "EndDate=?\n"
+                + "WHERE UserID=?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, fullName);
+            stm.setString(2, userName);
+            stm.setString(3, phoneNumber);
+            stm.setString(4, dob);
+            stm.setString(5, placeWork);
+            stm.setString(6, userCode);
+
+            // Set the start and end dates if not null
+            if (startDate != null) {
+                stm.setDate(7, new java.sql.Date(startDate.getTime()));
+            } else {
+                stm.setNull(7, java.sql.Types.DATE);
+            }
+
+            if (endDate != null) {
+                stm.setDate(8, new java.sql.Date(endDate.getTime()));
+            } else {
+                stm.setNull(8, java.sql.Types.DATE);
+            }
+
+            // Set the user ID for the WHERE clause
+            stm.setInt(9, id);
+
+            // Execute the update
+            stm.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e);
         }
-
-        if (endDate != null) {
-            stm.setDate(8, new java.sql.Date(endDate.getTime()));
-        } else {
-            stm.setNull(8, java.sql.Types.DATE);
-        }
-
-        // Set the user ID for the WHERE clause
-        stm.setInt(9, id);
-
-        // Execute the update
-        stm.executeUpdate();
-
-    } catch (SQLException e) {
-        System.out.println(e);
     }
-}
-
 
     public void updateAvatarById(String selectedAvatar, int id) {
         String sql = "update Users\n"
@@ -301,6 +298,27 @@ public void updateUserById(String fullName, String userName, String phoneNumber,
             }
         }
         return false;
+    }
+
+    public List<User> getAllTeachers() {
+        List<User> teachers = new ArrayList<>();
+        String sql = "SELECT * FROM Users WHERE RoleID = 3";
+
+        try {
+            ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                User teacher = new User();
+                teacher.setUserId(rs.getInt("UserID"));
+                teacher.setFullName(rs.getString("FullName"));
+                teachers.add(teacher);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return teachers;
     }
 
     public static void main(String[] args) {
