@@ -20,6 +20,25 @@ import models.subject;
  */
 public class SubjectDAO extends MyDAO {
 
+    public subject getSubjectById(int subjectId) {
+        subject subject = null;
+        String sql = "SELECT * FROM Subject WHERE SubjectID = ?";
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, subjectId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                subject = new subject();
+                subject.setSubjectId(rs.getInt("SubjectID"));
+                subject.setSubjectName(rs.getString("SubjectName"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return subject;
+    }
+
     public List<subject> getAllSubject() {
         xSql = "select * from Subject";
         List<subject> slist = new ArrayList<>();
@@ -221,6 +240,22 @@ public class SubjectDAO extends MyDAO {
         return 0;
     }
 
+    public boolean updateSubject(subject subject) {
+        String sql = "UPDATE Subject SET SubjectName = ?, Title = ? WHERE SubjectID = ?";
+
+        try ( PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, subject.getSubjectName());
+            ps.setString(2, subject.getTitle()); 
+            ps.setInt(3, subject.getSubjectId());
+
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean deleteSubject(int subjectId) {
         String sql = "DELETE FROM Subject WHERE subjectId = ?";
         try {
@@ -245,9 +280,10 @@ public class SubjectDAO extends MyDAO {
         }
         return false;
     }
+
     public String getSubjectNameById(int subjectId) {
         String subjectName = null;
-        try (PreparedStatement statement = connection.prepareStatement("SELECT SubjectName FROM Subject WHERE SubjectID = ?")) {
+        try ( PreparedStatement statement = connection.prepareStatement("SELECT SubjectName FROM Subject WHERE SubjectID = ?")) {
             statement.setInt(1, subjectId);
             ResultSet resultSet = statement.executeQuery();
 
@@ -258,5 +294,33 @@ public class SubjectDAO extends MyDAO {
             e.printStackTrace();
         }
         return subjectName;
+    }
+
+    public void assignTeacherToSubject(int subjectId, int teacherId) {
+        String sql = "INSERT IGNORE INTO TeacherSubjects (SubjectID, UserID) VALUES (?, ?)";
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, subjectId);
+            ps.setInt(2, teacherId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isTeacherAssignedToSubject(int subjectId, int teacherId) {
+        String query = "SELECT COUNT(*) FROM TeacherSubjects WHERE SubjectID = ? AND UserID = ?";
+        try ( PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, subjectId);
+            ps.setInt(2, teacherId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

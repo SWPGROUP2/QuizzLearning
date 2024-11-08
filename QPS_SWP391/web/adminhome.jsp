@@ -10,6 +10,7 @@
         <title>Admin Dashboard</title>
         <link rel="stylesheet" href="../assets/css/admin-user-list.css"/>
         <link rel="stylesheet" href="../assets/css/common.css">
+        <%@include file="Components/AllAccess.jsp"%>
     </head>
     <style>
         .pagination {
@@ -90,8 +91,8 @@
                     <h1>User Manager</h1>
                     <small>Home / User Manager</small>
                 </div>
-                <a class="button" href = 'adduser.jsp'>Add User</a>
-
+                <a class="btn btn-primary" href = 'adduser.jsp'>Add User</a>
+                <a class="btn btn-primary" href = 'subject-list'>Manage Subject</a>
                 <div class="search-bar" style="align-items: center; margin-top: 15px">
                     <!-- Role filter -->
                     <div class="col-md-6">
@@ -135,8 +136,6 @@
                                 <th>ROLE</th>
                                 <th>DOB</th>
                                 <th>PHONE NUMBER</th>
-                                <th>PLACE WORK</th>
-                                <th>USER CODE</th>
                                 <th>ACTIONS</th>
                             </tr>
                         </thead>
@@ -156,9 +155,11 @@
                                     <td>${user.role}</td>
                                     <td>${user.dob}</td>
                                     <td>${user.phoneNumber}</td>
-                                    <td>${user.place}</td>
-                                    <td>${user.userCode}</td>
                                     <td>
+                                        <form action="update-user" method="POST" style="display:inline;">
+                                            <input type="hidden" name="userId" value="${user.getUserId()}"/>
+                                            <button type="submit" class="btn btn-primary btn-lg">Edit</button>
+                                        </form>
                                         <form action="delete-user" method="POST" style="display:inline;">
                                             <input type="hidden" name="userId" value="${user.getUserId()}"/>
                                             <button type="submit" class="btn btn-danger btn-lg">Delete</button>
