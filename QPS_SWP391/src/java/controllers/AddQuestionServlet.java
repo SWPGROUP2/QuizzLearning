@@ -22,12 +22,6 @@ public class AddQuestionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-<<<<<<< HEAD
-        String subjectIdStr = request.getParameter("subjectId");
-        request.setAttribute("subjectId", subjectIdStr);
-
-        
-=======
         try {
             HttpSession session = request.getSession();
             User loggedInUser = (User) session.getAttribute("account");
@@ -51,7 +45,6 @@ public class AddQuestionServlet extends HttpServlet {
             e.printStackTrace();
         }
 
->>>>>>> 533e5aca70751c87f79c8544576c554cd452aebe
         request.getRequestDispatcher("addquestion.jsp").forward(request, response);
     }
 
@@ -128,11 +121,7 @@ public class AddQuestionServlet extends HttpServlet {
                 opdao.addOption(option);
             }
 
-<<<<<<< HEAD
-            response.sendRedirect("questionlist.jsp");
-=======
             response.sendRedirect(request.getContextPath() + "/questionlist");
->>>>>>> 533e5aca70751c87f79c8544576c554cd452aebe
 
         } catch (NumberFormatException e) {
             doGet(request, response);
