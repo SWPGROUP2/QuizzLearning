@@ -313,16 +313,16 @@ public Map<Integer, String> getUniqueSubjects(int userId) {
     String query = "SELECT DISTINCT s.SubjectName, s.SubjectID "
                  + "FROM Subject s "
                  + "JOIN TeacherSubjects ts ON s.SubjectID = ts.SubjectID "
-                 + "WHERE ts.UserID = ?";  // Filter by the current user's ID
+                 + "WHERE ts.UserID = ?";  
     
     try (PreparedStatement stmt = con.prepareStatement(query)) {
-        stmt.setInt(1, userId);  // Set the current user's ID in the query
+        stmt.setInt(1, userId);  
         
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 int subjectId = rs.getInt("SubjectID");
                 String subjectName = rs.getString("SubjectName");
-                uniqueSubjects.put(subjectId, subjectName); // Store in map (ID -> Name)
+                uniqueSubjects.put(subjectId, subjectName);
             }
         }
     } catch (SQLException e) {
@@ -334,14 +334,14 @@ public Map<Integer, String> getUniqueSubjects(int userId) {
 
 public Set<Integer> getUniqueChapters() {
     Set<Integer> uniqueChapters = new HashSet<>();
-    String query = "SELECT DISTINCT q.ChapterId FROM Questions q"; // Only select distinct ChapterId from Question table
+    String query = "SELECT DISTINCT q.ChapterId FROM Questions q";
 
     try (PreparedStatement stmt = con.prepareStatement(query);
          ResultSet rs = stmt.executeQuery()) {
 
         while (rs.next()) {
             int chapterId = rs.getInt("ChapterId");
-            uniqueChapters.add(chapterId); // Add to the HashSet
+            uniqueChapters.add(chapterId);
         }
     } catch (SQLException e) {
         e.printStackTrace();
@@ -352,7 +352,7 @@ public Map<Integer, String> getUniqueQuestionTypes() {
     Map<Integer, String> uniqueQuestionTypes = new LinkedHashMap<>();
     String query = "SELECT DISTINCT q.QuestionTypeId, qt.QuestionTypeName " +
                    "FROM Questions q " +
-                   "JOIN QuestionType qt ON q.QuestionTypeId = qt.QuestionTypeId"; // Join Question with QuestionType
+                   "JOIN QuestionType qt ON q.QuestionTypeId = qt.QuestionTypeId";
 
     try (PreparedStatement stmt = con.prepareStatement(query);
          ResultSet rs = stmt.executeQuery()) {
@@ -360,7 +360,7 @@ public Map<Integer, String> getUniqueQuestionTypes() {
         while (rs.next()) {
             int questionTypeId = rs.getInt("QuestionTypeId");
             String questionTypeName = rs.getString("QuestionTypeName");
-            uniqueQuestionTypes.put(questionTypeId, questionTypeName); // Store QuestionTypeId -> QuestionTypeName
+            uniqueQuestionTypes.put(questionTypeId, questionTypeName);
         }
     } catch (SQLException e) {
         e.printStackTrace();
@@ -389,12 +389,12 @@ public Map<Integer, String> getUniqueQuestionTypes() {
         String countQuery = "SELECT COUNT(*) FROM Questions q WHERE (? IS NULL OR q.ChapterID = ?)";
 
         try ( PreparedStatement stmt = connection.prepareStatement(countQuery)) {
-            stmt.setString(1, chapterId);  // Filter by chapter if provided
-            stmt.setString(2, chapterId);  // Filter by chapter if provided
+            stmt.setString(1, chapterId);
+            stmt.setString(2, chapterId); 
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                totalRecords = rs.getInt(1);  // Get the total count of records
+                totalRecords = rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();

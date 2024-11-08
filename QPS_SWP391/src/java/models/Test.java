@@ -42,12 +42,13 @@ public class Test {
         this.questionCount = questionCount;
     }
 
-    public Test(int testId, String testName, int subjectId, String subjectName, int classId, String className) {
+    public Test(int testId, String testName, int subjectId, String subjectName, int classId, int duration, String className) {
         this.testId = testId;
         this.testName = testName;
         this.subjectId = subjectId;
         this.subjectName = subjectName;
         this.classID = classId;
+        this.duration = duration;
         this.className = className;
     }
 
