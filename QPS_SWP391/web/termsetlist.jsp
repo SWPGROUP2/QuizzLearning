@@ -23,9 +23,9 @@
             </div>
             <div class="col-md-10">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                <a href="studenthome" class="btn btn-dark mr-8">Back to Homepage</a>
-                <h2>Term Sets</h2>
-                <a href="addTermSet.jsp" class="btn btn-primary">Add Term Set</a>
+                    <a href="studenthome" class="btn btn-dark mr-8">Back to Homepage</a>
+                    <h2>Term Sets</h2>
+                    <a href="addTermSet.jsp" class="btn btn-primary">Add Term Set</a>
                 </div>
                 <div class="row mt-3">
                     <c:forEach var="termSet" items="${termSets}">
@@ -34,7 +34,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">${termSet.termSetName}</h5>
                                     <p class="card-text">Description: ${termSet.termSetDescription}</p>
-                                    <a href="termlist.jsp" class="btn btn-primary">View Details</a>
+                                    <a href="termlist?termSetId=${termSet.termSetId}" class="btn btn-primary">View Details</a>
                                     <a href="deleteTermSet.jsp?id=${termSet.termSetId}" class="btn btn-danger float-right">Delete</a>
                                 </div>
                             </div>
