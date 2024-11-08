@@ -17,6 +17,12 @@ public class Option {
         this.optionText = optionText;
         this.isCorrect = isCorrect;
     }
+       public Option(int optionId, String optionText, int isCorrect) {
+
+        this.optionId = optionId;
+        this.optionText = optionText;
+        this.isCorrect = isCorrect;
+    }
 
     public int getQuestionID() {
         return questionID;

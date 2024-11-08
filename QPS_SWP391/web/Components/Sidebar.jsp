@@ -8,7 +8,11 @@
         <style>
             .sidebar {
                 height: 100vh;
+                min-height: 500px; 
                 color: white;
+                display: flex;
+                flex-direction: column;
+                background-color: #343a40; 
             }
             .sidebar h3 {
                 color: #FF5E73;
@@ -46,6 +50,52 @@
                 width: 65px;
                 height: 70px;
                 border-radius: 50%;
+            }
+
+            @media (max-width: 768px) {
+                .sidebar {
+                    height: auto; 
+                    min-height: 300px; 
+                }
+
+                .sidebar h3 {
+                    font-size: 18px;
+                }
+
+                .sidebar .btn {
+                    font-size: 14px;
+                }
+
+                .avatar-container {
+                    width: 50px;
+                    height: 55px;
+                }
+
+                .sidebar img {
+                    width: 45px;
+                    height: 50px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .sidebar {
+                    height: auto;
+                    min-height: 250px;
+                }
+
+                .sidebar .btn {
+                    font-size: 12px; 
+                }
+
+                .avatar-container {
+                    width: 40px;
+                    height: 45px;
+                }
+
+                .sidebar img {
+                    width: 35px;
+                    height: 40px;
+                }
             }
         </style>
     </head>

@@ -1,6 +1,7 @@
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.util.Date"%>
-
+<%@page import="java.util.ArrayList"%>
+<%@page import="models.User"%>
+<%@ page import="java.io.File" %>
+<%@ page import="java.util.Arrays" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,9 +39,9 @@
                                 %>
                                 <input type="radio" id="<%= relativePath %>" name="selectedAvatar" value="<%= relativePath %>">
                                 <label for="<%= relativePath %>" style="cursor: pointer;"><img src="<%= relativePath %>" alt="<%= relativePath %>"></label>
-                                <%
-                                    }
-                                %>
+                                    <%
+                                        }
+                                    %>
                                 <input type="hidden" id="hiddenId" name="userId" value="${sessionScope.account.userId}">
                                 <br>
                                 <button type="submit">Submit</button>
@@ -72,19 +73,12 @@
                                 <div style="margin-bottom: 8px;font-weight: bold;">
                                     Start Date:
                                 </div>
-                                <%
-                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                    String startDate = (sessionScope.account.startDate != null) ? sdf.format(sessionScope.account.startDate) : "";
-                                %>
-                                <input type="text" id="startDate" name="startDate" value="<%= startDate %>" readonly>
+                                <input type="date" id="startDate" name="startDate" value="${sessionScope.account.startDate != null ? sessionScope.account.startDate : ''}"readonly>
 
                                 <div style="margin-bottom: 8px;font-weight: bold;">
                                     End Date:
                                 </div>
-                                <%
-                                    String endDate = (sessionScope.account.endDate != null) ? sdf.format(sessionScope.account.endDate) : "";
-                                %>
-                                <input type="text" id="endDate" name="endDate" value="<%= endDate %>" readonly>
+                                <input type="date" id="endDate" name="endDate" value="${sessionScope.account.endDate != null ? sessionScope.account.endDate : ''}"readonly>
 
                                 <input type="hidden" id="hiddenId" name="userId" value="${sessionScope.account.userId}">
                                 <div><h3 style="color: red">${requestScope.mess}</h3></div>

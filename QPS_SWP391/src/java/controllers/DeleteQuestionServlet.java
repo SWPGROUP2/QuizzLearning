@@ -18,13 +18,11 @@ public class DeleteQuestionServlet extends HttpServlet {
  @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idParam = request.getParameter("id");
-        String subjectIdStr = request.getParameter("subjectId");
         
             int questionID = Integer.parseInt(idParam);
-            int subjectId = Integer.parseInt(subjectIdStr);
             QuestionDAO dao = new QuestionDAO();
             dao.deleteQuestion(questionID);                    
-            response.sendRedirect("questionlist?id=" + subjectId);          
+            response.sendRedirect("questionlist");          
     }
  @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
