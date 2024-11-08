@@ -117,7 +117,7 @@
 
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <c:if test="${sessionScope.account.roleId != 1}">
-                            <a href="addquestion?subjectId=${param.id}" class="btn btn-primary">Add Question</a>
+                            <a href="addquestion" class="btn btn-primary">Add Question</a>
                         </c:if>
                     </div>
 
@@ -147,7 +147,7 @@
                                             <td>${q.question}</td>
                                             <td>${q.questionTypeName}</td>
                                             <td class="table-actions">
-                                                <a href="editquestion?questionId=${q.questionID}&subjectId=${param.id}" class="btn btn-primary btn-sm">Edit</a>
+                                                <a href="editquestion?questionId=${q.questionID}" class="btn btn-primary btn-sm">Edit</a>
                                                 <form action="DeleteQuestionServlet" method="POST" style="display:inline;">
                                                     <input type="hidden" name="id" value="${q.questionID}">
                                                     <input type="hidden" name="subjectId" value="${param.id}">

@@ -401,5 +401,17 @@ public Map<Integer, String> getUniqueQuestionTypes() {
         }
         return totalRecords;
     }
-
+public boolean isQuestionExists(int subjectId, int chapterId, String questionText) throws SQLException {
+        String query = "SELECT COUNT(*) FROM Questions WHERE subjectId = ? AND chapterId = ? AND question = ?";
+        try ( PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, subjectId);
+            stmt.setInt(2, chapterId);
+            stmt.setString(3, questionText.trim());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        return false;
+    }
 }
