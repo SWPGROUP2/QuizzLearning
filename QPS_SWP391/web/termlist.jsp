@@ -48,23 +48,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <%
-                                TermDAO termDAO = new TermDAO();
-                                List<Term> terms = termDAO.getAllTerms();
-                                for (Term term : terms) {
-                            %>
-                            <tr>
-                                <td><%= term.getTermId() %></td>
-                                <td><%= term.getTerm() %></td>
-                                <td><%= term.getDefinition() %></td>
-                                <td>
-                                    <a href="editterm?termId=<%= term.getTermId() %>" class="btn btn-primary">Edit</a>
-                                    <a href="deleteterm?termId=<%= term.getTermId() %>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this term?');">Delete</a>
-                                </td>
-                            </tr>
-                            <%
-                                }
-                            %>
+                            <!-- Sử dụng JSTL để lặp qua các term -->
+                            <c:forEach var="term" items="${terms}">
+                                <tr>
+                                    <td>${term.termId}</td>
+                                    <td>${term.term}</td>
+                                    <td>${term.definition}</td>
+                                    <td>
+                                        <a href="editterm?termId=${term.termId}" class="btn btn-primary">Edit</a>
+                                        <a href="deleteterm?termId=${term.termId}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this term?');">Delete</a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
                 </div>

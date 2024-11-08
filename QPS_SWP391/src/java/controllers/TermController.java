@@ -1,7 +1,6 @@
 package controllers;
 
 import dal.TermDAO;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,21 +18,32 @@ public class TermController extends HttpServlet {
 
         if ("list".equals(action)) {
             listTerms(request, response);
-
         } else {
-            listTerms(request, response);
+            listTerms(request, response); 
         }
     }
 
     private void listTerms(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        TermDAO termDAO = new TermDAO();
+        String termSetIdStr = request.getParameter("termSetId");
 
-        List<Term> terms = termDAO.getAllTerms();
-        request.setAttribute("terms", terms);
-        request.getRequestDispatcher("termlist.jsp").forward(request, response);
+        if (termSetIdStr == null || termSetIdStr.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Term Set ID is required");
+            return;  // Dừng xử lý tiếp
+        }
+
+        try {
+            int termSetId = Integer.parseInt(termSetIdStr);
+            TermDAO termDAO = new TermDAO();
+            List<Term> terms = termDAO.getTermsByTermSetId(termSetId);
+            request.setAttribute("terms", terms);
+            request.getRequestDispatcher("termlist.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Term Set ID format");
+        }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
+        // Xử lý POST nếu cần
     }
 }

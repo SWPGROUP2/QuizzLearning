@@ -139,7 +139,9 @@ CREATE TABLE Test_Questions (
 CREATE TABLE TermSets (
     TermSetID INT AUTO_INCREMENT PRIMARY KEY,
     TermSetName VARCHAR(255) CHARACTER SET utf8mb4,
-    TermSetDescription VARCHAR(255) CHARACTER SET utf8mb4
+    TermSetDescription VARCHAR(255) CHARACTER SET utf8mb4,
+    CreatedBy INT,
+    FOREIGN KEY (CreatedBy) REFERENCES Users(UserID)
 );
 
 -- Create Terms table
@@ -246,8 +248,8 @@ VALUES
 (2, 6), (2, 7), (2, 8), (2, 9), (2, 10),  -- Câu hỏi cho bài kiểm tra tiếng Anh 1
 (3, 11), (3, 12), (3, 13), (3, 14), (3, 15);  -- Câu hỏi cho bài kiểm tra tiếng Hàn 1
 
-INSERT INTO TermSets (TermSetName, TermSetDescription) VALUES
-('Chào hỏi trong tiếng Nhật', 'Một số câu chào hỏi cơ bản thường ngày trong tiếng Nhật');
+INSERT INTO TermSets (TermSetName, TermSetDescription, CreatedBy) VALUES
+('Chào hỏi trong tiếng Nhật', 'Một số câu chào hỏi cơ bản thường ngày trong tiếng Nhật', 1);
 
 INSERT INTO Terms (TermSetID, Term, Definition)
 VALUES 
@@ -264,5 +266,7 @@ VALUES
 (1, 'はい、わかりました', 'Vâng, tôi hiểu rồi'),
 (1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
+
+select * from Terms
 
 

@@ -10,22 +10,27 @@ import java.util.List;
 
 public class TermDAO extends MyDAO {
 
-    public List<Term> getAllTerms() {
+    public List<Term> getTermsByTermSetId(int termSetId) {
         List<Term> termList = new ArrayList<>();
-        String sql = "SELECT * FROM Terms"; // Assuming your table name is 'Terms'
+        String sql = "SELECT * FROM Terms WHERE termSetId = ?"; // Lọc theo TermSetID
 
-        try ( PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Term term = new Term();
-                term.setTermId(rs.getInt("termId"));
-                term.setTermSetId(rs.getInt("termSetId"));
-                term.setTerm(rs.getString("term"));
-                term.setDefinition(rs.getString("definition"));
-                termList.add(term);
+        try ( PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, termSetId); // Gán termSetId vào PreparedStatement
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Term term = new Term();
+                    term.setTermId(rs.getInt("termId"));
+                    term.setTermSetId(rs.getInt("termSetId"));
+                    term.setTerm(rs.getString("term"));
+                    term.setDefinition(rs.getString("definition"));
+                    termList.add(term);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return termList;
     }
 
@@ -65,14 +70,14 @@ public class TermDAO extends MyDAO {
 
     public boolean updateTerm(Term term) {
         String sql = "UPDATE terms SET term = ?, definition = ?, termSetId = ? WHERE termId = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, term.getTerm());
             ps.setString(2, term.getDefinition());
             ps.setInt(3, term.getTermSetId());
             ps.setInt(4, term.getTermId());
 
             int affectedRows = ps.executeUpdate();
-            return affectedRows > 0; 
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
