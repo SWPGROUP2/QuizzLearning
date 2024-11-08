@@ -112,6 +112,7 @@
                                     <th>Class</th>
                                     <th>Subject</th>
                                     <th>Test Name</th>
+                                    <th>Duration</th>
                                     <th>Questions in Test</th>
                                     <th>Actions</th>
                                 </tr>
@@ -124,6 +125,7 @@
                                         <td>${test.className}</td>
                                         <td>${test.subjectName}</td>
                                         <td>${test.testName}</td>
+                                         <td>${test.duration}</td>
                                         <td>${test.questionCount}</td>
                                         <td class="table-actions">
                                             <c:if test="${sessionScope.account.roleId == 3}">

@@ -43,6 +43,7 @@ public class TestList extends HttpServlet {
         }
 
         int userId = loggedInUser.getUserId();
+        int roleId = loggedInUser.getRoleId();
 
         QuestionDAO questionDAO = new QuestionDAO();
         Map<Integer, String> uniqueSubjects = questionDAO.getUniqueSubjects(userId);
@@ -50,7 +51,12 @@ public class TestList extends HttpServlet {
         ClassDAO classDAO = new ClassDAO();
         List<Classes> uniqueClasses = classDAO.getTeacherClasses(userId);
 
-        List<Test> tests = testDAO.getAllTestTeacher(userId, subjectId, classId, searchQuery, currentPage, testsPerPage);
+        List<Test> tests;
+        if (roleId == 3) {
+            tests = testDAO.getAllTestTeacher(userId, subjectId, classId, searchQuery, currentPage, testsPerPage);
+        } else {  // Other roles, assuming students
+            tests = testDAO.getAllTestStudent(userId, subjectId, classId, searchQuery, currentPage, testsPerPage);
+        }
 
         for (Test test : tests) {
             int questionCount = testDAO.countQuestionsInTest(test.getTestId());

@@ -78,7 +78,7 @@ public class TestDAO extends MyDAO {
         List<Test> tests = new ArrayList<>();
 
 
-        StringBuilder query = new StringBuilder("SELECT t.TestID, t.TestName, t.SubjectID, s.SubjectName, t.ClassID, c.ClassName "
+        StringBuilder query = new StringBuilder("SELECT t.TestID, t.TestName, t.SubjectID, s.SubjectName, t.ClassID,t.Duration, c.ClassName "
                 + "FROM Tests t "
                 + "JOIN TeacherSubjects ts ON t.SubjectID = ts.SubjectID "
                 + "JOIN Subject s ON t.SubjectID = s.SubjectID "
@@ -95,7 +95,6 @@ public class TestDAO extends MyDAO {
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
             query.append(" AND t.TestName LIKE ?");
         }
-
 
         query.append(" LIMIT ? OFFSET ?");
 
@@ -124,6 +123,7 @@ public class TestDAO extends MyDAO {
                         rs.getInt("SubjectID"),
                         rs.getString("SubjectName"),
                         rs.getInt("ClassID"),
+                        rs.getInt("Duration"),
                         rs.getString("ClassName")
                 );
                 tests.add(test);
@@ -134,6 +134,84 @@ public class TestDAO extends MyDAO {
 
         return tests;
     }
+    
+public List<Test> getAllTestStudent(int userId, String subjectId, String classId, String searchQuery, int currentPage, int testsPerPage) {
+    List<Test> tests = new ArrayList<>();
+
+    StringBuilder query = new StringBuilder("SELECT " +
+             "t.TestID, " +
+             "t.SubjectID, " +
+             "t.TestName, " +
+             "t.Duration, " +
+             "t.ClassID, " +
+             "t.QuestionTypeID, " +
+             "s.SubjectName, " +
+             "qt.QuestionTypeName, " +
+             "c.ClassName " +
+             "FROM Tests t " +
+             "JOIN Class c ON t.ClassID = c.ClassID " +
+             "JOIN Users u ON u.UserID = c.UserID " +
+             "JOIN Subject s ON t.SubjectID = s.SubjectID " +
+             "JOIN QuestionType qt ON t.QuestionTypeID = qt.QuestionTypeID " +
+             "WHERE u.UserID = ? " +  // Placeholder for userID
+             "AND u.RoleID = 1");  // Only filter by RoleID for student
+
+    // Optional filters for subject, class, and search query
+    if (subjectId != null && !subjectId.isEmpty()) {
+        query.append(" AND t.SubjectID = ?");
+    }
+    if (classId != null && !classId.isEmpty()) {
+        query.append(" AND t.ClassID = ?");
+    }
+    if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+        query.append(" AND t.TestName LIKE ?");
+    }
+
+    // Pagination (LIMIT and OFFSET)
+    query.append(" LIMIT ? OFFSET ?");
+
+    try (PreparedStatement stmt = con.prepareStatement(query.toString())) {
+        int index = 1;
+
+        // Set userId (for student) parameter
+        stmt.setInt(index++, userId);
+
+        // Set optional filters if provided
+        if (subjectId != null && !subjectId.isEmpty()) {
+            stmt.setString(index++, subjectId);  // Set subjectId filter
+        }
+        if (classId != null && !classId.isEmpty()) {
+            stmt.setString(index++, classId);  // Set classId filter
+        }
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            stmt.setString(index++, "%" + searchQuery.trim() + "%");  // Set searchQuery filter
+        }
+
+        // Set pagination parameters
+        stmt.setInt(index++, testsPerPage);  // Set testsPerPage limit
+        stmt.setInt(index, (currentPage - 1) * testsPerPage);  // Set the OFFSET for pagination
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Test test = new Test(
+                        rs.getInt("TestID"),
+                        rs.getString("TestName"),
+                        rs.getInt("SubjectID"),
+                        rs.getString("SubjectName"),
+                        rs.getInt("ClassID"),
+                        rs.getInt("Duration"),
+                        rs.getString("ClassName")
+                );
+                tests.add(test);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();  // Handle exceptions
+    }
+
+    return tests;  // Return the list of tests
+}
+
 
     public int countTotalTests(int userId, String subjectId, String classId, String searchQuery) {
         int count = 0;
