@@ -73,7 +73,7 @@
                 <div class="col-md-10">
                     <div class="d-flex align-items-center mb-2">
                         <a href="adminhome" class="btn btn-dark mr-2">Back to Homepage</a>
-                        <a href="add-user" class="btn btn-success mr-2">Add User</a> <!-- The "Add User" button, linking to the page for adding a user -->
+                        <a href="adduser" class="btn btn-success mr-2">Add User</a> <!-- The "Add User" button, linking to the page for adding a user -->
                         <h1 class="flex-grow-1 text-center mb-0">User Manager</h1>
                     </div>
 

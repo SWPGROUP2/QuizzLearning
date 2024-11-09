@@ -57,6 +57,7 @@ public class AddQuestionServlet extends HttpServlet {
 
         boolean hasError = false;
 
+        // Validate basic fields
         if (subjectIdStr == null || subjectIdStr.trim().isEmpty()) {
             request.setAttribute("errorMessage", "Vui lòng chọn môn học");
             hasError = true;
@@ -74,6 +75,43 @@ public class AddQuestionServlet extends HttpServlet {
             hasError = true;
         }
 
+        int questionTypeId = Integer.parseInt(questionTypeIdStr);
+        if (questionTypeId == 1) { 
+            boolean hasCorrectAnswer = false;
+            for (int i = 1; i <= 4; i++) {
+                String optionText = request.getParameter("optionText" + i);
+                boolean isCorrect = request.getParameter("isCorrect" + i) != null;
+
+                if (optionText == null || optionText.trim().isEmpty()) {
+                    request.setAttribute("optionError" + i, "Option " + i + " không được để trống");
+                    hasError = true;
+                }
+                request.setAttribute("optionText" + i, optionText);
+                request.setAttribute("isCorrect" + i, isCorrect);
+
+                if (isCorrect) {
+                    hasCorrectAnswer = true;
+                }
+            }
+
+            if (!hasCorrectAnswer) {
+                request.setAttribute("errorMessage", "Phải chọn ít nhất một đáp án đúng");
+                hasError = true;
+            }
+        } else if (questionTypeId == 2) { 
+            String optionText = request.getParameter("optionText");
+            if (optionText == null || optionText.trim().isEmpty()) {
+                request.setAttribute("matchingError", "Đáp án không được để trống");
+                request.setAttribute("optionText", optionText);
+                hasError = true;
+            }
+        }
+
+        request.setAttribute("question", questionText);
+        request.setAttribute("subjectId", subjectIdStr);
+        request.setAttribute("chapterId", chapterIdStr);
+        request.setAttribute("questionTypeId", questionTypeIdStr);
+
         if (hasError) {
             doGet(request, response);
             return;
@@ -82,7 +120,6 @@ public class AddQuestionServlet extends HttpServlet {
         try {
             int subjectId = Integer.parseInt(subjectIdStr);
             int chapterId = Integer.parseInt(chapterIdStr);
-            int questionTypeId = Integer.parseInt(questionTypeIdStr);
 
             QuestionDAO quesdao = new QuestionDAO();
 
@@ -124,10 +161,10 @@ public class AddQuestionServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/questionlist");
 
         } catch (NumberFormatException e) {
-            doGet(request, response);
+            
         } catch (Exception e) {
             e.printStackTrace();
-            doGet(request, response);
+            
         }
     }
 

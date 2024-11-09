@@ -6,6 +6,13 @@
     <head>
         <title>Edit Test</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+            .question-count {
+                color: #007bff;
+                font-weight: normal;
+                margin-left: 10px;
+            }
+        </style>
     </head>
     <body>
         <div class="container-fluid">
@@ -65,7 +72,11 @@
                             </tbody>
                         </table>
 
-                        <h2>Questions in Test</h2>
+                        <h2>
+                            Questions in Test
+                            <span class="question-count">Selected: <span id="selectedCount">0</span></span>
+                        </h2>
+                        
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -80,6 +91,7 @@
                                     <tr>
                                         <td>
                                             <input type="checkbox" 
+                                                   class="question-checkbox"
                                                    name="questionIds" 
                                                    value="${question.questionID}"
                                                    <c:if test="${fn:contains(selectedQuestionIds, question.questionID)}">checked</c:if> 
@@ -98,5 +110,22 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            function updateSelectedCount() {
+                const checkboxes = document.getElementsByClassName('question-checkbox');
+                const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+                document.getElementById('selectedCount').textContent = selectedCount;
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const checkboxes = document.getElementsByClassName('question-checkbox');
+                Array.from(checkboxes).forEach(checkbox => {
+                    checkbox.addEventListener('change', updateSelectedCount);
+                });
+                
+                updateSelectedCount();
+            });
+        </script>
     </body>
 </html>

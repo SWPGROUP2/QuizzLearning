@@ -19,9 +19,38 @@ public class User {
     private String status;
     private int classId;
     private String className;
+    private String userCode;
 
     public User() {
     }
+
+    public User(int userId, String userName, int roleId, String email, String password, String role, String phoneNumber, String avatar, String fullName, Date Dob, Date startDate, Date endDate, String status, int classId, String className, String userCode) {
+        this.userId = userId;
+        this.userName = userName;
+        this.roleId = roleId;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.phoneNumber = phoneNumber;
+        this.avatar = avatar;
+        this.fullName = fullName;
+        this.Dob = Dob;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
+        this.classId = classId;
+        this.className = className;
+        this.userCode = userCode;
+    }
+
+    public String getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
+    
     
     public User(String userName, int roleID, String email, String password, String role) {
         this.userName = userName;
