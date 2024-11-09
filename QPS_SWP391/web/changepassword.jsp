@@ -9,11 +9,13 @@
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
         <style>
             body {
-                background: linear-gradient(to right, #fbc2eb, #a6c0fe);
+                background: linear-gradient(to top, #3e4b5b, #b35e5e);
+
                 font-family: Arial, sans-serif;
             }
             .card {
-                background: linear-gradient(to right, #fbc2eb, #a6c0fe);
+               
+                 background: linear-gradient(to top, #3e4b5b, #b35e5e);
                 border-radius: 15px;
                 box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
                 padding: 20px;
@@ -30,7 +32,7 @@
             }
             .form-label {
                 font-weight: 500;
-                color: #495057;
+                color: #000000;
             }
             .btn-custom {
                 background-color: #007bff;
@@ -52,7 +54,7 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40;">
+                <div class="col-md-2" ">
                     <%@include file="Components/Sidebar.jsp" %> <!-- Include Sidebar -->
                 </div>
 

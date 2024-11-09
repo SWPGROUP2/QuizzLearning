@@ -6,14 +6,16 @@
         <title>QPS 04</title>
         <script src="js/script.js"></script>
         <style>
-            body, html {
-                overflow-x: hidden;
+            html, body {
                 height: 100%;
+                margin: 0;
+                padding: 0;
             }
+
             .image-container {
                 position: relative;
                 width: 100%;
-                height: 100%;
+                height: 100vh;
                 text-align: center;
             }
             .image-container img {
@@ -58,7 +60,7 @@
     </head>
     <body class="container-fluid">
         <div class="row" style="height: 639px;">
-            <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
+            <div class="col-md-2">
                 <%@include file="/Components/Sidebar.jsp" %>
             </div>
             <div class="col-md-10 px-0">
