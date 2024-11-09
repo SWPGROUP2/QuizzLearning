@@ -24,20 +24,34 @@
             th {
                 background-color: #f2f2f2;
             }
+            .search-form {
+                width: 400px;
+            }
         </style>
     </head>
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40;">
+                <div class="col-md-2">
                     <%@include file="Components/Sidebar.jsp" %>
                 </div>
                 <div class="col-md-10">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <a href="termset" class="btn btn-dark mr-8">Back to Term set</a>
                         <h2>Terms List</h2>
-                        <a href="addterm" class="btn btn-primary">Add Term</a>
+                        <a href="addterm?termSetId=${param.termSetId}" class="btn btn-primary">Add Term</a>
                     </div>
+
+                    <form action="termlist?action=list" method="GET" class="search-form">
+                        <input type="hidden" name="termSetId" value="${param.termSetId}" />
+                        <div class="input-group">
+                        <input type="text" name="searchQuery" value="${searchQuery}" class="form-control" placeholder="Search by Term or Definition" class="form-control"/>
+                        <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                        </div>
+                    </form>
+
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -48,23 +62,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <%
-                                TermDAO termDAO = new TermDAO();
-                                List<Term> terms = termDAO.getAllTerms();
-                                for (Term term : terms) {
-                            %>
-                            <tr>
-                                <td><%= term.getTermId() %></td>
-                                <td><%= term.getTerm() %></td>
-                                <td><%= term.getDefinition() %></td>
-                                <td>
-                                    <a href="terms?action=edit&id=<%= term.getTermId() %>" class="btn btn-primary">Edit</a>
-                                    <a href="terms?action=delete&id=<%= term.getTermId() %>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this term?');">Delete</a>
-                                </td>
-                            </tr>
-                            <%
-                                }
-                            %>
+                            <c:forEach var="term" items="${terms}">
+                                <tr>
+                                    <td>${term.termId}</td>
+                                    <td>${term.term}</td>
+                                    <td>${term.definition}</td>
+                                    <td>
+                                        <a href="editterm?termId=${term.termId}" class="btn btn-primary">Edit</a>
+                                        <a href="deleteterm?termId=${term.termId}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this term?');">Delete</a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
                 </div>

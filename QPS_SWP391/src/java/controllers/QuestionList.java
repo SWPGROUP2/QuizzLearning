@@ -1,5 +1,7 @@
 package controllers;
+
 import dal.QuestionDAO;
+import dal.UserDAO;
 import models.Question;
 import models.QuestionType;
 
@@ -11,45 +13,52 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import models.User;
 
 public class QuestionList extends HttpServlet {
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Get filter parameters from the request
         String subjectId = request.getParameter("subjectId");
         String chapterId = request.getParameter("chapterId");
         String questionTypeId = request.getParameter("questionTypeId");
         String currentPageParam = request.getParameter("page");
-
+        String questionSearch = request.getParameter("questionSearch");
+        String sortOrder = request.getParameter("sortOrder");
         int currentPage = (currentPageParam != null) ? Integer.parseInt(currentPageParam) : 1;
         int questionsPerPage = 10;
 
-        // Initialize the QuestionDAO
+        HttpSession session = request.getSession();
+        User loggedInUser = (User) session.getAttribute("account");
+
+        // If the user is not logged in, redirect to login page
+        if (loggedInUser == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        // Retrieve the userId and roleId from the logged-in user
+        int userId = loggedInUser.getUserId();  // Assuming `User` has `getUserId()` method
+        int roleId = loggedInUser.getRoleId();  // Assuming `User` has `getRoleId()` method
         QuestionDAO questionDAO = new QuestionDAO();
 
-        // Fetch the filtered questions list
-        List<Question> questionList = questionDAO.getFilteredQuestions(subjectId, chapterId, questionTypeId, currentPage, questionsPerPage);
+        List<Question> questionList = questionDAO.getFilteredQuestions(subjectId, chapterId, questionTypeId, currentPage, questionsPerPage, roleId, userId, questionSearch, sortOrder);
 
-        // Fetch the list of unique subjects from the database
-        Map<Integer, String> uniqueSubjects = questionDAO.getUniqueSubjects();
-Set<Integer> uniqueChapters = questionDAO.getUniqueChapters();
-        // Fetch all question types
+        Map<Integer, String> uniqueSubjects = questionDAO.getUniqueSubjects(userId);
+        Set<Integer> uniqueChapters = questionDAO.getUniqueChapters();
         List<QuestionType> questionTypeList = questionDAO.getAllQuestionTypes();
-Map<Integer, String> uniqueQuestionTypes = questionDAO.getUniqueQuestionTypes();
-        // Get the total count of questions for pagination
-        int totalQuestions = questionDAO.getFilteredQuestionCount(subjectId, chapterId, questionTypeId);
+        Map<Integer, String> uniqueQuestionTypes = questionDAO.getUniqueQuestionTypes();
+        int totalQuestions = questionDAO.getFilteredQuestionCount(subjectId, chapterId, questionTypeId, userId);
         int totalPages = (int) Math.ceil((double) totalQuestions / questionsPerPage);
 
-        // Set the request attributes
         request.setAttribute("questionList", questionList);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("uniqueSubjects", uniqueSubjects);
         request.setAttribute("uniqueChapters", uniqueChapters);
-request.setAttribute("uniqueQuestionTypes", uniqueQuestionTypes);// Pass unique subjects
+        request.setAttribute("uniqueQuestionTypes", uniqueQuestionTypes);
         request.setAttribute("questionTypeList", questionTypeList);
-
-        // Forward the request and response to the JSP page
+        request.setAttribute("sortOrder", sortOrder);
         request.getRequestDispatcher("/questionlist.jsp").forward(request, response);
     }
 }

@@ -20,61 +20,78 @@ import models.User;
  */
 public class AdminDAO extends DBContext {
 
-    public List<User> searchUser(String name, int roleId) {
-        List<User> user = new ArrayList<>();
-        try {
-            String sqlQuery = "SELECT * \n"
-                    + "FROM Users u \n"
-                    + "INNER JOIN Roles r ON r.RoleID = u.RoleID \n"
-                    + "WHERE (-1 = ? OR u.RoleID = ?)\n"
-                    + "AND ('' = ? OR u.FullName LIKE ?)\n"
-                    + "ORDER BY u.UserID";
-            PreparedStatement stm = connection.prepareStatement(sqlQuery);
-            stm.setInt(1, roleId);
-            stm.setInt(2, roleId);
-            stm.setString(3, "%" + name + "%");
-            stm.setString(4, "%" + name + "%");
-            ResultSet rs = stm.executeQuery();
-            while (rs.next()) {
-                User u = new User();
-                u.setUserId(rs.getInt("UserID"));
-                u.setUserName(rs.getString("UserName"));
-                u.setRoleId(rs.getInt("RoleID"));
-                u.setEmail(rs.getString("Email"));
-                u.setPassword(rs.getString("Password"));
-                u.setRole(rs.getString("Role"));
-                u.setDob(rs.getDate("DoB"));
-                u.setPhoneNumber(rs.getString("PhoneNumber"));
-                u.setAvatar(rs.getString("Avatar"));
-                u.setPlace(rs.getString("PlaceWork"));
-                u.setFullName(rs.getString("FullName"));
-                u.setUserCode(rs.getString("UserCode"));
-                user.add(u);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return user;
-    }
+public List<User> getFilteredUsers(String roleId, String status, String className, int currentPage, int usersPerPage, String fullNameSearch) {
+    List<User> userList = new ArrayList<>();
     
-    public List<User> getListByPage(ArrayList<User> list,
-            int start, int end) {
-        ArrayList<User> arr = new ArrayList<>();
-        for (int i = start; i < end; i++) {
-            arr.add(list.get(i));
-        }
-        return arr;
+    StringBuilder query = new StringBuilder("SELECT u.UserID, u.UserName, u.RoleID, r.Role, u.Email, u.PhoneNumber, u.Avatar, "
+            + "u.FullName, u.DoB, u.StartDate, u.EndDate, u.Status, c.ClassID, c.ClassName "
+            + "FROM Users u "
+            + "JOIN Roles r ON u.RoleID = r.RoleID "
+            + "LEFT JOIN Class c ON u.UserID = c.UserID "
+            + "WHERE 1=1 "
+            + "AND (u.RoleID = 1 OR u.RoleID = 3) ");
+
+    // Apply filters
+    if (roleId != null && !roleId.isEmpty()) {
+        query.append(" AND u.RoleID = ? ");
+    }
+    if (status != null && !status.isEmpty()) {
+        query.append(" AND u.Status = ? ");
+    }
+    if (className != null && !className.isEmpty()) {
+        query.append(" AND c.ClassName = ? ");
+    }
+    if (fullNameSearch != null && !fullNameSearch.trim().isEmpty()) {
+        query.append(" AND u.FullName LIKE ? ");
     }
 
-    public static void main(String[] args) {
-        AdminDAO dao = new AdminDAO();
-        List<User> user = null;
-        try {
-            user = dao.searchUser("", 2);
-            System.out.println(user.toString());
-        } catch (Exception ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+    query.append(" LIMIT ?, ?");
+
+    try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+        int index = 1;
+
+        if (roleId != null && !roleId.isEmpty()) {
+            stmt.setString(index++, roleId);
+        }
+        if (status != null && !status.isEmpty()) {
+            stmt.setString(index++, status);
+        }
+        if (className != null && !className.isEmpty()) {
+            stmt.setString(index++, className);
+        }
+        if (fullNameSearch != null && !fullNameSearch.trim().isEmpty()) {
+            stmt.setString(index++, "%" + fullNameSearch.trim() + "%");
         }
 
+        stmt.setInt(index++, (currentPage - 1) * usersPerPage); 
+        stmt.setInt(index, usersPerPage); 
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            User user = new User(
+                    rs.getInt("UserID"),
+                    rs.getString("UserName"),
+                    rs.getInt("RoleID"),
+                    rs.getString("Role"),
+                    rs.getString("Email"),
+                    rs.getString("PhoneNumber"),
+                    rs.getString("Avatar"),
+                    rs.getString("FullName"),
+                    rs.getDate("DoB"),
+                    rs.getDate("StartDate"),
+                    rs.getDate("EndDate"),
+                    rs.getString("Status"),
+                    rs.getInt("ClassID"),
+                    rs.getString("ClassName")
+            );
+            userList.add(user);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return userList;
+}
+
+
 }

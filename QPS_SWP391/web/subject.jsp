@@ -20,14 +20,14 @@
 
     <body class="container-fluid">
         <div class="row">
-            <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
+            <div class="col-md-2">
                 <%@include file="Components/Sidebar.jsp" %>
             </div>
             <div class="col-md-10 px-0">
                 <div id="" class="mb-4">
                     <div id="">
                         <div class="container-fluid px-4 px-lg-5 row" style="margin-top: 10px">
-                            <a href="teacherhome" class="btn btn-dark">Back to Homepage</a> 
+                            <a href="adminhome" class="btn btn-dark">Back to Homepage</a> 
                             <h1>Subject List</h1>
 
                             <div class="mt-3 col-md-12">
@@ -43,6 +43,7 @@
                                     <div class="col-md-6 d-flex justify-content-end mb-4">
                                         <a href="add-subject" class="btn btn-primary" type="submit">Add Subject</a>
                                     </div>
+
                                 </div>
                                 <c:forEach var="s" items="${listSubjectsByPagging}">
                                     <div class="col-md-12 mb-3 shadow bg-white rounded border" style="border-radius: 8px; width: 100%">
@@ -63,19 +64,21 @@
                                                 <!-- Cột: Nút Detail và Delete nằm cạnh nhau -->
                                                 <div class="col-md-5 text-center">
                                                     <!-- Form View List Question -->
-                                                    <form action="subject-list" method="POST" style="display:inline;">
-                                                        <a href="questionlist?id=${s.getSubjectId()}" class="btn btn-primary btn-lg">List Question</a>
-                                                    </form>
-                                                    
-                                                    <form action="edit-subject" method="POST" style="display:inline;">
+
+
+                                                    <form action="assign-teacher" method="GET" style="display:inline;">
                                                         <input type="hidden" name="subjectId" value="${s.getSubjectId()}"/>
-                                                        <button type="submit" class="btn btn-primary btn-lg">Edit</button>
+                                                        <button type="submit" class="btn btn-primary btn-lg">Assign</button>
                                                     </form>
+
+
+                                                    <a href="edit-subject?id=${s.getSubjectId()}" class="btn btn-primary btn-lg" style="display:inline;">Edit</a>
                                                     <!-- Form Delete -->
                                                     <form action="delete-subject" method="POST" style="display:inline;">
                                                         <input type="hidden" name="subjectId" value="${s.getSubjectId()}"/>
                                                         <button type="submit" class="btn btn-danger btn-lg">Delete</button>
                                                     </form>
+
                                                 </div>
                                             </div>
                                         </div>

@@ -1,167 +1,138 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="utils.*" %>
-<c:set var="role" value="${empty param.role ? -1 : param.role}"/>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin Dashboard</title>
-        <link rel="stylesheet" href="../assets/css/admin-user-list.css"/>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="../assets/css/common.css">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+
+            }
+            .filter-form {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .filter-form label {
+                margin-right: 5px;
+            }
+            .filter-form .form-control {
+                width: auto;
+                min-width: 150px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed;
+            }
+            th, td {
+                padding: 10px;
+                text-align: left;
+                border: 1px solid #ddd;
+                word-wrap: break-word;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            .pagination a {
+                margin: 0 2px;
+            }
+            .table-actions {
+                display: flex;
+                gap: 5px;
+            }
+            .table-actions form {
+                display: inline;
+            }
+        </style>
+        <script>
+            function autoSubmitForm() {
+                document.getElementById("filterForm").submit();
+            }
+        </script>
     </head>
-    <style>
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 10px;
-        }
-        .pagination a {
-            color: black;
-            font-size: 18px;
-            padding: 8px 16px;
-            text-decoration: none;
-            margin: 5px;
-            border: 1px solid #A162FD;
-            border-radius: 5px;
-        }
-        .pagination a.active {
-            background-color: #A162FD;
-            color: white;
-        }
-        .pagination a:hover:not(.active) {
-            background-color: #A162FD;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        table th {
-            background-color: #f2f2f2;
-        }
-        .search-bar {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .search-bar input[type="text"] {
-            width: 300px;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .search-bar button {
-            padding: 8px 16px;
-            background-color: #A162FD;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .search-bar button:hover {
-            background-color: #8044d3;
-        }
-        .btn-add-user {
-            padding: 8px 16px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .btn-add-user:hover {
-            background-color: #218838;
-        }
-    </style>
-    <body class="container-fluid">
-        <div class="row" style="height: 639px;">
-            <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
-                <%@include file="/Components/Sidebar.jsp" %>
-            </div>
-            <main class="col-md-10 px-10">
-                <div class="">
-                    <h1>User Manager</h1>
-                    <small>Home / User Manager</small>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2 ">
+                    <%@include file="/Components/Sidebar.jsp" %>
                 </div>
-                <a class="button" href = 'adduser.jsp'>Add User</a>
 
-                <div class="search-bar" style="align-items: center; margin-top: 15px">
-                    <!-- Role filter -->
-                    <div class="col-md-6">
-                        <form class="form-inline">
-                            <div class="form-group mb-2">
-                                <label for="roleSelect" class="mr-2">Role:</label>
-                                <select class="form-control" id="roleSelect" name="role" onchange="applyFilter('role', event.target.value)">
-                                    <option value="-1" ${role == -1 ? 'selected' : ''}>All roles</option>
-                                    <option value="1" ${role == 1 ? 'selected' : ''}>Student</option>
-                                    <option value="2" ${role == 2 ? 'selected' : ''}>Admin</option>
-                                    <option value="3" ${role == 3 ? 'selected' : ''}>Teacher</option>
-                                </select>
-                            </div>
-                        </form>
+                <div class="col-md-10">
+                    <div class="d-flex align-items-center mb-2">
+                        <a href="adminhome" class="btn btn-dark mr-2">Back to Homepage</a>
+                        <a href="adduser" class="btn btn-success mr-2">Add User</a>
+                        <h1 class="flex-grow-1 text-center mb-0">User Manager</h1>
                     </div>
+                    <form id="filterForm" action="adminhome" method="GET" class="filter-form mb-3">
+                        <label for="classFilter">Class:</label>
+                        <select id="classFilter" name="classname" class="form-control" onchange="autoSubmitForm()">
+                            <option value="">All Classes</option>
+                            <c:forEach items="${uniqueClassesMap}" var="entry">
+                                <option value="${entry.key}" ${param.classname == entry.key ? "selected" : ""}>${entry.key}</option>
+                            </c:forEach>
+                        </select>
 
-                    <!-- Search bar with button -->
-                    <form class="form" onsubmit="event.preventDefault()">
-                        <label for="search">
-                            <input
-                                autocomplete="off"
-                                placeholder="Search by name"
-                                id="search"
-                                type="text"
-                                name="search"
-                                value="${param.search}"
-                                onkeypress="handleSearch(event)"
-                                />
-                        </label>
-                        <button type="button" onclick="handleSearchClick()">Search</button>
+                        <label for="roleFilter">Role:</label>
+                        <select id="roleFilter" name="roleId" class="form-control" onchange="autoSubmitForm()">
+                            <option value="">All Roles</option>
+                            <option value="1" ${param.roleId == '1' ? "selected" : ""}>Student</option>
+                            <option value="3" ${param.roleId == '3' ? "selected" : ""}>Teacher</option>
+                        </select>
+
+                        <label for="statusFilter">Status:</label>
+                        <select id="statusFilter" name="status" class="form-control" onchange="autoSubmitForm()">
+                            <option value="">All Statuses</option>
+                            <option value="Active" ${param.status == 'Active' ? "selected" : ""}>Active</option>
+                            <option value="Inactive" ${param.status == 'Inactive' ? "selected" : ""}>Inactive</option>
+                        </select>
+
+                        <label for="fullNameSearch">Full Name:</label>
+                        <input type="text" id="fullNameSearch" name="fullName" class="form-control" placeholder="Search by Full Name" value="${param.fullName}" style="width:auto; min-width:150px;">
+
+                        <button type="submit" class="btn btn-primary">Filter</button>
                     </form>
-                </div>
 
-                <div>
-                    <table>
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>USER</th>
+                                <th>AVATAR</th>
+                                <th>EMAIL</th>
                                 <th>FULL NAME</th>
                                 <th>ROLE</th>
-                                <th>DOB</th>
-                                <th>PHONE NUMBER</th>
-                                <th>PLACE WORK</th>
-                                <th>USER CODE</th>
+                                <th>CLASS</th>
+                                <th>STATUS</th>
                                 <th>ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach items="${listUser}" var="user">
+                            <c:forEach items="${userList}" var="user">
                                 <tr>
-                                    <td>${user.userId}</td>
                                     <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="" style="background-image: url(../${user.avatar}); width: 50px; height: 50px; background-size: cover; border-radius: 50%;"></div>
-                                            <div class="ml-3">
-                                                <h4>${user.email}</h4>
-                                            </div>
-                                        </div>
+                                        <div style="background-image: url(../${user.avatar}); width: 50px; height: 50px; background-size: cover; border-radius: 50%;"></div>
                                     </td>
+                                    <td>${user.email}</td>
                                     <td>${user.fullName}</td>
                                     <td>${user.role}</td>
-                                    <td>${user.dob}</td>
-                                    <td>${user.phoneNumber}</td>
-                                    <td>${user.place}</td>
-                                    <td>${user.userCode}</td>
-                                    <td>
+                                    <td>${user.className}</td>
+                                    <td>${user.status}</td>
+                                    <td class="table-actions">
+                                        <form action="update-user" method="POST" style="display:inline;">
+                                            <input type="hidden" name="userId" value="${user.userId}"/>
+                                            <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                                        </form>
                                         <form action="delete-user" method="POST" style="display:inline;">
-                                            <input type="hidden" name="userId" value="${user.getUserId()}"/>
-                                            <button type="submit" class="btn btn-danger btn-lg">Delete</button>
+                                            <input type="hidden" name="userId" value="${user.userId}"/>
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -169,37 +140,15 @@
                         </tbody>
                     </table>
 
-                    <!-- Pagination -->
-                    <c:set var="page" value="${requestScope.page}"/>
                     <div class="pagination">
+                        <c:set var="page" value="${requestScope.page}"/>
                         <c:forEach begin="1" end="${requestScope.num}" var="i">
-                            <a class="${i==page ? 'active' : ''}" href="adminhome?page=${i}">${i}</a>
+                            <a href="adminhome?page=${i}" class="btn btn-secondary ${i == page ? 'active' : ''}">${i}</a>
                         </c:forEach>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
-    </body>
+    </div>
+</body>
 </html>
-
-<script>
-    function applyFilter(name, value) {
-        let searches = new URLSearchParams(location.search);
-        searches.set(name, value);
-        location.search = searches.toString();
-    }
-
-    function handleSearch(e) {
-        if (e.key === "Enter") {
-            const target = e.target;
-            const name = target.getAttribute("name");
-            const value = target.value;
-            applyFilter(name, value);
-        }
-    }
-
-    function handleSearchClick() {
-        const searchInput = document.getElementById('search');
-        applyFilter('search', searchInput.value);
-    }
-</script>

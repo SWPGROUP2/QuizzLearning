@@ -14,12 +14,44 @@ public class User {
     private String avatar;
     private String fullName;
     private Date Dob;
-    private String place;
+    private Date startDate;  
+    private Date endDate;    
+    private String status;
+    private int classId;
+    private String className;
     private String userCode;
 
     public User() {
     }
 
+    public User(int userId, String userName, int roleId, String email, String password, String role, String phoneNumber, String avatar, String fullName, Date Dob, Date startDate, Date endDate, String status, int classId, String className, String userCode) {
+        this.userId = userId;
+        this.userName = userName;
+        this.roleId = roleId;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.phoneNumber = phoneNumber;
+        this.avatar = avatar;
+        this.fullName = fullName;
+        this.Dob = Dob;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
+        this.classId = classId;
+        this.className = className;
+        this.userCode = userCode;
+    }
+
+    public String getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
+    
+    
     public User(String userName, int roleID, String email, String password, String role) {
         this.userName = userName;
         this.roleId = roleID;
@@ -37,7 +69,7 @@ public class User {
         this.role = role;
     }
 
-    public User(int userId, String userName, int roleId, String email, String password, String role, String phoneNumber, String avatar, String fullName, Date Dob) {
+    public User(int userId, String userName, int roleId, String email, String password, String role, String phoneNumber, String avatar, String fullName, Date Dob, Date startDate, Date endDate) {
         this.userId = userId;
         this.userName = userName;
         this.roleId = roleId;
@@ -48,60 +80,65 @@ public class User {
         this.avatar = avatar;
         this.fullName = fullName;
         this.Dob = Dob;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
-    public User(String userName, int roleId, String email, String password, String role, String phoneNumber, Date Dob, String place) {
-        this.userName = userName;
-        this.roleId = roleId;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.phoneNumber = phoneNumber;
-        this.Dob = Dob;
-        this.place = place;
-    }
-
-    public User(String userName, int roleId, String email, String password, String role, String phoneNumber, Date Dob, String place, String userCode) {
-        this.userName = userName;
-        this.roleId = roleId;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.phoneNumber = phoneNumber;
-        this.Dob = Dob;
-        this.place = place;
-        this.userCode = userCode;
-    }
-
-    public User(int userId, String userName, int roleId, String email, String password, String role, String phoneNumber, String avatar, String fullName, Date Dob, String place, String userCode) {
+    public User(int userId, String userName, int roleId, String role, String email, String phoneNumber, String avatar, String fullName, Date Dob, Date startDate, Date endDate, String status,int classId, String className) {
         this.userId = userId;
         this.userName = userName;
         this.roleId = roleId;
-        this.email = email;
-        this.password = password;
         this.role = role;
+        this.email = email;
         this.phoneNumber = phoneNumber;
         this.avatar = avatar;
         this.fullName = fullName;
         this.Dob = Dob;
-        this.place = place;
-        this.userCode = userCode;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
+        this.classId = classId;
+        this.className = className;
     }
 
-    public String getPlace() {
-        return place;
+    public String getClassName() {
+        return className;
     }
 
-    public void setPlace(String place) {
-        this.place = place;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
-    public String getUserCode() {
-        return userCode;
+    public int getClassId() {
+        return classId;
     }
 
-    public void setUserCode(String userCode) {
-        this.userCode = userCode;
+    public void setClassId(int classId) {
+        this.classId = classId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public String getPhoneNumber() {
@@ -184,8 +221,4 @@ public class User {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "User{" + "userId=" + userId + ", userName=" + userName + ", roleId=" + roleId + ", email=" + email + ", password=" + password + ", role=" + role + ", phoneNumber=" + phoneNumber + ", avatar=" + avatar + ", fullName=" + fullName + ", Dob=" + Dob + ", place=" + place + ", userCode=" + userCode + '}';
-    }
 }

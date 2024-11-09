@@ -2,25 +2,29 @@ package controllers;
 
 import dal.TermSetDAO;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import models.TermSet;
 import java.io.IOException;
 import java.util.List;
 
 public class TermSetController extends HttpServlet {
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        TermSetDAO termSetDAO = new TermSetDAO();
-        List<TermSet> termSets = termSetDAO.getAllTermSets();
+        HttpSession session = request.getSession();
+        int userId = (int) session.getAttribute("user_id");
+        
+        String searchQuery = request.getParameter("searchQuery");
 
-        // Check if termSets is empty and log it
-        System.out.println("Term sets in controller: " + termSets.size());
+        TermSetDAO termSetDAO = new TermSetDAO();
+        
+        List<TermSet> termSets = termSetDAO.getAllTermSetsByUser(userId, searchQuery);
 
         request.setAttribute("termSets", termSets);
+
         request.getRequestDispatcher("termsetlist.jsp").forward(request, response);
     }
 }
-

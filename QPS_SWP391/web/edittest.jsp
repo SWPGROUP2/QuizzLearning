@@ -6,39 +6,18 @@
     <head>
         <title>Edit Test</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <script>
-            function getQuestionTypeId(questionTypeName) {
-                switch (questionTypeName) {
-                    case 'Multiple-choice':
-                        return 1;
-                    case 'Short-answer':
-                        return 2;
-                    default:
-                        return null;
-                }
+        <style>
+            .question-count {
+                color: #007bff;
+                font-weight: normal;
+                margin-left: 10px;
             }
-
-            function filterQuestions() {
-                const selectedTypeId = document.getElementById('questionType').value;
-                const rows = document.querySelectorAll('tbody tr');
-                rows.forEach(row => {
-                    const questionTypeCell = row.cells[3].textContent.trim();
-                    const questionTypeId = getQuestionTypeId(questionTypeCell);
-                    if (selectedTypeId === '' || questionTypeId == selectedTypeId) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            }
-
-        </script>
-
+        </style>
     </head>
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
+                <div class="col-md-2">
                     <%@include file="Components/Sidebar.jsp" %>
                 </div>
                 <div class="col-md-10">
@@ -49,61 +28,55 @@
 
                     <form action="edittest" method="post">
                         <input type="hidden" name="testId" value="${test.getTestId()}">
-                        <input type="hidden" name="subjectId" value="${test.getSubjectId()}"> 
+                        <input type="hidden" name="subjectId" value="${test.getSubjectId()}">
 
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>Test Name</th>
                                     <th>Class</th>
-                                    <th>Subject</th>
                                     <th>Duration (minutes)</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>
-                                        <input type="text" name="testName" class="form-control" value="${test.getTestName()}" required>
+                                        <input type="text" name="testName" class="form-control" value="${test.testName}" required>
                                     </td>
                                     <td>
-                                        <select name="class" class="form-control" required>
-                                            <c:forEach var="classItem" items="${classes}">
-                                                <option value="${classItem.classID}" 
-                                                        <c:if test="${classItem.classID == test.getClassId()}">selected</c:if>
-                                                        >${classItem.getClassName()}</option>
+                                        <select class="form-control" id="class" name="classId" required>
+                                            <c:forEach var="classItem" items="${teacherClasses}">
+                                                <option value="${classItem.classID}">${classItem.className}</option>
                                             </c:forEach>
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="subject" class="form-control" required>
-                                            <c:forEach var="subject" items="${subjects}">
-                                                <option value="${subject.subjectId}" 
-                                                        <c:if test="${subject.subjectId == test.getSubjectId()}">selected</c:if>
-                                                        >${subject.getSubjectName()}</option>
-                                            </c:forEach>
-                                        </select>
+                                        <input type="number" name="duration" class="form-control" value="${test.duration}" required>
                                     </td>
                                     <td>
-                                        <input type="number" name="duration" class="form-control" value="${test.getDuration()}" required>
+                                        <input type="datetime-local" name="startTime" class="form-control" value="${fn:replace(test.testStartTime, ' ', 'T')}" required>
+                                    </td>
+                                    <td>
+                                        <input type="datetime-local" name="endTime" class="form-control" value="${fn:replace(test.testEndTime, ' ', 'T')}" required>
+                                    </td>
+                                    <td>
+                                        <select name="status" class="form-control" required>
+                                            <option value="1" <c:if test="${test.status == 1}">selected</c:if>>Active</option>
+                                            <option value="0" <c:if test="${test.status == 0}">selected</c:if>>Inactive</option>
+                                        </select>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
 
-                        <h2>Select Question Type</h2>
-                        <div class="form-group">
-                            <label for="questionType">Question Type:</label>
-                            <select class="form-control" id="questionType" name="questionTypeId" onchange="filterQuestions()">
-                                <option value="">All</option>
-                                <c:forEach var="type" items="${questionTypes}">
-                                    <option value="${type.questionTypeId}" 
-                                            <c:if test="${type.questionTypeId == test.questionTypeId}">selected</c:if>
-                                            >${type.questionTypeName}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
-
-                        <h2>Questions in Test</h2>
+                        <h2>
+                            Questions in Test
+                            <span class="question-count">Selected: <span id="selectedCount">0</span></span>
+                        </h2>
+                        
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -118,24 +91,41 @@
                                     <tr>
                                         <td>
                                             <input type="checkbox" 
+                                                   class="question-checkbox"
                                                    name="questionIds" 
                                                    value="${question.questionID}"
                                                    <c:if test="${fn:contains(selectedQuestionIds, question.questionID)}">checked</c:if> 
-                                                       >
-                                            </td>
-                                            <td>${question.chapterId}</td>
+                                                   >
+                                        </td>
+                                        <td>${question.chapterId}</td>
                                         <td>${question.question}</td>
                                         <td>${question.questionTypeName}</td>
                                     </tr>
                                 </c:forEach>
-
-
                             </tbody>
                         </table>
+
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </form>
                 </div>
             </div>
         </div>
+
+        <script>
+            function updateSelectedCount() {
+                const checkboxes = document.getElementsByClassName('question-checkbox');
+                const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+                document.getElementById('selectedCount').textContent = selectedCount;
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const checkboxes = document.getElementsByClassName('question-checkbox');
+                Array.from(checkboxes).forEach(checkbox => {
+                    checkbox.addEventListener('change', updateSelectedCount);
+                });
+                
+                updateSelectedCount();
+            });
+        </script>
     </body>
 </html>

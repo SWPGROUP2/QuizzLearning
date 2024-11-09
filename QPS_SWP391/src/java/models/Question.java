@@ -23,7 +23,7 @@ public class Question {
         this.chapterId = chapterId;
         this.question = question;
         this.questionTypeName = questionTypeName;
-        this.subjectName = subjectName;  // Initialize subjectName
+        this.subjectName = subjectName;  
     }
 public Question(int questionID, int subjectId, int chapterId, String question, int questionTypeId, String questionTypeName, String subjectName) {
     this.questionID = questionID;
@@ -41,6 +41,15 @@ public Question(int questionID, int subjectId, int chapterId, String question, i
     this.question = question;
     this.questionTypeId = questionTypeId;
     this.questionTypeName = questionTypeName;
+}
+public Question(int questionID, int subjectId, int chapterId, String question, String subjectName,int questionTypeId) {
+    this.questionID = questionID;
+    this.subjectId = subjectId;
+    this.chapterId = chapterId;
+    this.question = question;
+        this.subjectName = subjectName;
+    this.questionTypeId = questionTypeId;
+
 }
     
 

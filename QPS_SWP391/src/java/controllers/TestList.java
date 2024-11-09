@@ -1,13 +1,19 @@
 package controllers;
 
+import dal.ClassDAO;
+import dal.QuestionDAO;
+import dal.TestDAO;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import dal.TestDAO;
+import jakarta.servlet.http.HttpSession;
+import models.Classes;
 import models.Test;
+import models.User;
 
 public class TestList extends HttpServlet {
 
@@ -17,26 +23,39 @@ public class TestList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String searchQuery = request.getParameter("searchQuery");
         String pageParam = request.getParameter("page");
-        String sortBy = request.getParameter("sortBy");
-        String sortOrder = request.getParameter("sortOrder");
+        String subjectId = request.getParameter("subjectId");
+        String classId = request.getParameter("classId");
 
         int currentPage = 1;
         if (pageParam != null) {
             currentPage = Integer.parseInt(pageParam);
         }
 
-        List<Test> tests;
-        int totalTests;
+        HttpSession session = request.getSession();
+        User loggedInUser = (User) session.getAttribute("account");
 
-        if (searchQuery != null && !searchQuery.isEmpty()) {
-            tests = testDAO.getAllTests(searchQuery, sortBy, sortOrder);
-            request.setAttribute("tests", tests);
-            totalTests = testDAO.countTestsByName(searchQuery);
-        } else {
-            tests = testDAO.getTestsPaginated(currentPage, testsPerPage, sortBy, sortOrder);
-            totalTests = testDAO.countAllTests();
+        if (loggedInUser == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        int userId = loggedInUser.getUserId();
+        int roleId = loggedInUser.getRoleId();
+
+        QuestionDAO questionDAO = new QuestionDAO();
+        Map<Integer, String> uniqueSubjects = questionDAO.getUniqueSubjects(userId);
+
+        ClassDAO classDAO = new ClassDAO();
+        List<Classes> uniqueClasses = classDAO.getUniqueClasses(userId);
+
+        List<Test> tests;
+        if (roleId == 3) {
+            tests = testDAO.getAllTestTeacher(userId, subjectId, classId, searchQuery, currentPage, testsPerPage);
+        } else {  
+            tests = testDAO.getAllTestStudent(userId, subjectId, classId, searchQuery, currentPage, testsPerPage);
         }
 
         for (Test test : tests) {
@@ -44,15 +63,16 @@ public class TestList extends HttpServlet {
             test.setQuestionCount(questionCount);
         }
 
+        int totalTests = testDAO.countTotalTests(userId, subjectId, classId, searchQuery);
         int totalPages = (int) Math.ceil((double) totalTests / testsPerPage);
 
+        request.setAttribute("uniqueClasses", uniqueClasses);
+        request.setAttribute("uniqueSubjects", uniqueSubjects);
         request.setAttribute("tests", tests);
         request.setAttribute("searchQuery", searchQuery);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
-        request.setAttribute("sortBy", sortBy);
-        request.setAttribute("sortOrder", sortOrder);
 
-        request.getRequestDispatcher("testlist.jsp").forward(request, response);
+        request.getRequestDispatcher("testList.jsp").forward(request, response);
     }
 }

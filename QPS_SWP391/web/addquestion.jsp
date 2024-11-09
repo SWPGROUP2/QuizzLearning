@@ -38,7 +38,7 @@
     </head>
     <body class="container-fluid">
         <div class="row">
-            <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
+            <div class="col-md-2" >
                 <%@ include file="Components/Sidebar.jsp" %>
             </div>
             <div class="col-md-10 px-4 py-4" style="margin-top: 20px">
@@ -58,7 +58,16 @@
                         </c:if>
 
                         <form action="addquestion" method="post">
-                            <input type="hidden" name="subjectId" value="${subjectId}" />
+                            <div class="form-group">
+                                <label for="subjectId">Subject</label>
+                                <select class="form-control" id="subjectId" name="subjectId" required>
+                                    <c:forEach var="subject" items="${teacherSubjects}">
+                                        <option value="${subject.subjectId}">${subject.subjectName}</option>
+                                    </c:forEach>
+
+                                </select>
+                            </div>
+
 
                             <div class="form-group">
                                 <label for="chapterId">Chapter</label>
@@ -97,7 +106,6 @@
                                 </div>
                             </div>
 
-                            
                             <div id="singleChoiceOptions" style="display:none;">
                                 <div class="form-group">
                                     <label>Options</label>
@@ -130,7 +138,7 @@
                                     <input type="text" 
                                            class="form-control ${not empty matchingError ? 'is-invalid' : ''}" 
                                            id="optionText" name="optionText" 
-                                           placeholder="Enter short answer" 
+                                           placeholder="Enter matching option" 
                                            value="${optionText}">
                                     <c:if test="${not empty matchingError}">
                                         <div class="invalid-feedback">
