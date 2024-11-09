@@ -73,6 +73,6 @@ public class TestList extends HttpServlet {
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
 
-        request.getRequestDispatcher("testList.jsp").forward(request, response);
+        request.getRequestDispatcher("testlist.jsp").forward(request, response);
     }
 }

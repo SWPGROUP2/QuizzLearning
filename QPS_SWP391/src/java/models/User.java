@@ -14,12 +14,12 @@ public class User {
     private String avatar;
     private String fullName;
     private Date Dob;
-    private String place;
-    private String userCode;
     private Date startDate;  
     private Date endDate;    
     private String status;
-    
+    private int classId;
+    private String className;
+
     public User() {
     }
     
@@ -55,6 +55,39 @@ public class User {
         this.endDate = endDate;
     }
 
+    public User(int userId, String userName, int roleId, String role, String email, String phoneNumber, String avatar, String fullName, Date Dob, Date startDate, Date endDate, String status,int classId, String className) {
+        this.userId = userId;
+        this.userName = userName;
+        this.roleId = roleId;
+        this.role = role;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.avatar = avatar;
+        this.fullName = fullName;
+        this.Dob = Dob;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
+        this.classId = classId;
+        this.className = className;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public int getClassId() {
+        return classId;
+    }
+
+    public void setClassId(int classId) {
+        this.classId = classId;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -77,22 +110,6 @@ public class User {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
-    }
-
-    public String getUserCode() {
-        return userCode;
-    }
-
-    public void setUserCode(String userCode) {
-        this.userCode = userCode;
     }
 
     public String getPhoneNumber() {
@@ -175,8 +192,4 @@ public class User {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "User{" + "userId=" + userId + ", userName=" + userName + ", roleId=" + roleId + ", email=" + email + ", password=" + password + ", role=" + role + ", phoneNumber=" + phoneNumber + ", avatar=" + avatar + ", fullName=" + fullName + ", Dob=" + Dob + ", place=" + place + ", userCode=" + userCode + '}';
-    }
 }

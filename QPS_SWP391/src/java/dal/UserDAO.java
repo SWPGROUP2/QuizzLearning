@@ -84,47 +84,6 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public void addUser(User user) throws Exception {
-        try {
-            ps = connection.prepareStatement("INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, DoB, PlaceWork, UserCode, FullName) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
-            ps.setString(1, user.getUserName());
-            ps.setInt(2, user.getRoleId());
-            ps.setString(3, user.getEmail());
-            ps.setString(4, user.getPassword());
-            ps.setString(5, user.getPhoneNumber());
-            ps.setDate(6, user.getDob());
-            ps.setString(7, user.getPlace());
-            ps.setString(8, user.getUserCode());
-            ps.setString(9, user.getFullName());
-            ps.executeUpdate();
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    public List<User> getTop5NewestUser() throws Exception {
-        List<User> top5UserList = new ArrayList<>();
-        try {
-            String query = "SELECT TOP (5) UserID,UserName,Avatar\n"
-                    + "FROM Users\n"
-                    + "WHERE RoleID = 1\n"
-                    + "ORDER BY [UserID] DESC;";
-            PreparedStatement stm = connection.prepareStatement(query);
-            ResultSet rs = stm.executeQuery();
-
-            while (rs.next()) {
-                User user = new User();
-                user.setUserId(rs.getInt("UserID"));
-                user.setUserName(rs.getString("UserName"));
-                user.setAvatar(rs.getString("Avatar"));
-                top5UserList.add(user);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return top5UserList;
-    }
-
     public User getUserById(int id) {
         User user = null;
         String query = "SELECT UserID, UserName, RoleID, Email, Password, PhoneNumber, Avatar, FullName, "
