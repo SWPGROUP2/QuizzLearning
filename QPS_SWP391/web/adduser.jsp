@@ -111,16 +111,6 @@
                         </div>
 
                         <div class="form-group">
-                            <input type="text" class="form-control ${not empty userCodeError ? 'is-invalid' : ''}" 
-                                   name="usercode" placeholder="Student ID" value="${userCode}" required>
-                            <c:if test="${not empty userCodeError}">
-                                <div class="invalid-feedback">
-                                    ${userCodeError}
-                                </div>
-                            </c:if>
-                        </div>
-
-                        <div class="form-group">
                             <label>Date of birth:</label>
                             <input type="date" class="form-control ${not empty dateError ? 'is-invalid' : ''}" 
                                    name="date" value="${date}" required>

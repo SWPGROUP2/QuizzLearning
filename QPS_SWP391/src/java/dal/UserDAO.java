@@ -282,8 +282,8 @@ public class UserDAO extends DBContext {
     }
     public boolean addUser(User user) {
         String sql = "INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, " +
-                    "FullName, DoB, UserCode, StartDate, EndDate, Status) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "FullName, DoB, StartDate, EndDate, Status) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, user.getUserName());
@@ -293,10 +293,9 @@ public class UserDAO extends DBContext {
             stmt.setString(5, user.getPhoneNumber());
             stmt.setString(6, user.getFullName());
             stmt.setDate(7, user.getDob());
-            stmt.setString(8, user.getUserCode());
-            stmt.setDate(9, user.getStartDate());
-            stmt.setDate(10, user.getEndDate());
-            stmt.setString(11, user.getStatus());
+            stmt.setDate(8, user.getStartDate());
+            stmt.setDate(9, user.getEndDate());
+            stmt.setString(10, user.getStatus());
 
             int affectedRows = stmt.executeUpdate();
 
