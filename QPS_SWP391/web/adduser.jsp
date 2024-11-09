@@ -30,7 +30,7 @@
     </head>
     <body class="container-fluid">
         <div class="row">
-            <div class="col-md-2" style="border-right: 1px solid #1a1e21; background-color: #343a40">
+            <div class="col-md-2">
                 <%@include file="Components/Sidebar.jsp" %>
             </div>
             <div class="col-md-10">

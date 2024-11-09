@@ -12,9 +12,7 @@
             body {
                 font-family: Arial, sans-serif;
             }
-            .sidebar {
-                background-color: #343a40;
-            }
+
             .filter-form {
                 display: flex;
                 flex-wrap: wrap;
@@ -65,7 +63,7 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-2 sidebar">
+                <div class="col-md-2">
                     <%@ include file="Components/Sidebar.jsp" %>
                 </div>
 
@@ -75,7 +73,6 @@
                         <h1 class="flex-grow-1 text-center mb-0">Question List</h1>
                     </div>
 
-                    <!-- Filter Form -->
                     <form id="filterForm" action="questionlist" method="GET" class="filter-form mb-3">
                         <label for="subjectFilter">Subject:</label>
                         <select id="subjectFilter" name="subjectId" class="form-control" onchange="autoSubmitForm()">

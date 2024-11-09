@@ -12,9 +12,7 @@
         <style>
             body {
                 font-family: Arial, sans-serif;
-            }
-            .sidebar {
-                background-color: #343a40;
+                
             }
             .filter-form {
                 display: flex;
@@ -57,7 +55,6 @@
             }
         </style>
         <script>
-            // Auto-submit the form when a filter dropdown changes
             function autoSubmitForm() {
                 document.getElementById("filterForm").submit();
             }
@@ -66,49 +63,46 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-2 sidebar">
+                <div class="col-md-2 ">
                     <%@include file="/Components/Sidebar.jsp" %>
                 </div>
 
                 <div class="col-md-10">
                     <div class="d-flex align-items-center mb-2">
                         <a href="adminhome" class="btn btn-dark mr-2">Back to Homepage</a>
-                        <a href="adduser" class="btn btn-success mr-2">Add User</a> <!-- The "Add User" button, linking to the page for adding a user -->
+                        <a href="adduser" class="btn btn-success mr-2">Add User</a>
                         <h1 class="flex-grow-1 text-center mb-0">User Manager</h1>
                     </div>
-
-                    <!-- Filter Form -->
                     <form id="filterForm" action="adminhome" method="GET" class="filter-form mb-3">
                         <label for="classFilter">Class:</label>
                         <select id="classFilter" name="classId" class="form-control" onchange="autoSubmitForm()">
                             <option value="">All Classes</option>
-                            <c:forEach items="${userList}" var="c">
-                                <option value="${c.classId}" ${param.classId == c.classId ? "selected" : ""}>${c.className}</option>
+                            <c:forEach items="${uniqueClassesMap}" var="entry">
+                                <option value="${entry.value}" ${param.classId == entry.value ? "selected" : ""}>${entry.key}</option>
                             </c:forEach>
                         </select>
 
-                        <label for="roleFilter">Role:</label>
-                        <select id="roleFilter" name="roleId" class="form-control" onchange="autoSubmitForm()">
-                            <option value="">All Roles</option>
-                            <c:forEach items="${userList}" var="r">
-                                <option value="${r.roleId}" ${param.roleId == r.roleId ? "selected" : ""}>${r.role}</option>
-                            </c:forEach>
-                        </select>
 
-                        <label for="statusFilter">Status:</label>
-                        <select id="statusFilter" name="status" class="form-control" onchange="autoSubmitForm()">
-                            <option value="">All Statuses</option>
-                            <option value="Active" ${param.status == 'Active' ? "selected" : ""}>Active</option>
-                            <option value="Inactive" ${param.status == 'Inactive' ? "selected" : ""}>Inactive</option>
-                        </select>
+                    <label for="roleFilter">Role:</label>
+                    <select id="roleFilter" name="roleId" class="form-control" onchange="autoSubmitForm()">
+                        <option value="">All Roles</option>
+                        <option value="1" ${param.roleId == '1' ? "selected" : ""}>Student</option>
+                        <option value="3" ${param.roleId == '3' ? "selected" : ""}>Teacher</option>
+                    </select>
 
-                        <label for="fullNameSearch">Full Name:</label>
-                        <input type="text" id="fullNameSearch" name="fullName" class="form-control" placeholder="Search by Full Name" value="${param.fullName}" style="width:auto; min-width:150px;">
+                    <label for="statusFilter">Status:</label>
+                    <select id="statusFilter" name="status" class="form-control" onchange="autoSubmitForm()">
+                        <option value="">All Statuses</option>
+                        <option value="Active" ${param.status == 'Active' ? "selected" : ""}>Active</option>
+                        <option value="Inactive" ${param.status == 'Inactive' ? "selected" : ""}>Inactive</option>
+                    </select>
 
-                        <button type="submit" class="btn btn-primary">Filter</button>
+                    <label for="fullNameSearch">Full Name:</label>
+                    <input type="text" id="fullNameSearch" name="fullName" class="form-control" placeholder="Search by Full Name" value="${param.fullName}" style="width:auto; min-width:150px;">
+
+                    <button type="submit" class="btn btn-primary">Filter</button>
                     </form>
 
-                    <!-- User List Table -->
                     <div>
                         <table class="table table-bordered">
                             <thead>
@@ -148,7 +142,6 @@
                             </tbody>
                         </table>
 
-                        <!-- Pagination -->
                         <div class="pagination">
                             <c:set var="page" value="${requestScope.page}"/>
                             <c:forEach begin="1" end="${requestScope.num}" var="i">

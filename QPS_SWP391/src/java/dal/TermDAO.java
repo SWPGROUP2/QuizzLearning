@@ -10,12 +10,23 @@ import java.util.List;
 
 public class TermDAO extends MyDAO {
 
-    public List<Term> getTermsByTermSetId(int termSetId) {
+    public List<Term> getTermsByTermSetId(int termSetId, String searchQuery) {
         List<Term> termList = new ArrayList<>();
-        String sql = "SELECT * FROM Terms WHERE termSetId = ?"; // Lọc theo TermSetID
 
-        try ( PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, termSetId); // Gán termSetId vào PreparedStatement
+        StringBuilder sql = new StringBuilder("SELECT * FROM Terms WHERE termSetId = ?");
+
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            sql.append(" AND (term LIKE ? OR definition LIKE ?)");
+        }
+
+        try ( PreparedStatement ps = con.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, termSetId);
+
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchQuery.trim() + "%");
+                ps.setString(paramIndex++, "%" + searchQuery.trim() + "%");
+            }
 
             try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {

@@ -25,17 +25,19 @@ public class TermController extends HttpServlet {
 
     private void listTerms(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String termSetIdStr = request.getParameter("termSetId");
+        String searchQuery = request.getParameter("searchQuery");
 
         if (termSetIdStr == null || termSetIdStr.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Term Set ID is required");
-            return;  // Dừng xử lý tiếp
+            return;  
         }
 
         try {
             int termSetId = Integer.parseInt(termSetIdStr);
             TermDAO termDAO = new TermDAO();
-            List<Term> terms = termDAO.getTermsByTermSetId(termSetId);
+            List<Term> terms = termDAO.getTermsByTermSetId(termSetId, searchQuery);  
             request.setAttribute("terms", terms);
+            request.setAttribute("searchQuery", searchQuery);
             request.getRequestDispatcher("termlist.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Term Set ID format");
@@ -44,6 +46,5 @@ public class TermController extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        // Xử lý POST nếu cần
     }
 }
