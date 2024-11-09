@@ -12,6 +12,9 @@
                 font-weight: normal;
                 margin-left: 10px;
             }
+            .invalid-feedback {
+                display: block;
+            }
         </style>
     </head>
     <body>
@@ -43,12 +46,22 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        <input type="text" name="testName" class="form-control" value="${test.testName}" required>
+                                        <input type="text" name="testName" 
+                                               class="form-control ${not empty testNameError ? 'is-invalid' : ''}" 
+                                               value="${testName}" required>
+                                        <c:if test="${not empty testNameError}">
+                                            <div class="invalid-feedback">
+                                                ${testNameError}
+                                            </div>
+                                        </c:if>
                                     </td>
                                     <td>
                                         <select class="form-control" id="class" name="classId" required>
                                             <c:forEach var="classItem" items="${teacherClasses}">
-                                                <option value="${classItem.classID}">${classItem.className}</option>
+                                                <option value="${classItem.classID}" 
+                                                        ${classItem.classID == test.classId ? 'selected' : ''}>
+                                                    ${classItem.className}
+                                                </option>
                                             </c:forEach>
                                         </select>
                                     </td>
@@ -61,7 +74,6 @@
                                     <td>
                                         <input type="datetime-local" name="endTime" class="form-control" value="${fn:replace(test.testEndTime, ' ', 'T')}" required>
                                     </td>
-                                    
                                 </tr>
                             </tbody>
                         </table>
@@ -70,7 +82,7 @@
                             Questions in Test
                             <span class="question-count">Selected: <span id="selectedCount">0</span></span>
                         </h2>
-                        
+
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -88,8 +100,7 @@
                                                    class="question-checkbox"
                                                    name="questionIds" 
                                                    value="${question.questionID}"
-                                                   <c:if test="${fn:contains(selectedQuestionIds, question.questionID)}">checked</c:if> 
-                                                   >
+                                                   <c:if test="${fn:contains(selectedQuestionIds, question.questionID)}">checked</c:if>>
                                         </td>
                                         <td>${question.chapterId}</td>
                                         <td>${question.question}</td>
@@ -112,12 +123,12 @@
                 document.getElementById('selectedCount').textContent = selectedCount;
             }
 
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 const checkboxes = document.getElementsByClassName('question-checkbox');
                 Array.from(checkboxes).forEach(checkbox => {
                     checkbox.addEventListener('change', updateSelectedCount);
                 });
-                
+
                 updateSelectedCount();
             });
         </script>
