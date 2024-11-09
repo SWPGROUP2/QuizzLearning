@@ -8,12 +8,25 @@ import java.util.List;
 import models.TermSet;
 
 public class TermSetDAO extends MyDAO {
-    public List<TermSet> getAllTermSetsByUser(int userId) {
+
+    public List<TermSet> getAllTermSetsByUser(int userId, String searchQuery) {
         List<TermSet> termSets = new ArrayList<>();
+
         String sql = "SELECT TermSetID, TermSetName, TermSetDescription FROM TermSets WHERE CreatedBy = ?";
+
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            sql += " AND (TermSetName LIKE ? OR TermSetDescription LIKE ?)";
+        }
 
         try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
+
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                String likeSearch = "%" + searchQuery + "%";
+                ps.setString(2, likeSearch);
+                ps.setString(3, likeSearch);
+            }
+
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -23,6 +36,7 @@ public class TermSetDAO extends MyDAO {
                 termSet.setTermSetDescription(rs.getString("TermSetDescription"));
                 termSets.add(termSet);
             }
+
             System.out.println("Number of term sets fetched for user " + userId + ": " + termSets.size());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -104,17 +118,6 @@ public class TermSetDAO extends MyDAO {
             e.printStackTrace();
         }
         return count;
-    }
-
-    public static void main(String[] args) {
-        TermSetDAO termSetDAO = new TermSetDAO();
-        List<TermSet> termSets = termSetDAO.getAllTermSetsByUser(1);
-
-        for (TermSet ts : termSets) {
-            System.out.println("Term Set ID: " + ts.getTermSetId()
-                    + ", Name: " + ts.getTermSetName()
-                    + ", Description: " + ts.getTermSetDescription());
-        }
     }
 
 }

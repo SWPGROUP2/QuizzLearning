@@ -13,7 +13,9 @@
             .card {
                 margin-bottom: 20px;
             }
-
+            .search-form {
+                width: 400px; /* Adjust this value to control the form's width */
+            }
         </style>
     </head>
     <body class="container-fluid">
@@ -27,6 +29,17 @@
                     <h2>Term Sets</h2>
                     <a href="addTermSet.jsp" class="btn btn-primary">Add Term Set</a>
                 </div>
+
+                <!-- Search Form with Button to the Right -->
+                <form method="GET" action="termsets" class="search-form mb-3">
+                    <div class="input-group">
+                        <input type="text" name="searchQuery" value="${param.searchQuery}" class="form-control" placeholder="Search by Term Set Name or Description">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                </form>
+
                 <div class="row mt-3">
                     <c:forEach var="termSet" items="${termSets}">
                         <div class="col-md-4"> 
@@ -41,6 +54,7 @@
                             </div>
                         </div>
                     </c:forEach>
+
                     <c:if test="${empty termSets}">
                         <div class="col-12">
                             <div class="alert alert-warning" role="alert">
