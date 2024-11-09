@@ -20,9 +20,10 @@ CREATE TABLE Users (
     Email VARCHAR(255) CHARACTER SET utf8mb4 UNIQUE,  -- Ensure email is unique
     Password VARCHAR(255) CHARACTER SET utf8mb4,
     PhoneNumber VARCHAR(15),
-    Avatar VARCHAR(5000) DEFAULT 'assets/avatar/default-avatar.png',
+    Avatar VARCHAR(5000) DEFAULT 'https://i.pinimg.com/originals/26/82/bf/2682bf05bc23c0b6a1145ab9c966374b.png',
     FullName VARCHAR(100) CHARACTER SET utf8mb4,
     DoB DATE,
+    UserCode VARCHAR(255) CHARACTER SET utf8mb4,
     StartDate DATE,  -- New column for contract start date
     EndDate DATE,    -- New column for contract end date
     Status ENUM('Active', 'Inactive') DEFAULT 'Active',
@@ -37,7 +38,7 @@ VALUES
 ('user4', 1, 'student1@example.com', '1', '0109876543', 'Student Two', '2001-03-12', '2024-01-01', '2025-01-01', 'Active'),
 ('user5', 2, 'admin1@example.com', '1', '0192837465', 'Admin Two', '1990-07-30', '2024-01-01', '2025-01-01', 'Active'),
 ('user6', 3, 'teacher1@example.com', '1', '0223456789', 'Teacher Two', '1982-02-14', '2024-01-01', '2025-01-01', 'Active'),
-('user7', 1, 'student2@example.com', '1', '0334455667', 'Student Three', '1999-09-09', '2024-11-06', '2023-01-01', 'Inactive'),
+('user7', 1, 'student2@example.com', '1', '0334455667', 'Student Three', '1999-09-09', '2024-11-06', '2023-01-01', 'Active'),
 ('user8', 2, 'admin2@example.com', '1', '0445566778', 'Admin Three', '1983-11-11', '2024-01-01', '2025-01-01', 'Active'),
 ('user9', 3, 'teacher2@example.com', '1', '0556677889', 'Teacher Three', '1986-04-04', '2024-01-01', '2025-01-01', 'Inactive'),
 ('user10', 1, 'student3@example.com', '1', '0667788990', 'Student Four', '2002-12-22', '2024-11-09', '2025-01-01', 'Inactive');
@@ -65,7 +66,7 @@ CREATE TABLE Class (
     FOREIGN KEY (UserID) REFERENCES Users(UserID) 
 );
 
-INSERT INTO Class (ClassName, UserID) VALUES ('Class A', 1), ('Class B', 3), ('Class C', 3),('Class A', 10),('Class A', 4),('Class A', 6),('Class A', 7),('Class A', 9),('Class A', 2),('Class A', 5),('Class A', 8);
+INSERT INTO Class (ClassName, UserID) VALUES ('Class A', 1), ('Class B', 3), ('Class C', 3);
 
 -- Create TeacherSubjects table
 CREATE TABLE TeacherSubjects (
@@ -118,7 +119,6 @@ CREATE TABLE Tests (
     TestName VARCHAR(255) CHARACTER SET utf8mb4,
     Duration INT,
     ClassID INT,
-    QuestionTypeID INT,
     test_startTime TIMESTAMP,
     test_endTime TIMESTAMP,
     test_status INT DEFAULT 0,
@@ -232,14 +232,14 @@ VALUES
 (9, 'I don’t like spicy food.', 0),
 (10, 'I like playing soccer.', 1);
 
-INSERT INTO Tests (SubjectID, TestName, Duration, ClassID, QuestionTypeID, test_startTime, test_endTime, test_status) 
+INSERT INTO Tests (SubjectID, TestName, Duration, ClassID, test_startTime, test_endTime, test_status) 
 VALUES 
-(1, 'English Midterm Test', 90, 1, 1, '2024-11-15 09:00:00', '2024-11-15 10:30:00', 0),
-(1, 'English Final Exam', 120, 2, 1, '2024-12-20 09:00:00', '2024-12-20 11:00:00', 0),
-(2, 'Japanese Language Test N5', 102, 3, 1, '2024-11-16 10:00:00', '2024-11-16 11:00:00', 0),
-(2, 'Japanese Final Exam', 120, 1, 1,'2024-12-22 13:00:00', '2024-12-22 15:00:00', 0),
-(3, 'Korean Proficiency Test', 100, 2, 2, '2024-11-18 14:00:00', '2024-11-18 15:15:00', 0),
-(3, 'Korean Final Exam', 120, 3, 1, '2024-12-23 08:30:00', '2024-12-23 10:30:00', 0);
+(1, 'English Midterm Test', 90, 1, '2024-11-15 09:00:00', '2024-11-15 10:30:00', 0),
+(1, 'English Final Exam', 120, 2, '2024-12-20 09:00:00', '2024-12-20 11:00:00', 0),
+(2, 'Japanese Language Test N5', 102, 3, '2024-11-16 10:00:00', '2024-11-16 11:00:00', 0),
+(2, 'Japanese Final Exam', 120, 1, '2024-12-22 13:00:00', '2024-12-22 15:00:00', 0),
+(3, 'Korean Proficiency Test', 100, 2, '2024-11-18 14:00:00', '2024-11-18 15:15:00', 0),
+(3, 'Korean Final Exam', 120, 3, '2024-12-23 08:30:00', '2024-12-23 10:30:00', 0);
 
 
 INSERT INTO Test_Questions (TestID, QuestionID) 
@@ -267,9 +267,18 @@ VALUES
 (1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
 
-
-
-
-
-
-
+SELECT
+t.TestID,
+t.SubjectID,
+t.TestName,
+t.Duration,
+t.ClassID,
+s.SubjectName,
+qt.QuestionTypeName,
+c.ClassName
+FROM Tests t
+JOIN Class c ON t.ClassID = c.ClassID
+JOIN Users u ON u.UserID = c.UserID
+JOIN Subject s ON t.SubjectID = s.SubjectID
+WHERE u.UserID = 1
+AND u.RoleID = 1

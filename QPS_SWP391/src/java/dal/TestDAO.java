@@ -141,15 +141,12 @@ public class TestDAO extends MyDAO {
                 + "t.TestName, "
                 + "t.Duration, "
                 + "t.ClassID, "
-                + "t.QuestionTypeID, "
                 + "s.SubjectName, "
-                + "qt.QuestionTypeName, "
                 + "c.ClassName "
                 + "FROM Tests t "
                 + "JOIN Class c ON t.ClassID = c.ClassID "
                 + "JOIN Users u ON u.UserID = c.UserID "
                 + "JOIN Subject s ON t.SubjectID = s.SubjectID "
-                + "JOIN QuestionType qt ON t.QuestionTypeID = qt.QuestionTypeID "
                 + "WHERE u.UserID = ? "
                 + // Placeholder for userID
                 "AND u.RoleID = 1");  // Only filter by RoleID for student
