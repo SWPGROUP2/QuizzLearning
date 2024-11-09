@@ -65,7 +65,7 @@ CREATE TABLE Class (
     FOREIGN KEY (UserID) REFERENCES Users(UserID) 
 );
 
-INSERT INTO Class (ClassName, UserID) VALUES ('Class A', 1), ('Class B', 3), ('Class C', 3),('Class A', 10),('Class A', 4),('Class A', 6),('Class A', 7),('Class A', 9),('Class A', 2),('Class A', 5),('Class A', 8);
+INSERT INTO Class (ClassName, UserID) VALUES ('Class A', 1), ('Class A', 3), ('Class B', 3),('Class A', 10),('Class A', 4),('Class A', 6),('Class B', 7),('Class A', 9),('Class A', 2),('Class A', 5),('Class A', 8);
 
 -- Create TeacherSubjects table
 CREATE TABLE TeacherSubjects (
@@ -73,12 +73,14 @@ CREATE TABLE TeacherSubjects (
     UserID INT,
     SubjectID INT,
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID),
-    UNIQUE (UserID, SubjectID)  -- Ensures each teacher can teach each subject only once
+    FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID)
+     
 );
 
 INSERT INTO TeacherSubjects (UserID, SubjectID)
 VALUES 
+(4, 2),
+(1, 2),
 (1, 1),
 (3, 1), -- Teacher with UserID 3 can teach Japanese
 (3, 2), -- Teacher with UserID 3 can also teach English
@@ -267,5 +269,6 @@ VALUES
 (1, 'はい、わかりました', 'Vâng, tôi hiểu rồi'),
 (1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
+
 
 
