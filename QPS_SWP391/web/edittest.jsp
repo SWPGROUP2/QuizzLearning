@@ -38,7 +38,6 @@
                                     <th>Duration (minutes)</th>
                                     <th>Start Time</th>
                                     <th>End Time</th>
-                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,12 +61,7 @@
                                     <td>
                                         <input type="datetime-local" name="endTime" class="form-control" value="${fn:replace(test.testEndTime, ' ', 'T')}" required>
                                     </td>
-                                    <td>
-                                        <select name="status" class="form-control" required>
-                                            <option value="1" <c:if test="${test.status == 1}">selected</c:if>>Active</option>
-                                            <option value="0" <c:if test="${test.status == 0}">selected</c:if>>Inactive</option>
-                                        </select>
-                                    </td>
+                                    
                                 </tr>
                             </tbody>
                         </table>

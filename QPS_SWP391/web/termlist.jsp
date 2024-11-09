@@ -45,10 +45,10 @@
                     <form action="termlist?action=list" method="GET" class="search-form">
                         <input type="hidden" name="termSetId" value="${param.termSetId}" />
                         <div class="input-group">
-                        <input type="text" name="searchQuery" value="${searchQuery}" class="form-control" placeholder="Search by Term or Definition" class="form-control"/>
-                        <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Search</button>
-                        </div>
+                            <input type="text" name="searchQuery" value="${searchQuery}" class="form-control" placeholder="Search by Term or Definition" class="form-control"/>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </div>
                         </div>
                     </form>
 
@@ -69,8 +69,9 @@
                                     <td>${term.definition}</td>
                                     <td>
                                         <a href="editterm?termId=${term.termId}" class="btn btn-primary">Edit</a>
-                                        <a href="deleteterm?termId=${term.termId}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this term?');">Delete</a>
-                                    </td>
+                                        <a href="deleteterm?termId=${term.termId}&termSetId=${param.termSetId}" 
+                                           class="btn btn-danger" 
+                                           onclick="return confirm('Are you sure you want to delete this term?');">Delete</a>                                    </td>
                                 </tr>
                             </c:forEach>
                         </tbody>
