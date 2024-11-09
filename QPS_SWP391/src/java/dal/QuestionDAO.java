@@ -82,13 +82,11 @@ public class QuestionDAO extends MyDAO {
         return subjectList;
     }
 
-    // Get filtered questions with pagination
 public List<Question> getFilteredQuestions(String subjectId, String chapterId, String questionTypeId, int currentPage, int questionsPerPage, int roleId, int userId, String questionSearch, String sortOrder) {
     List<Question> questionList = new ArrayList<>();
 
-    // Ensure the user is a teacher
     if (roleId != 3) {
-        return questionList; // Return an empty list if the user is not a teacher
+        return questionList; 
     }
 
     StringBuilder query = new StringBuilder("SELECT q.QuestionID, s.SubjectName, q.ChapterID, q.Question, qt.QuestionTypeName "
@@ -96,9 +94,8 @@ public List<Question> getFilteredQuestions(String subjectId, String chapterId, S
             + "JOIN Subject s ON q.SubjectID = s.SubjectID "
             + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
             + "JOIN TeacherSubjects ts ON q.SubjectID = ts.SubjectID "
-            + "WHERE ts.UserID = ?"); // Ensures questions only for the subjects taught by this teacher
+            + "WHERE ts.UserID = ?");
 
-    // Additional filtering
     if (subjectId != null && !subjectId.isEmpty()) {
         query.append(" AND q.SubjectID = ? ");
     }
@@ -129,11 +126,11 @@ public List<Question> getFilteredQuestions(String subjectId, String chapterId, S
             stmt.setString(index++, questionTypeId);
         }
         if (questionSearch != null && !questionSearch.trim().isEmpty()) {
-            stmt.setString(index++, "%" + questionSearch.trim() + "%"); // Add search keyword with wildcards
+            stmt.setString(index++, "%" + questionSearch.trim() + "%");
         }
 
-        stmt.setInt(index++, (currentPage - 1) * questionsPerPage); // Set offset
-        stmt.setInt(index, questionsPerPage);                       // Set limit
+        stmt.setInt(index++, (currentPage - 1) * questionsPerPage); 
+        stmt.setInt(index, questionsPerPage);                      
 
         ResultSet rs = stmt.executeQuery();
 
