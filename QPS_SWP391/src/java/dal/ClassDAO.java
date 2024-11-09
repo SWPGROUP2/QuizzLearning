@@ -70,7 +70,7 @@ public class ClassDAO extends MyDAO {
 
     public List<Classes> getTeacherClasses(int userId) {
         List<Classes> uniqueClasses = new ArrayList<>();
-        
+
         String sql = "SELECT DISTINCT c.ClassID, c.ClassName "
                 + "FROM Class c "
                 + "JOIN ClassMembers cm ON cm.ClassID = c.ClassID "
@@ -119,14 +119,14 @@ public class ClassDAO extends MyDAO {
 
         return uniqueSubjects;
     }
-    
+
     public List<Classes> getClassesByTeacherId(int userId) {
         List<Classes> classList = new ArrayList<>();
         String sql = "SELECT * FROM Class WHERE UserID = ?";
-        
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Classes cls = new Classes();
                     cls.setClassID(rs.getInt("ClassID"));
@@ -138,6 +138,43 @@ public class ClassDAO extends MyDAO {
             e.printStackTrace();
         }
         return classList;
+    }
+
+    public List<Classes> getUniqueClasses() {
+        List<Classes> uniqueClassesList = new ArrayList<>();
+        String query = "SELECT MIN(c.ClassID) as ClassID, c.ClassName "
+                + "FROM Class c "
+                + "GROUP BY c.ClassName "
+                + "ORDER BY c.ClassName";
+
+        try ( PreparedStatement ps = connection.prepareStatement(query);  
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Classes cls = new Classes();
+                cls.setClassID(rs.getInt("ClassID"));
+                cls.setClassName(rs.getString("ClassName"));
+                uniqueClassesList.add(cls);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return uniqueClassesList;
+    }
+    
+    public boolean addUserToClass(int userID, int classID) {
+        String sql = "INSERT INTO Class (UserID, ClassName) " +
+                    "SELECT ?, ClassName FROM Class WHERE ClassID = ?";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, userID);
+            stmt.setInt(2, classID);
+
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
 }

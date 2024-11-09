@@ -78,7 +78,6 @@
                         <select id="classFilter" name="classId" class="form-control" onchange="autoSubmitForm()">
                             <option value="">All Classes</option>
                             <c:forEach items="${uniqueClassesMap}" var="entry">
-                                <!-- Using entry.value as the option value (classId) and entry.key as the display text (className) -->
                                 <option value="${entry.value}" ${param.classId == entry.value ? "selected" : ""}>${entry.key}</option>
                             </c:forEach>
                         </select>
@@ -143,7 +142,6 @@
                             </tbody>
                         </table>
 
-                        <!-- Pagination -->
                         <div class="pagination">
                             <c:set var="page" value="${requestScope.page}"/>
                             <c:forEach begin="1" end="${requestScope.num}" var="i">

@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -278,6 +279,42 @@ public class UserDAO extends DBContext {
         }
 
         return teachers;
+    }
+    public boolean addUser(User user) {
+        String sql = "INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, " +
+                    "FullName, DoB, UserCode, StartDate, EndDate, Status) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, user.getUserName());
+            stmt.setInt(2, user.getRoleId());
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getPassword());
+            stmt.setString(5, user.getPhoneNumber());
+            stmt.setString(6, user.getFullName());
+            stmt.setDate(7, user.getDob());
+            stmt.setString(8, user.getUserCode());
+            stmt.setDate(9, user.getStartDate());
+            stmt.setDate(10, user.getEndDate());
+            stmt.setString(11, user.getStatus());
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                return false;
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    user.setUserId(generatedKeys.getInt(1));
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     public static void main(String[] args) {
