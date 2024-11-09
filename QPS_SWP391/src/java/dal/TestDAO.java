@@ -366,7 +366,7 @@ public List<Test> getAllTestStudent(int userId, String subjectId, String classId
     }
 
     public void updateTest(Test test) {
-        String sql = "UPDATE Tests SET TestName = ?, Duration = ?, ClassID = ?, test_startTime = ?, test_endTime = ?, test_status = ? WHERE TestID = ?";
+        String sql = "UPDATE Tests SET TestName = ?, Duration = ?, ClassID = ?, test_startTime = ?, test_endTime = ? WHERE TestID = ?";
 
         try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, test.getTestName());
@@ -374,8 +374,7 @@ public List<Test> getAllTestStudent(int userId, String subjectId, String classId
             ps.setInt(3, test.getClassId());
             ps.setTimestamp(4, test.getTestStartTime());
             ps.setTimestamp(5, test.getTestEndTime());
-            ps.setInt(6, test.getStatus());
-            ps.setInt(7, test.getTestId());
+            ps.setInt(6, test.getTestId());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -2,9 +2,6 @@ package controllers;
 
 import dal.ClassDAO;
 import dal.QuestionDAO;
-import dal.QuestionTypeDAO;
-import dal.SubjectDAO;
-import dal.TeacherSubjectsDAO;
 import dal.TestDAO;
 import dal.TestQuestionDAO;
 import java.io.IOException;
@@ -57,7 +54,6 @@ public class EditTestController extends HttpServlet {
         request.setAttribute("duration", test.getDuration());
         request.setAttribute("startTime", test.getTestStartTime());
         request.setAttribute("endTime", test.getTestEndTime());
-        request.setAttribute("status", test.getStatus());
 
         request.getRequestDispatcher("edittest.jsp").forward(request, response);
     }
@@ -66,27 +62,50 @@ public class EditTestController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String testIdParam = request.getParameter("testId");
-        if (testIdParam == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Test ID is missing");
-            return;
-        }
+       
 
         int testId = Integer.parseInt(testIdParam);
         String testName = request.getParameter("testName");
         String durationStr = request.getParameter("duration");
         String classIdStr = request.getParameter("classId");
-        String statusStr = request.getParameter("status");
         String startTimeStr = request.getParameter("startTime");
         String endTimeStr = request.getParameter("endTime");
+        String subjectId = request.getParameter("subjectId");
 
-        if (classIdStr == null || classIdStr.trim().isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Class ID is missing");
-            return;
+        boolean hasError = false;
+
+        request.setAttribute("testName", testName);
+        request.setAttribute("duration", durationStr);
+        request.setAttribute("classId", classIdStr);
+        request.setAttribute("startTime", startTimeStr);
+        request.setAttribute("endTime", endTimeStr);
+
+        if (isBlank(testName)) {
+            request.setAttribute("testNameError", "Test name không được để trống");
+            hasError = true;
         }
 
-        int duration = Integer.parseInt(durationStr);
-        int classId = Integer.parseInt(classIdStr);
-        int status = Integer.parseInt(statusStr);
+        if (hasError) {
+            TestDAO testdao = new TestDAO();
+            QuestionDAO quesdao = new QuestionDAO();
+            ClassDAO classdao = new ClassDAO();
+            TestQuestionDAO testquestiondao = new TestQuestionDAO();
+            
+            Test test = testdao.getTestById(testId);
+            List<Question> questions = quesdao.getQuestionsBySubjectId(Integer.parseInt(subjectId));
+            HttpSession session = request.getSession();
+            User loggedInUser = (User) session.getAttribute("account");
+            List<Classes> teacherClasses = classdao.getClassesByTeacherId(loggedInUser.getUserId());
+            List<Integer> selectedQuestionIds = testquestiondao.getQuestionIdsByTestId(testId);
+
+            request.setAttribute("test", test);
+            request.setAttribute("questions", questions);
+            request.setAttribute("teacherClasses", teacherClasses);
+            request.setAttribute("selectedQuestionIds", selectedQuestionIds);
+
+            request.getRequestDispatcher("edittest.jsp").forward(request, response);
+            return;
+        }
 
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
@@ -96,28 +115,28 @@ public class EditTestController extends HttpServlet {
             Test test = new Test();
             test.setTestID(testId);
             test.setTestName(testName);
-            test.setDuration(duration);
-            test.setClassId(classId);
+            test.setDuration(Integer.parseInt(durationStr));
+            test.setClassId(Integer.parseInt(classIdStr));
             test.setTestStartTime(new java.sql.Timestamp(startDate.getTime()));
             test.setTestEndTime(new java.sql.Timestamp(endDate.getTime()));
-            test.setStatus(status);
 
             TestDAO testdao = new TestDAO();
             testdao.updateTest(test);
 
             String[] questionIds = request.getParameterValues("questionIds");
-            if (questionIds == null) {
-                response.sendRedirect("test-list");
-                return;
+            if (questionIds != null) {
+                TestQuestionDAO testQuestionDAO = new TestQuestionDAO();
+                testQuestionDAO.saveTestQuestions(testId, questionIds);
             }
-
-            TestQuestionDAO testQuestionDAO = new TestQuestionDAO();
-            testQuestionDAO.saveTestQuestions(testId, questionIds);
 
             response.sendRedirect("test-list");
         } catch (ParseException | SQLException e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Error processing request");
+            request.getRequestDispatcher("edittest.jsp").forward(request, response);
         }
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }
