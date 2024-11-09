@@ -10,9 +10,6 @@
         body {
             font-family: Arial, sans-serif;
         }
-        .sidebar {
-            background-color: #343a40;
-        }
         .filter-form {
             display: flex;
             flex-wrap: wrap;
@@ -57,7 +54,7 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2 sidebar">
+            <div class="col-md-2">
                 <%@include file="Components/Sidebar.jsp" %>
             </div>
             <div class="col-md-10">
@@ -76,12 +73,10 @@
                     </c:if>
                 </div>
 
-                <!-- Search and Filter Form -->
                 <form class="filter-form mb-3" action="test-list" method="GET">
                     <label for="searchQuery">Search Test:</label>
                     <input type="text" id="searchQuery" name="searchQuery" value="${searchQuery}" placeholder="Search test by name" class="form-control"/>
 
-                    <!-- Class Filter -->
                     <label for="classId">Class:</label>
                     <select id="classId" name="classId" class="form-control">
                         <option value="">All Classes</option>
@@ -90,7 +85,6 @@
                         </c:forEach>
                     </select>
 
-                    <!-- Subject Filter -->
                     <label for="subjectId">Subject:</label>
                     <select id="subjectId" name="subjectId" class="form-control">
                         <option value="">All Subjects</option>

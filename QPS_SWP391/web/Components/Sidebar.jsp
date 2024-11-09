@@ -7,16 +7,18 @@
         <%@include file="/Components/AllAccess.jsp"%>
         <style>
             .sidebar {
-                height: 100vh;
-                min-height: 500px; 
+                height: 100%;
+                min-height: 500px;
+                width: 315px;
+                position: fixed;
                 color: white;
                 display: flex;
                 flex-direction: column;
-                background-color: #343a40; 
+                background-color: #343a40;
+                left: 0;
+                top: 0;
             }
-            .sidebar h3 {
-                color: #FF5E73;
-            }
+
             .sidebar .nav-item {
                 margin-bottom: 15px;
             }
@@ -36,7 +38,7 @@
                 transform: translateX(5px);
             }
             .avatar-container {
-                width: 70px; 
+                width: 70px;
                 height: 75px;
                 border-radius: 50%;
                 border: 3px solid rgba(255, 94, 94, 0.5);
@@ -52,51 +54,7 @@
                 border-radius: 50%;
             }
 
-            @media (max-width: 768px) {
-                .sidebar {
-                    height: auto; 
-                    min-height: 300px; 
-                }
 
-                .sidebar h3 {
-                    font-size: 18px;
-                }
-
-                .sidebar .btn {
-                    font-size: 14px;
-                }
-
-                .avatar-container {
-                    width: 50px;
-                    height: 55px;
-                }
-
-                .sidebar img {
-                    width: 45px;
-                    height: 50px;
-                }
-            }
-
-            @media (max-width: 480px) {
-                .sidebar {
-                    height: auto;
-                    min-height: 250px;
-                }
-
-                .sidebar .btn {
-                    font-size: 12px; 
-                }
-
-                .avatar-container {
-                    width: 40px;
-                    height: 45px;
-                }
-
-                .sidebar img {
-                    width: 35px;
-                    height: 40px;
-                }
-            }
         </style>
     </head>
     <body>
@@ -126,32 +84,32 @@
                         int roleId = account.getRoleId();
                         if (roleId == 1) {
                 %>
-                            <li class="nav-item">
-                                <a class="btn" href="termset">Term Set List</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="btn" href="test-list">Test List</a>
-                            </li>
+                <li class="nav-item">
+                    <a class="btn" href="termset">Term Set List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn" href="test-list">Test List</a>
+                </li>
                 <% 
                         } else if (roleId == 2) {
                 %>
-                            <li class="nav-item">
-                                <a class="btn" href="subject-list">Subject List</a>
-                            </li>
+                <li class="nav-item">
+                    <a class="btn" href="subject-list">Subject List</a>
+                </li>
                 <% 
                         } else if (roleId == 3) {
                 %>
-                            <li class="nav-item">
-                                <a class="btn" href="questionlist">Question Bank</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="btn" href="test-list">Test List</a>
-                            </li>
+                <li class="nav-item">
+                    <a class="btn" href="questionlist">Question Bank</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn" href="test-list">Test List</a>
+                </li>
                 <% 
                         }
                     } else {
                 %>
-                    <p>No account found!</p>
+                <p>No account found!</p>
                 <% 
                     }
                 %>

@@ -20,10 +20,9 @@ CREATE TABLE Users (
     Email VARCHAR(255) CHARACTER SET utf8mb4 UNIQUE,  -- Ensure email is unique
     Password VARCHAR(255) CHARACTER SET utf8mb4,
     PhoneNumber VARCHAR(15),
-    Avatar VARCHAR(5000) DEFAULT 'https://i.pinimg.com/originals/26/82/bf/2682bf05bc23c0b6a1145ab9c966374b.png',
+    Avatar VARCHAR(5000) DEFAULT 'assets/avatar/default-avatar.png',
     FullName VARCHAR(100) CHARACTER SET utf8mb4,
     DoB DATE,
-    UserCode VARCHAR(255) CHARACTER SET utf8mb4,
     StartDate DATE,  -- New column for contract start date
     EndDate DATE,    -- New column for contract end date
     Status ENUM('Active', 'Inactive') DEFAULT 'Active',

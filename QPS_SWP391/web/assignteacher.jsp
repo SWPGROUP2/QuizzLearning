@@ -93,7 +93,7 @@
     <body>
 
         <!-- Sidebar -->
-        <div class="col-md-2 p-0" style="border-right: 1px solid #1a1e21; background-color: #343a40;">
+        <div class="col-md-2 p-0"">
             <%@include file="Components/Sidebar.jsp" %>
         </div>
 
