@@ -4,16 +4,14 @@
  */
 package models;
 
-/**
- *
- * @author dell
- */
-public class TestResult {
+import java.time.LocalDateTime;
 
+public class TestResult {
     private String testName;
     private int score;
+    private LocalDateTime completedAt;
 
-    // Getter và Setter cho testName và score
+    
     public String getTestName() {
         return testName;
     }
@@ -28,5 +26,13 @@ public class TestResult {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public LocalDateTime getCompletedAt() {
+        return completedAt;
+    }
+
+    public void setCompletedAt(LocalDateTime completedAt) {
+        this.completedAt = completedAt;
     }
 }

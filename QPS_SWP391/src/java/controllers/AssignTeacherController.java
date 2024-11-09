@@ -24,15 +24,19 @@ public class AssignTeacherController extends HttpServlet {
         int subjectId = Integer.parseInt(subjectIdParam);
 
         subject subject = subjectDAO.getSubjectById(subjectId);
-        List<User> teachers = userDAO.getAllTeachers();
+        List<User> teachers = userDAO.getAllTeachersAndAdmins();
+
+        List<Integer> assignedTeacherIds = subjectDAO.getAssignedTeacherIds(subjectId);
 
         if (subject != null) {
             request.setAttribute("subject", subject);
+            request.setAttribute("assignedTeacherIds", assignedTeacherIds);
         } else {
             request.setAttribute("subject", new subject());
         }
 
         if (teachers != null && !teachers.isEmpty()) {
+            request.setAttribute("assignedTeacherIds", assignedTeacherIds);
             request.setAttribute("teachers", teachers);
         } else {
             request.setAttribute("teachers", new ArrayList<>());
@@ -58,7 +62,7 @@ public class AssignTeacherController extends HttpServlet {
 
         if (teacherIds != null) {
             for (String teacherIdStr : teacherIds) {
-                if (!teacherIdStr.isEmpty()) { 
+                if (!teacherIdStr.isEmpty()) {
                     int teacherId = Integer.parseInt(teacherIdStr);
 
                     if (!subjectDAO.isTeacherAssignedToSubject(subjectId, teacherId)) {

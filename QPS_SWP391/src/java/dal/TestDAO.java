@@ -254,14 +254,11 @@ public class TestDAO extends MyDAO {
                 + "t.TestName, "
                 + "t.Duration, "
                 + "t.ClassID, "
-                + "t.QuestionTypeID, "
                 + "s.SubjectName, "
-                + "qt.QuestionTypeName, "
                 + "c.ClassName "
                 + "FROM Tests t "
                 + "JOIN Class c ON t.ClassID = c.ClassID "
                 + "JOIN Subject s ON t.SubjectID = s.SubjectID "
-                + "JOIN QuestionType qt ON t.QuestionTypeID = qt.QuestionTypeID "
                 + "WHERE c.ClassName IN (");
 
         for (int i = 0; i < classNames.size(); i++) {
@@ -542,19 +539,20 @@ public class TestDAO extends MyDAO {
 
     public List<TestResult> getTestHistory(int userId) {
         List<TestResult> testHistory = new ArrayList<>();
-        String sql = "SELECT t.TestName, r.score FROM Tests t "
+        String sql = "SELECT t.TestName, r.score, r.completed_at FROM Tests t "
                 + "JOIN TestResults r ON t.TestID = r.test_id "
                 + "WHERE r.student_id = ?";
 
         try ( PreparedStatement statement = connection.prepareStatement(sql)) {
-
             statement.setInt(1, userId);
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
                 TestResult result = new TestResult();
-                result.setTestName(rs.getString("testName"));
+                result.setTestName(rs.getString("TestName"));
                 result.setScore(rs.getInt("score"));
+                result.setCompletedAt(rs.getTimestamp("completed_at").toLocalDateTime()); // Lấy thời gian hoàn thành
+
                 testHistory.add(result);
             }
         } catch (SQLException e) {
@@ -585,7 +583,11 @@ public class TestDAO extends MyDAO {
                 String questionTypeName = resultSet.getString("QuestionTypeName");
 
                 Question question = new Question(questionID, subjectId, chapterId, questionText, questionTypeId, questionTypeName);
-                question.setOptions(getOptionsByQuestionId(questionID));
+
+                // Nếu câu hỏi là dạng Multiple Choice, lấy các tùy chọn
+                if (questionTypeName.equals("Multiple-choice")) {
+                    question.setOptions(getOptionsByQuestionId(questionID)); // Lấy các tùy chọn cho câu hỏi
+                }
 
                 questions.add(question);
             }
@@ -617,5 +619,43 @@ public class TestDAO extends MyDAO {
             e.printStackTrace();
         }
         return options;
+    }
+
+    public String getQuestionType(int questionId) {
+        String questionType = null;
+        String query = "SELECT qt.QuestionTypeName FROM Questions q "
+                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
+                + "WHERE q.QuestionID = ?";
+
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, questionId);
+            try ( ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    questionType = rs.getString("QuestionTypeName");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return questionType;
+    }
+
+    public String getCorrectAnswerForShortAnswer(int questionId) {
+        String correctAnswer = null;
+        String query = "SELECT OptionText FROM Options WHERE QuestionID = ?";
+
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, questionId);
+            try ( ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    correctAnswer = rs.getString("OptionText");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return correctAnswer;
     }
 }

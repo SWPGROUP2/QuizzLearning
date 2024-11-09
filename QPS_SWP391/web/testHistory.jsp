@@ -26,7 +26,7 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-2 p-0">
+                <div class="col-md-2">
                     <%@include file="Components/Sidebar.jsp" %>
                 </div>
                 <div class="col-md-10">
@@ -37,6 +37,7 @@
                             <tr>
                                 <th>Tên Bài Kiểm Tra</th>
                                 <th>Điểm</th>
+                                <th>Ngày làm bài</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,6 +47,7 @@
                                         <tr>
                                             <td>${test.testName}</td>
                                             <td>${test.score}</td>
+                                            <td>${test.completedAt}</td>
                                         </tr>
                                     </c:forEach>
                                 </c:when>

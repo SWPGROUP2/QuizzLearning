@@ -101,19 +101,18 @@
         <div class="content">
             <div class="form-container">
                 <h1>Assign Teacher to Subject: ${subject.getSubjectName()}</h1>
-
-                <!-- Form để gán giáo viên vào môn học -->
                 <form action="assign-teacher" method="POST">
                     <input type="hidden" name="subjectId" value="${subject.getSubjectId()}" />
 
                     <c:forEach var="teacher" items="${teachers}">
                         <div>
-                            <input type="checkbox" name="teacherIds" value="${teacher.getUserId()}" />
-                            <label for="teacherIds">${teacher.getFullName()}</label>
+                            <input type="checkbox" name="teacherIds" value="${teacher.getUserId()}"
+                                   <c:if test="${assignedTeacherIds.contains(teacher.getUserId())}">checked</c:if> />
+                            <label>${teacher.getFullName()}</label>
                         </div>
                     </c:forEach>
 
-                    <button type="submit" class="btn btn-primary">Assign</button>
+                    <button type="submit" class="btn btn-primary">Assign Users</button>
                 </form>
 
                 <a href="subject-list" class="btn btn-secondary">Back to Subject List</a>

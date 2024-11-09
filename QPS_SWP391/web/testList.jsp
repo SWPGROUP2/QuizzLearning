@@ -94,6 +94,7 @@
                     </select>
 
                     <button class="btn btn-primary" type="submit">Filter</button>
+                    <a href="testHistory" class="btn btn-primary">Test History</a>
                 </form>
 
                 <c:choose>
