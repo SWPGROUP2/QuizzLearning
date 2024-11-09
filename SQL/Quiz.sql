@@ -23,7 +23,7 @@ CREATE TABLE Users (
     Avatar VARCHAR(5000) DEFAULT 'assets/avatar/default-avatar.png',
     FullName VARCHAR(100) CHARACTER SET utf8mb4,
     DoB DATE,
-    StartDate DATE,  -- New column for contract start date
+    StartDate DATE,  
     EndDate DATE,    -- New column for contract end date
     Status ENUM('Active', 'Inactive') DEFAULT 'Active',
     FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
@@ -59,7 +59,7 @@ VALUES
 
 -- Create Class table
 CREATE TABLE Class (
-    ClassID INT AUTO_INCREMENT PRIMARY KEY,
+    ClassID INT auto_increment primary KEY,
     ClassName VARCHAR(255) CHARACTER SET utf8mb4,
     UserID INT,
     FOREIGN KEY (UserID) REFERENCES Users(UserID) 
@@ -79,6 +79,7 @@ CREATE TABLE TeacherSubjects (
 
 INSERT INTO TeacherSubjects (UserID, SubjectID)
 VALUES 
+(1, 1),
 (3, 1), -- Teacher with UserID 3 can teach Japanese
 (3, 2), -- Teacher with UserID 3 can also teach English
 (6, 3); -- Teacher with UserID 6 can teach Korean
@@ -266,10 +267,5 @@ VALUES
 (1, 'はい、わかりました', 'Vâng, tôi hiểu rồi'),
 (1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
-
-
-
-
-
 
 
