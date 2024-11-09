@@ -260,32 +260,34 @@ public class UserDAO extends DBContext {
         return false;
     }
 
-    public List<User> getAllTeachers() {
-        List<User> teachers = new ArrayList<>();
-        String sql = "SELECT * FROM Users WHERE RoleID = 3";
+    public List<User> getAllTeachersAndAdmins() {
+        List<User> teachersAndAdmins = new ArrayList<>();
+        String sql = "SELECT * FROM Users WHERE RoleID IN (1, 3)"; // Lấy cả RoleID = 1 và RoleID = 3
 
         try {
             ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                User teacher = new User();
-                teacher.setUserId(rs.getInt("UserID"));
-                teacher.setFullName(rs.getString("FullName"));
-                teachers.add(teacher);
+                User user = new User();
+                user.setUserId(rs.getInt("UserID"));
+                user.setFullName(rs.getString("FullName"));
+                user.setRoleId(rs.getInt("RoleID")); // Nếu cần lấy RoleID
+                teachersAndAdmins.add(user);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return teachers;
+        return teachersAndAdmins;
     }
+
     public boolean addUser(User user) {
-        String sql = "INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, " +
-                    "FullName, DoB, StartDate, EndDate, Status) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        String sql = "INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, "
+                + "FullName, DoB, StartDate, EndDate, Status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try ( PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, user.getUserName());
             stmt.setInt(2, user.getRoleId());
             stmt.setString(3, user.getEmail());
@@ -303,7 +305,7 @@ public class UserDAO extends DBContext {
                 return false;
             }
 
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            try ( ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     user.setUserId(generatedKeys.getInt(1));
                     return true;

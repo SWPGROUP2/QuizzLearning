@@ -23,8 +23,7 @@ CREATE TABLE Users (
     Avatar VARCHAR(5000) DEFAULT 'https://i.pinimg.com/originals/26/82/bf/2682bf05bc23c0b6a1145ab9c966374b.png',
     FullName VARCHAR(100) CHARACTER SET utf8mb4,
     DoB DATE,
-    UserCode VARCHAR(255) CHARACTER SET utf8mb4,
-    StartDate DATE,  -- New column for contract start date
+    StartDate DATE,  
     EndDate DATE,    -- New column for contract end date
     Status ENUM('Active', 'Inactive') DEFAULT 'Active',
     FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
@@ -60,13 +59,13 @@ VALUES
 
 -- Create Class table
 CREATE TABLE Class (
-    ClassID INT AUTO_INCREMENT PRIMARY KEY,
+    ClassID INT auto_increment primary KEY,
     ClassName VARCHAR(255) CHARACTER SET utf8mb4,
     UserID INT,
     FOREIGN KEY (UserID) REFERENCES Users(UserID) 
 );
 
-INSERT INTO Class (ClassName, UserID) VALUES ('Class A', 1), ('Class B', 3), ('Class C', 3);
+INSERT INTO Class (ClassName, UserID) VALUES ('Class A', 1), ('Class A', 3), ('Class B', 3),('Class A', 10),('Class A', 4),('Class A', 6),('Class B', 7),('Class A', 9),('Class A', 2),('Class A', 5),('Class A', 8);
 
 -- Create TeacherSubjects table
 CREATE TABLE TeacherSubjects (
@@ -74,15 +73,30 @@ CREATE TABLE TeacherSubjects (
     UserID INT,
     SubjectID INT,
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID),
-    UNIQUE (UserID, SubjectID)  -- Ensures each teacher can teach each subject only once
+    FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID)
+     
 );
 
 INSERT INTO TeacherSubjects (UserID, SubjectID)
 VALUES 
+(4, 2),
+(1, 2),
+(1, 1),
 (3, 1), -- Teacher with UserID 3 can teach Japanese
 (3, 2), -- Teacher with UserID 3 can also teach English
 (6, 3); -- Teacher with UserID 6 can teach Korean
+select * from Users;
+SELECT t.TestID,
+t.SubjectID,
+t.TestName,
+t.Duration,
+t.ClassID,
+s.SubjectName,
+c.ClassName
+FROM Tests t
+JOIN Class c ON t.ClassID = c.ClassID
+JOIN Subject s ON t.SubjectID = s.SubjectID
+WHERE c.ClassName IN ("Class A");
 
 -- Create QuestionType table
 CREATE TABLE QuestionType (
@@ -267,18 +281,8 @@ VALUES
 (1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
 (1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
 
-SELECT
-t.TestID,
-t.SubjectID,
-t.TestName,
-t.Duration,
-t.ClassID,
-s.SubjectName,
-qt.QuestionTypeName,
-c.ClassName
-FROM Tests t
-JOIN Class c ON t.ClassID = c.ClassID
-JOIN Users u ON u.UserID = c.UserID
-JOIN Subject s ON t.SubjectID = s.SubjectID
-WHERE u.UserID = 1
-AND u.RoleID = 1
+SELECT qt.QuestionTypeName FROM Questions q
+JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID
+WHERE q.QuestionID = 5;
+SELECT OptionText FROM Options WHERE QuestionID = 5
+select * from Options

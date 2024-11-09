@@ -7,7 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.Option;
@@ -74,10 +76,10 @@ public class TestDAO extends MyDAO {
         return qlist;
     }
 
-    public List<Test> getAllTestTeacher(int userId, String subjectId, String classId, String searchQuery, int page, int testsPerPage) {
+    public List<Test> getAllTestTeacher(int userId, String subjectId, String className, String searchQuery, int page, int testsPerPage) {
         List<Test> tests = new ArrayList<>();
 
-        StringBuilder query = new StringBuilder("SELECT t.TestID, t.TestName, t.SubjectID, s.SubjectName, t.ClassID,t.Duration, c.ClassName "
+        StringBuilder query = new StringBuilder("SELECT t.TestID, t.TestName, t.SubjectID, s.SubjectName, t.ClassID, t.Duration, c.ClassName "
                 + "FROM Tests t "
                 + "JOIN TeacherSubjects ts ON t.SubjectID = ts.SubjectID "
                 + "JOIN Subject s ON t.SubjectID = s.SubjectID "
@@ -87,8 +89,8 @@ public class TestDAO extends MyDAO {
         if (subjectId != null && !subjectId.isEmpty()) {
             query.append(" AND t.SubjectID = ?");
         }
-        if (classId != null && !classId.isEmpty()) {
-            query.append(" AND t.ClassID = ?");
+        if (className != null && !className.isEmpty()) {
+            query.append(" AND c.ClassName = ?");
         }
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
             query.append(" AND t.TestName LIKE ?");
@@ -103,8 +105,8 @@ public class TestDAO extends MyDAO {
             if (subjectId != null && !subjectId.isEmpty()) {
                 stmt.setString(index++, subjectId);
             }
-            if (classId != null && !classId.isEmpty()) {
-                stmt.setString(index++, classId);
+            if (className != null && !className.isEmpty()) {
+                stmt.setString(index++, className);
             }
             if (searchQuery != null && !searchQuery.trim().isEmpty()) {
                 stmt.setString(index++, "%" + searchQuery.trim() + "%");
@@ -112,6 +114,7 @@ public class TestDAO extends MyDAO {
 
             stmt.setInt(index++, testsPerPage);
             stmt.setInt(index, (page - 1) * testsPerPage);
+
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Test test = new Test(
@@ -132,54 +135,94 @@ public class TestDAO extends MyDAO {
         return tests;
     }
 
-    public List<Test> getAllTestStudent(int userId, String subjectId, String classId, String searchQuery, int currentPage, int testsPerPage) {
+    public List<String> getClassNamesByUserId(int userId) {
+        List<String> classNames = new ArrayList<>();
+
+        String query = "SELECT c.ClassName "
+                + "FROM TeacherSubjects ts "
+                + "JOIN Class c ON ts.UserID = c.UserID "
+                + "JOIN Users u ON u.UserID = c.UserID "
+                + "WHERE u.UserID = ?";
+
+        try ( PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+
+            try ( ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String className = rs.getString("ClassName");
+                    classNames.add(className);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return classNames;
+    }
+
+    public List<Integer> getSubjectIdsByUserId(int userId) {
+        List<Integer> subjectIds = new ArrayList<>();
+
+        String query = "SELECT t.SubjectID "
+                + "FROM TeacherSubjects ts "
+                + "JOIN Subject t ON t.SubjectID = ts.SubjectID "
+                + "JOIN Class c ON ts.UserID = c.UserID "
+                + "JOIN Users u ON u.UserID = c.UserID "
+                + "WHERE u.UserID = ?";
+
+        try ( PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+
+            try ( ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int subjectId = rs.getInt("SubjectID");
+                    subjectIds.add(subjectId);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return subjectIds;
+    }
+
+    public List<Test> getAllTestsByClassNameAndSubjectId(String className, int subjectId, String searchQuery, int currentPage, int testsPerPage) {
         List<Test> tests = new ArrayList<>();
+
         StringBuilder query = new StringBuilder("SELECT "
                 + "t.TestID, "
                 + "t.SubjectID, "
                 + "t.TestName, "
                 + "t.Duration, "
                 + "t.ClassID, "
+                + "t.QuestionTypeID, "
                 + "s.SubjectName, "
+                + "qt.QuestionTypeName, "
                 + "c.ClassName "
                 + "FROM Tests t "
                 + "JOIN Class c ON t.ClassID = c.ClassID "
-                + "JOIN Users u ON u.UserID = c.UserID "
                 + "JOIN Subject s ON t.SubjectID = s.SubjectID "
-                + "WHERE u.UserID = ? "
-                + // Placeholder for userID
-                "AND u.RoleID = 1");  // Only filter by RoleID for student
+                + "JOIN QuestionType qt ON t.QuestionTypeID = qt.QuestionTypeID "
+                + "WHERE c.ClassName = ? "
+                + "AND t.SubjectID = ?");
 
-        if (subjectId != null && !subjectId.isEmpty()) {
-            query.append(" AND t.SubjectID = ?");
-        }
-        if (classId != null && !classId.isEmpty()) {
-            query.append(" AND t.ClassID = ?");
-        }
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
             query.append(" AND t.TestName LIKE ?");
         }
 
-        // Pagination
         query.append(" LIMIT ? OFFSET ?");
 
         try ( PreparedStatement stmt = con.prepareStatement(query.toString())) {
             int index = 1;
-            stmt.setInt(index++, userId);  // Set the user ID for the logged-in student
+            stmt.setString(index++, className);
+            stmt.setInt(index++, subjectId);
 
-            if (subjectId != null && !subjectId.isEmpty()) {
-                stmt.setString(index++, subjectId);  // Set subject filter
-            }
-            if (classId != null && !classId.isEmpty()) {
-                stmt.setString(index++, classId);  // Set class filter
-            }
             if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-                stmt.setString(index++, "%" + searchQuery.trim() + "%");  // Set search query filter for TestName
+                stmt.setString(index++, "%" + searchQuery.trim() + "%");
             }
 
-            // Set pagination parameters
-            stmt.setInt(index++, testsPerPage);  // Set limit (tests per page)
-            stmt.setInt(index, (currentPage - 1) * testsPerPage);  // Set offset based on current page and tests per page
+            stmt.setInt(index++, testsPerPage);
+            stmt.setInt(index, (currentPage - 1) * testsPerPage);
 
             try ( ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -196,10 +239,89 @@ public class TestDAO extends MyDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();  // Handle exceptions
+            e.printStackTrace();
         }
 
-        return tests;  // Return the list of tests
+        return tests;
+    }
+
+    public List<Test> getAllTestsByClassNamesAndSubjectIds(List<String> classNames, List<Integer> subjectIds, String searchQuery, int currentPage, int testsPerPage) {
+        List<Test> tests = new ArrayList<>();
+
+        StringBuilder query = new StringBuilder("SELECT "
+                + "t.TestID, "
+                + "t.SubjectID, "
+                + "t.TestName, "
+                + "t.Duration, "
+                + "t.ClassID, "
+                + "s.SubjectName, "
+                + "c.ClassName "
+                + "FROM Tests t "
+                + "JOIN Class c ON t.ClassID = c.ClassID "
+                + "JOIN Subject s ON t.SubjectID = s.SubjectID "
+                + "WHERE c.ClassName IN (");
+
+        for (int i = 0; i < classNames.size(); i++) {
+            query.append("?");
+            if (i < classNames.size() - 1) {
+                query.append(", ");
+            }
+        }
+
+        query.append(") AND t.SubjectID IN (");
+
+        for (int i = 0; i < subjectIds.size(); i++) {
+            query.append("?");
+            if (i < subjectIds.size() - 1) {
+                query.append(", ");
+            }
+        }
+
+        query.append(")");
+
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            query.append(" AND t.TestName LIKE ?");
+        }
+
+        query.append(" LIMIT ? OFFSET ?");
+
+        try ( PreparedStatement stmt = con.prepareStatement(query.toString())) {
+            int index = 1;
+
+            for (String className : classNames) {
+                stmt.setString(index++, className);
+            }
+
+            for (Integer subjectId : subjectIds) {
+                stmt.setInt(index++, subjectId);
+            }
+
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                stmt.setString(index++, "%" + searchQuery.trim() + "%");
+            }
+
+            stmt.setInt(index++, testsPerPage);
+            stmt.setInt(index, (currentPage - 1) * testsPerPage);
+
+            try ( ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Test test = new Test(
+                            rs.getInt("TestID"),
+                            rs.getString("TestName"),
+                            rs.getInt("SubjectID"),
+                            rs.getString("SubjectName"),
+                            rs.getInt("ClassID"),
+                            rs.getInt("Duration"),
+                            rs.getString("ClassName")
+                    );
+                    tests.add(test);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tests;
     }
 
     public int countTotalTests(int userId, String subjectId, String classId, String searchQuery) {
@@ -212,7 +334,7 @@ public class TestDAO extends MyDAO {
             query.append(" AND t.SubjectID = ?");
         }
         if (classId != null && !classId.isEmpty()) {
-            query.append(" AND t.ClassID = ?");
+            query.append(" AND t.ClassName = ?");
         }
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
             query.append(" AND t.TestName LIKE ?");
@@ -363,7 +485,7 @@ public class TestDAO extends MyDAO {
     }
 
     public void updateTest(Test test) {
-        String sql = "UPDATE Tests SET TestName = ?, Duration = ?, ClassID = ?, test_startTime = ?, test_endTime = ?, test_status = ? WHERE TestID = ?";
+        String sql = "UPDATE Tests SET TestName = ?, Duration = ?, ClassID = ?, test_startTime = ?, test_endTime = ? WHERE TestID = ?";
 
         try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, test.getTestName());
@@ -371,8 +493,7 @@ public class TestDAO extends MyDAO {
             ps.setInt(3, test.getClassId());
             ps.setTimestamp(4, test.getTestStartTime());
             ps.setTimestamp(5, test.getTestEndTime());
-            ps.setInt(6, test.getStatus());
-            ps.setInt(7, test.getTestId());
+            ps.setInt(6, test.getTestId());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -418,19 +539,20 @@ public class TestDAO extends MyDAO {
 
     public List<TestResult> getTestHistory(int userId) {
         List<TestResult> testHistory = new ArrayList<>();
-        String sql = "SELECT t.TestName, r.score FROM Tests t "
+        String sql = "SELECT t.TestName, r.score, r.completed_at FROM Tests t "
                 + "JOIN TestResults r ON t.TestID = r.test_id "
                 + "WHERE r.student_id = ?";
 
         try ( PreparedStatement statement = connection.prepareStatement(sql)) {
-
             statement.setInt(1, userId);
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
                 TestResult result = new TestResult();
-                result.setTestName(rs.getString("testName"));
+                result.setTestName(rs.getString("TestName"));
                 result.setScore(rs.getInt("score"));
+                result.setCompletedAt(rs.getTimestamp("completed_at").toLocalDateTime()); // Lấy thời gian hoàn thành
+
                 testHistory.add(result);
             }
         } catch (SQLException e) {
@@ -461,7 +583,11 @@ public class TestDAO extends MyDAO {
                 String questionTypeName = resultSet.getString("QuestionTypeName");
 
                 Question question = new Question(questionID, subjectId, chapterId, questionText, questionTypeId, questionTypeName);
-                question.setOptions(getOptionsByQuestionId(questionID));
+
+                // Nếu câu hỏi là dạng Multiple Choice, lấy các tùy chọn
+                if (questionTypeName.equals("Multiple-choice")) {
+                    question.setOptions(getOptionsByQuestionId(questionID)); // Lấy các tùy chọn cho câu hỏi
+                }
 
                 questions.add(question);
             }
@@ -493,5 +619,43 @@ public class TestDAO extends MyDAO {
             e.printStackTrace();
         }
         return options;
+    }
+
+    public String getQuestionType(int questionId) {
+        String questionType = null;
+        String query = "SELECT qt.QuestionTypeName FROM Questions q "
+                + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
+                + "WHERE q.QuestionID = ?";
+
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, questionId);
+            try ( ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    questionType = rs.getString("QuestionTypeName");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return questionType;
+    }
+
+    public String getCorrectAnswerForShortAnswer(int questionId) {
+        String correctAnswer = null;
+        String query = "SELECT OptionText FROM Options WHERE QuestionID = ?";
+
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, questionId);
+            try ( ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    correctAnswer = rs.getString("OptionText");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return correctAnswer;
     }
 }

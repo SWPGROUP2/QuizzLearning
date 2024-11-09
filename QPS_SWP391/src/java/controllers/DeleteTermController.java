@@ -56,14 +56,17 @@ public class DeleteTermController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String termIdParam = request.getParameter("termId");
 
+        String termIdParam = request.getParameter("termId");
         int termId = Integer.parseInt(termIdParam);
+
         TermDAO termDAO = new TermDAO();
+        int termSetId = termDAO.getTermSetIdByTermId(termId); 
 
         termDAO.deleteTerm(termId);
 
-        response.sendRedirect("termlist?termSetId=" + request.getParameter("termSetId"));
+        response.sendRedirect("termlist?action=list&termSetId=" + termSetId);
+
     }
 
     /**

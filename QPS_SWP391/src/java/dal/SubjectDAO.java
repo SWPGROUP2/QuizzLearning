@@ -245,7 +245,7 @@ public class SubjectDAO extends MyDAO {
 
         try ( PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, subject.getSubjectName());
-            ps.setString(2, subject.getTitle()); 
+            ps.setString(2, subject.getTitle());
             ps.setInt(3, subject.getSubjectId());
 
             int rowsUpdated = ps.executeUpdate();
@@ -322,5 +322,22 @@ public class SubjectDAO extends MyDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<Integer> getAssignedTeacherIds(int subjectId) {
+        List<Integer> assignedTeacherIds = new ArrayList<>();
+        String query = "SELECT UserID FROM TeacherSubjects WHERE SubjectID = ?";
+
+        try ( PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, subjectId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                assignedTeacherIds.add(rs.getInt("teacherId"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return assignedTeacherIds;
     }
 }

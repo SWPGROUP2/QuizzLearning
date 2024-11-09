@@ -9,7 +9,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <%@include file="Components/AllAccess.jsp"%>    
+        <%@include file="Components/AllAccess.jsp"%>
         <title>Do Test</title>
     </head>
     <body>
@@ -32,14 +32,26 @@
                                         <h5 class="mb-0">Câu hỏi: ${question.getQuestion()}</h5>
                                     </div>
                                     <div class="card-body">
-                                        <c:forEach var="option" items="${options}">
-                                            <div class="form-check">
-                                                <input type="radio" class="form-check-input" name="question_${question.questionID}" value="${option.optionId}" id="option_${option.optionId}">
-                                                <label class="form-check-label" for="option_${option.optionId}">
-                                                    ${option.optionText}
-                                                </label>
-                                            </div>
-                                        </c:forEach>
+                                        <c:choose>
+                                            <c:when test="${question.getQuestionTypeId() != null && question.getQuestionTypeId() == 2}">
+                                                <input type="text" class="form-control" 
+                                                       name="question_${question.questionID}" 
+                                                       placeholder="Nhập câu trả lời của bạn ở đây">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:forEach var="option" items="${options}">
+                                                    <div class="form-check">
+                                                        <input type="radio" class="form-check-input" 
+                                                               name="question_${question.questionID}" 
+                                                               value="${option.optionId}" 
+                                                               id="option_${option.optionId}">
+                                                        <label class="form-check-label" for="option_${option.optionId}">
+                                                            ${option.optionText}
+                                                        </label>
+                                                    </div>
+                                                </c:forEach>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
                             </c:forEach>

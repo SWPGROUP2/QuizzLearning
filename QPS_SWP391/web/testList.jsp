@@ -78,10 +78,10 @@
                     <input type="text" id="searchQuery" name="searchQuery" value="${searchQuery}" placeholder="Search test by name" class="form-control"/>
 
                     <label for="classId">Class:</label>
-                    <select id="classId" name="classId" class="form-control">
+                    <select id="classId" name="className" class="form-control">
                         <option value="">All Classes</option>
                         <c:forEach var="entry" items="${uniqueClasses}">
-                            <option value="${entry.classID}" ${entry.classID == selectedClassId ? 'selected' : ''}>${entry.className}</option>
+                            <option value="${entry.className}" ${entry.className == selectedClassName ? 'selected' : ''}>${entry.className}</option>
                         </c:forEach>
                     </select>
 
@@ -97,7 +97,6 @@
                     <a href="testHistory" class="btn btn-primary">Test History</a>
                 </form>
 
-                <!-- Tests Table -->
                 <c:choose>
                     <c:when test="${not empty tests}">
                         <table class="table table-bordered">
@@ -120,7 +119,7 @@
                                         <td>${test.className}</td>
                                         <td>${test.subjectName}</td>
                                         <td>${test.testName}</td>
-                                         <td>${test.duration}</td>
+                                        <td>${test.duration}</td>
                                         <td>${test.questionCount}</td>
                                         <td class="table-actions">
                                             <c:if test="${sessionScope.account.roleId == 3}">

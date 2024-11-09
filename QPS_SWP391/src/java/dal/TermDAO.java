@@ -109,4 +109,19 @@ public class TermDAO extends MyDAO {
         }
     }
 
+    public int getTermSetIdByTermId(int termId) {
+        int termSetId = 0;
+        String sql = "SELECT TermSetID FROM Terms WHERE TermID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, termId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                termSetId = rs.getInt("TermSetID");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting TermSetID: " + e.getMessage());
+        }
+        return termSetId;
+    }
 }

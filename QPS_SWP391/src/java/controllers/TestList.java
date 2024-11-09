@@ -28,6 +28,7 @@ public class TestList extends HttpServlet {
         String pageParam = request.getParameter("page");
         String subjectId = request.getParameter("subjectId");
         String classId = request.getParameter("classId");
+        String className = request.getParameter("className");
 
         int currentPage = 1;
         if (pageParam != null) {
@@ -51,11 +52,24 @@ public class TestList extends HttpServlet {
         ClassDAO classDAO = new ClassDAO();
         List<Classes> uniqueClasses = classDAO.getUniqueClasses(userId);
 
-        List<Test> tests;
-        if (roleId == 3) {
+        List<String> classNames = testDAO.getClassNamesByUserId(userId);
+        List<Integer> subjectIds = testDAO.getSubjectIdsByUserId(userId);
+
+        List<Test> tests = null;
+        if (roleId == 3) { 
             tests = testDAO.getAllTestTeacher(userId, subjectId, classId, searchQuery, currentPage, testsPerPage);
         } else {  
-            tests = testDAO.getAllTestStudent(userId, subjectId, classId, searchQuery, currentPage, testsPerPage);
+           if (className != null && !className.isEmpty()) {
+                Integer parsedSubjectId = null;
+                if (subjectId != null && !subjectId.isEmpty()) {
+                    parsedSubjectId = Integer.parseInt(subjectId);
+                }
+                tests = testDAO.getAllTestsByClassNameAndSubjectId(className, parsedSubjectId, searchQuery, currentPage, testsPerPage);
+            } else {
+                if (!classNames.isEmpty() && !subjectIds.isEmpty()) {
+                    tests = testDAO.getAllTestsByClassNamesAndSubjectIds(classNames, subjectIds, searchQuery, currentPage, testsPerPage);
+                }
+            }
         }
 
         for (Test test : tests) {
