@@ -49,12 +49,12 @@ public class TestList extends HttpServlet {
         Map<Integer, String> uniqueSubjects = questionDAO.getUniqueSubjects(userId);
 
         ClassDAO classDAO = new ClassDAO();
-        List<Classes> uniqueClasses = classDAO.getTeacherClasses(userId);
+        List<Classes> uniqueClasses = classDAO.getUniqueClasses(userId);
 
         List<Test> tests;
         if (roleId == 3) {
             tests = testDAO.getAllTestTeacher(userId, subjectId, classId, searchQuery, currentPage, testsPerPage);
-        } else {  // Other roles, assuming students
+        } else {  
             tests = testDAO.getAllTestStudent(userId, subjectId, classId, searchQuery, currentPage, testsPerPage);
         }
 

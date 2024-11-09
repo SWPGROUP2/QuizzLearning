@@ -43,7 +43,6 @@ public class AddUserController extends HttpServlet {
             String password = request.getParameter("password");
             String phoneNumber = request.getParameter("phonenumber");
             String userName = request.getParameter("userName");
-            String userCode = request.getParameter("usercode");
             String dateString = request.getParameter("date");
             String startDateString = request.getParameter("startDate");
             String endDateString = request.getParameter("endDate");
@@ -57,7 +56,6 @@ public class AddUserController extends HttpServlet {
             request.setAttribute("password", password);
             request.setAttribute("phoneNumber", phoneNumber);
             request.setAttribute("userName", userName);
-            request.setAttribute("userCode", userCode);
             request.setAttribute("date", dateString);
             request.setAttribute("startDate", startDateString);
             request.setAttribute("endDate", endDateString);
@@ -94,10 +92,6 @@ public class AddUserController extends HttpServlet {
 
        
 
-            if (isBlank(userCode)) {
-                request.setAttribute("userCodeError", "Mã học sinh không được để trống");
-                hasError = true;
-            }
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             if (!isBlank(dateString)) {
@@ -145,7 +139,6 @@ public class AddUserController extends HttpServlet {
             newUser.setPassword(password);
             newUser.setPhoneNumber(phoneNumber);
             newUser.setUserName(userName);
-            newUser.setUserCode(userCode);
             newUser.setDob(sqlDate);
             newUser.setStartDate(startDate);
             newUser.setEndDate(endDate);

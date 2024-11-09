@@ -109,12 +109,11 @@ public List<Question> getFilteredQuestions(String subjectId, String chapterId, S
         query.append(" AND q.Question LIKE ? ");
     }
 
-    // Apply pagination
     query.append(" LIMIT ?, ?");
 
     try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
         int index = 1;
-        stmt.setInt(index++, userId);  // Use the teacher's user ID
+        stmt.setInt(index++, userId);  
 
         if (subjectId != null && !subjectId.isEmpty()) {
             stmt.setString(index++, subjectId);
@@ -153,18 +152,14 @@ public List<Question> getFilteredQuestions(String subjectId, String chapterId, S
     return questionList;
 }
 
-
-
-
 public int getFilteredQuestionCount(String subjectId, String chapterId, String questionTypeId, int userId) {
     int count = 0;
     StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM Questions q "
             + "JOIN Subject s ON q.SubjectID = s.SubjectID "
             + "JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID "
             + "JOIN TeacherSubjects ts ON q.SubjectID = ts.SubjectID "
-            + "WHERE ts.UserID = ?"); // Ensures we count only the questions for subjects taught by the teacher
+            + "WHERE ts.UserID = ?"); 
 
-    // Additional filtering for subject, chapter, and question type
     if (subjectId != null && !subjectId.isEmpty()) {
         query.append(" AND q.SubjectID = ? ");
     }
@@ -177,7 +172,7 @@ public int getFilteredQuestionCount(String subjectId, String chapterId, String q
 
     try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
         int index = 1;
-        stmt.setInt(index++, userId);  // Filter by teacher's userId
+        stmt.setInt(index++, userId);  
 
         if (subjectId != null && !subjectId.isEmpty()) {
             stmt.setString(index++, subjectId);
@@ -191,7 +186,7 @@ public int getFilteredQuestionCount(String subjectId, String chapterId, String q
 
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
-            count = rs.getInt(1);  // Get the count of matching questions
+            count = rs.getInt(1);  
         }
     } catch (SQLException e) {
         e.printStackTrace();
@@ -239,7 +234,7 @@ public int getFilteredQuestionCount(String subjectId, String chapterId, String q
             ResultSet rs = stmt.executeQuery();
             
             if (rs.next()) {
-                // Extract the fields from the result set
+
                 int id = rs.getInt("QuestionID");
                 int subjectId = rs.getInt("SubjectID");
                 int chapterId = rs.getInt("ChapterID");
@@ -248,10 +243,8 @@ public int getFilteredQuestionCount(String subjectId, String chapterId, String q
                 int questionTypeId = rs.getInt("QuestionTypeID");
 
 
-                // Create the question object
                 question = new Question(id, subjectId, chapterId, questionText, subjectName, questionTypeId);
 
-                // Fetch the options related to this question
                 List<Option> options = getOptionsForQuestion(questionId);
                 question.setOptions(options);
             }
@@ -307,24 +300,41 @@ public int getFilteredQuestionCount(String subjectId, String chapterId, String q
 
 public Map<Integer, String> getUniqueSubjects(int userId) {
     Map<Integer, String> uniqueSubjects = new LinkedHashMap<>();
-    String query = "SELECT DISTINCT s.SubjectName, s.SubjectID "
-                 + "FROM Subject s "
-                 + "JOIN TeacherSubjects ts ON s.SubjectID = ts.SubjectID "
-                 + "WHERE ts.UserID = ?";  
     
-    try (PreparedStatement stmt = con.prepareStatement(query)) {
-        stmt.setInt(1, userId);  
+    String classQuery = "SELECT DISTINCT c.ClassID "
+                      + "FROM Class c "
+                      + "WHERE c.UserID = ?";
+    
+    try (PreparedStatement stmt = con.prepareStatement(classQuery)) {
+        stmt.setInt(1, userId); 
         
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                int subjectId = rs.getInt("SubjectID");
-                String subjectName = rs.getString("SubjectName");
-                uniqueSubjects.put(subjectId, subjectName);
+                int classId = rs.getInt("ClassID");
+                
+                String subjectQuery = "SELECT DISTINCT s.SubjectID, s.SubjectName "
+                                    + "FROM Subject s "
+                                    + "JOIN TeacherSubjects ts ON s.SubjectID = ts.SubjectID "
+                                    + "JOIN Class c ON ts.UserID = c.UserID "
+                                    + "WHERE c.ClassID = ?";
+                
+                try (PreparedStatement subjectStmt = con.prepareStatement(subjectQuery)) {
+                    subjectStmt.setInt(1, classId); 
+                    
+                    try (ResultSet subjectRs = subjectStmt.executeQuery()) {
+                        while (subjectRs.next()) {
+                            int subjectId = subjectRs.getInt("SubjectID");
+                            String subjectName = subjectRs.getString("SubjectName");
+                            uniqueSubjects.put(subjectId, subjectName);  
+                        }
+                    }
+                }
             }
         }
     } catch (SQLException e) {
         e.printStackTrace();
     }
+    
     return uniqueSubjects;
 }
 
