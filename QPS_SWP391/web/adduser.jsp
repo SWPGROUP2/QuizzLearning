@@ -1,69 +1,30 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Sign up</title>
+        <title>Add User</title>
         <style>
-
-            form {
+            body {
+                background-color: #f8f9fa;
+            }
+            .card {
+                border: none;
+                border-radius: 15px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
                 background-color: #fff;
                 padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-                width: 400px;
-                text-align: center;
-                justify-content: center;
-                margin-left: 450px;
+                margin: 20px auto;
+                max-width: 600px;
             }
-
-            input[type="email"],
-            input[type="password"],
-            input[type="text"]{
-                width: 100%;
-                padding: 10px;
-                margin-bottom: 10px;
-                border-radius: 5px;
-                border: 1px solid #ddd;
-                box-sizing: border-box;
+            .btn-success {
+                border-radius: 30px;
             }
-
-            input[type="checkbox"] {
-                margin-right: 5px;
-                margin-bottom: 15px;
+            .form-control {
+                border-radius: 20px;
             }
-
-            input[type="submit"] {
-                width: 100%;
-                padding: 10px;
-                border-radius: 5px;
-                border: none;
-                color: #fff;
-                background-color: #000;
-                color: #fff;
-                cursor: pointer;
-                transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-            }
-
-            input[type="submit"]:hover {
-                background-color: #9B68FF;
-            }
-
-            h2 {
+            .form-group {
                 margin-bottom: 20px;
-                color: #333;
-            }
-
-            h5 {
-                margin-bottom: 0;
-                padding-top: 10px;
-                color: #000;
-                cursor: pointer;
-                margin-top: 10px;
-
             }
         </style>
     </head>
@@ -72,57 +33,117 @@
             <div class="col-md-2">
                 <%@include file="Components/Sidebar.jsp" %>
             </div>
-            <form action="adduser" method="post">
-                <h2>Add user</h2>
+            <div class="col-md-10">
+                <div class="card">
+                    <h2 class="text-center mb-4">Add User</h2>
 
-                <div>
-                    <input maxlength="50" type="email" id="email" name="email" placeholder="Email Address" required>
-                </div>
+                    <c:if test="${not empty errorMessage}">
+                        <div class="alert alert-danger">
+                            <p>${errorMessage}</p>
+                        </div>
+                    </c:if>
 
-                <div>
-                    <input placeholder="Password" type="password" id="password" name="password" required>
-                </div>
+                    <form action="adduser" method="post">
+                        <div class="form-group">
+                            <div class="radio-group">
+                                <input type="radio" name="role" value="student" ${role == 'student' ? 'checked' : ''} required> Student
+                                <input type="radio" name="role" value="teacher" style="margin-left: 30px" ${role == 'teacher' ? 'checked' : ''} required> Teacher
+                            </div>
+                        </div>
 
-                <div>
-                    <input maxlength="30" type="text" id="fullname" name="fullname" placeholder="Full Name" required>
-                </div>
-                <div>
-                    <input min="8" max="13" placeholder="Phone Number" type="text" id="phoneNumber" name="phonenumber" required>
-                </div>
-                <div>
-                    <input maxlength="20" placeholder="Student ID" type="text" id="usercode" name="usercode" required>
-                </div>
-                <div style="margin: 5px 0px;">
-                    Select Campus:    <select name = "place" > 
-                        <option value="FU-Hoa Lac">FU-Hoa Lac </option>
-                        <option value="FU-Ho Chi Minh ">FU-Ho Chi Minh </option>
-                        <option value="FU-Da nang">FU-Da nang </option>
-                        <option value="FU-Can Tho ">FU-Can Tho </option>
-                        <option value="FU-Quy Nhon">FU-Quy Nhon </option>
-                    </select>
-                </div>
-                <div style="margin: 5px 0px;">
-                    Date of birth:    <input type="date" id="date" name="date"  required>
-                </div>
-                <div style="justify-content: space-around; padding: auto; margin-bottom: 10px">
-                    <input type="radio" name="role" value="student" required> Student
-                    <input type="radio" name="role" value="teacher" style="margin-left: 30px" required> Teacher
-                </div>
+                        <div class="form-group">
+                            <select class="form-control" id="class" name="classId" required>
+                                <c:forEach var="classItem" items="${allclass}">
+                                    <option value="${classItem.classID}" ${classId == classItem.classID ? 'selected' : ''}>${classItem.className}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
 
-                <div>
-                    <input type="submit" value="Add">
-                </div>
-                <div>
-                    <h5>Back to <a href="adminhome" class="text-decoration-none">Home</a></h5>
-                </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control ${not empty fullNameError ? 'is-invalid' : ''}" 
+                                   name="fullName" placeholder="Full Name" value="${fullName}" required>
+                            <c:if test="${not empty fullNameError}">
+                                <div class="invalid-feedback">
+                                    ${fullNameError}
+                                </div>
+                            </c:if>
+                        </div>
 
-                <c:if test="${mess!=null}">
-                    <div class="message">
-                        <h4 style="color: red;">${mess}</h4>
-                    </div>
-                </c:if>
-            </form>
+                        <div class="form-group">
+                            <input type="email" class="form-control ${not empty emailError ? 'is-invalid' : ''}" 
+                                   name="email" placeholder="Email Address" value="${email}" required>
+                            <c:if test="${not empty emailError}">
+                                <div class="invalid-feedback">
+                                    ${emailError}
+                                </div>
+                            </c:if>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="password" class="form-control ${not empty passwordError ? 'is-invalid' : ''}" 
+                                   name="password" placeholder="Password" required>
+                            <c:if test="${not empty passwordError}">
+                                <div class="invalid-feedback">
+                                    ${passwordError}
+                                </div>
+                            </c:if>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control ${not empty userNameError ? 'is-invalid' : ''}" 
+                                   name="userName" placeholder="User Name" value="${userName}" >
+                            <c:if test="${not empty userNameError}">
+                                <div class="invalid-feedback">
+                                    ${userNameError}
+                                </div>
+                            </c:if>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control ${not empty phoneError ? 'is-invalid' : ''}" 
+                                   name="phonenumber" placeholder="Phone Number" value="${phoneNumber}" 
+                                   pattern="\d{10}" title="Phone number must be 10 digits" required>
+                            <c:if test="${not empty phoneError}">
+                                <div class="invalid-feedback">
+                                    ${phoneError}
+                                </div>
+                            </c:if>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Date of birth:</label>
+                            <input type="date" class="form-control ${not empty dateError ? 'is-invalid' : ''}" 
+                                   name="date" value="${date}" required>
+                            <c:if test="${not empty dateError}">
+                                <div class="invalid-feedback">
+                                    ${dateError}
+                                </div>
+                            </c:if>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Start Date:</label>
+                                <input type="date" class="form-control" 
+                                       name="startDate" value="${startDate}" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>End Date:</label>
+                                <input type="date" class="form-control" 
+                                       name="endDate" value="${endDate}">
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">Add User</button>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <h5>Back to <a href="adminhome" class="text-decoration-none">Home</a></h5>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
     </body>
 </html>

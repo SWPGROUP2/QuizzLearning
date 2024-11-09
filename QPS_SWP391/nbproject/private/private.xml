@@ -3,7 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/web/editterm.jsp</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/src/java/models/Term.java</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/web/termlist.jsp</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/src/java/controllers/EditTermController.java</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/src/java/dal/TermDAO.java</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/src/java/controllers/DeleteTermController.java</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/src/java/controllers/TermController.java</file>
         </group>
     </open-files>
 </project-private>

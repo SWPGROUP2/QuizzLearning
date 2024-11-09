@@ -67,32 +67,32 @@ public class ClassDAO extends MyDAO {
         }
         return null;
     }
+    
+        public List<Classes> getUniqueClasses(int userId) {
+    List<Classes> uniqueClasses = new ArrayList<>();
+    
+    String sql = "SELECT DISTINCT c.ClassID, c.ClassName " +
+                 "FROM Class c " +
+                 "JOIN Users u ON c.UserID = u.UserID " +
+                 "WHERE u.UserID = ?";
 
-    public List<Classes> getTeacherClasses(int userId) {
-        List<Classes> uniqueClasses = new ArrayList<>();
-        
-        String sql = "SELECT DISTINCT c.ClassID, c.ClassName "
-                + "FROM Class c "
-                + "JOIN ClassMembers cm ON cm.ClassID = c.ClassID "
-                + "JOIN TeacherSubjects ts ON ts.UserID = cm.UserID "
-                + "WHERE cm.UserID = ?";
+    try (PreparedStatement stmt = con.prepareStatement(sql)) {
+        stmt.setInt(1, userId);
+        ResultSet rs = stmt.executeQuery();
 
-        try ( PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setInt(1, userId);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Classes classObj = new Classes();
-                classObj.setClassID(rs.getInt("ClassID"));
-                classObj.setClassName(rs.getString("ClassName"));
-                uniqueClasses.add(classObj);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        while (rs.next()) {
+            Classes classObj = new Classes();
+            classObj.setClassID(rs.getInt("ClassID"));
+            classObj.setClassName(rs.getString("ClassName"));
+            uniqueClasses.add(classObj);
         }
-
-        return uniqueClasses;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return uniqueClasses;
+}
+
 
     public List<subject> getTeacherSubjects(int userId) {
         List<subject> uniqueSubjects = new ArrayList<>();
@@ -119,14 +119,14 @@ public class ClassDAO extends MyDAO {
 
         return uniqueSubjects;
     }
-    
+
     public List<Classes> getClassesByTeacherId(int userId) {
         List<Classes> classList = new ArrayList<>();
         String sql = "SELECT * FROM Class WHERE UserID = ?";
-        
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Classes cls = new Classes();
                     cls.setClassID(rs.getInt("ClassID"));
@@ -138,6 +138,43 @@ public class ClassDAO extends MyDAO {
             e.printStackTrace();
         }
         return classList;
+    }
+
+    public List<Classes> getUniqueClasses() {
+        List<Classes> uniqueClassesList = new ArrayList<>();
+        String query = "SELECT MIN(c.ClassID) as ClassID, c.ClassName "
+                + "FROM Class c "
+                + "GROUP BY c.ClassName "
+                + "ORDER BY c.ClassName";
+
+        try ( PreparedStatement ps = connection.prepareStatement(query);  
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Classes cls = new Classes();
+                cls.setClassID(rs.getInt("ClassID"));
+                cls.setClassName(rs.getString("ClassName"));
+                uniqueClassesList.add(cls);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return uniqueClassesList;
+    }
+    
+    public boolean addUserToClass(int userID, int classID) {
+        String sql = "INSERT INTO Class (UserID, ClassName) " +
+                    "SELECT ?, ClassName FROM Class WHERE ClassID = ?";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, userID);
+            stmt.setInt(2, classID);
+
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
 }

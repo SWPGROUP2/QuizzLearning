@@ -134,7 +134,6 @@ public class TestDAO extends MyDAO {
 
     public List<Test> getAllTestStudent(int userId, String subjectId, String classId, String searchQuery, int currentPage, int testsPerPage) {
         List<Test> tests = new ArrayList<>();
-
         StringBuilder query = new StringBuilder("SELECT "
                 + "t.TestID, "
                 + "t.SubjectID, "
@@ -151,7 +150,6 @@ public class TestDAO extends MyDAO {
                 + // Placeholder for userID
                 "AND u.RoleID = 1");  // Only filter by RoleID for student
 
-        // Optional filters for subject, class, and search query
         if (subjectId != null && !subjectId.isEmpty()) {
             query.append(" AND t.SubjectID = ?");
         }
@@ -162,29 +160,26 @@ public class TestDAO extends MyDAO {
             query.append(" AND t.TestName LIKE ?");
         }
 
-        // Pagination (LIMIT and OFFSET)
+        // Pagination
         query.append(" LIMIT ? OFFSET ?");
 
         try ( PreparedStatement stmt = con.prepareStatement(query.toString())) {
             int index = 1;
+            stmt.setInt(index++, userId);  // Set the user ID for the logged-in student
 
-            // Set userId (for student) parameter
-            stmt.setInt(index++, userId);
-
-            // Set optional filters if provided
             if (subjectId != null && !subjectId.isEmpty()) {
-                stmt.setString(index++, subjectId);  // Set subjectId filter
+                stmt.setString(index++, subjectId);  // Set subject filter
             }
             if (classId != null && !classId.isEmpty()) {
-                stmt.setString(index++, classId);  // Set classId filter
+                stmt.setString(index++, classId);  // Set class filter
             }
             if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-                stmt.setString(index++, "%" + searchQuery.trim() + "%");  // Set searchQuery filter
+                stmt.setString(index++, "%" + searchQuery.trim() + "%");  // Set search query filter for TestName
             }
 
             // Set pagination parameters
-            stmt.setInt(index++, testsPerPage);  // Set testsPerPage limit
-            stmt.setInt(index, (currentPage - 1) * testsPerPage);  // Set the OFFSET for pagination
+            stmt.setInt(index++, testsPerPage);  // Set limit (tests per page)
+            stmt.setInt(index, (currentPage - 1) * testsPerPage);  // Set offset based on current page and tests per page
 
             try ( ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
