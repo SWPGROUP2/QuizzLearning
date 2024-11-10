@@ -126,7 +126,7 @@
                                     <td>${user.className}</td>
                                     <td>${user.status}</td>
                                     <td class="table-actions">
-                                        <form action="update-user" method="POST" style="display:inline;">
+                                        <form action="updateuser" method="POST" style="display:inline;">
                                             <input type="hidden" name="userId" value="${user.userId}"/>
                                             <button type="submit" class="btn btn-primary btn-sm">Edit</button>
                                         </form>

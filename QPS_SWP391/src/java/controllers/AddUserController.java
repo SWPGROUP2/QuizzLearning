@@ -89,9 +89,7 @@ public class AddUserController extends HttpServlet {
                 request.setAttribute("phoneError", "Số điện thoại đã được sử dụng");
                 hasError = true;
             }
-
-       
-
+            
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             if (!isBlank(dateString)) {
@@ -114,7 +112,8 @@ public class AddUserController extends HttpServlet {
             if (hasError) {
                 List<Classes> allclass = classdao.getUniqueClasses();
                 request.setAttribute("allclass", allclass);
-                request.getRequestDispatcher("adduser.jsp").forward(request, response);
+                request.setAttribute("password", password);
+                request.getRequestDispatcher("adduser").forward(request, response);
                 return;
             }
 
@@ -154,7 +153,6 @@ public class AddUserController extends HttpServlet {
             }
 
         } catch (Exception ex) {
-            request.setAttribute("errorMessage", "Đã xảy ra lỗi. Vui lòng thử lại.");
             request.getRequestDispatcher("adduser.jsp").forward(request, response);
         }
     }
