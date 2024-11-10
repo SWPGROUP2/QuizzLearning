@@ -85,35 +85,30 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public User getUserById(int id) {
-        User user = null;
-        String query = "SELECT UserID, UserName, RoleID, Email, Password, PhoneNumber, Avatar, FullName, "
-                + "DoB, Status, StartDate, EndDate "
-                + "FROM Users "
-                + "WHERE UserID = ?";
-        try ( PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, id);
-            try ( ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    user = new User();
-                    user.setUserId(rs.getInt("UserID"));
-                    user.setUserName(rs.getString("UserName"));
-                    user.setRoleId(rs.getInt("RoleID"));
-                    user.setEmail(rs.getString("Email"));
-                    user.setPassword(rs.getString("Password"));
-                    user.setPhoneNumber(rs.getString("PhoneNumber"));
-                    user.setAvatar(rs.getString("Avatar"));
-                    user.setFullName(rs.getString("FullName"));
-                    user.setDob(rs.getDate("DoB"));
-                    user.setStatus(rs.getString("Status"));
-                    user.setStartDate(rs.getDate("StartDate"));
-                    user.setEndDate(rs.getDate("EndDate"));
-                }
+    public User getUserById(int userId) {
+        String sql = "SELECT * FROM Users WHERE UserID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, userId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("UserID"));
+                user.setUserName(rs.getString("UserName"));
+                user.setRoleId(rs.getInt("RoleID"));
+                user.setEmail(rs.getString("Email"));
+                user.setPhoneNumber(rs.getString("PhoneNumber"));
+                user.setAvatar(rs.getString("Avatar"));
+                user.setFullName(rs.getString("FullName"));
+                user.setDob(rs.getDate("DoB"));
+                user.setStartDate(rs.getDate("StartDate"));
+                user.setEndDate(rs.getDate("EndDate"));
+                user.setStatus(rs.getString("Status"));
+                return user;
             }
-        } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Error executing query", ex);
+        } catch (SQLException e) {
         }
-        return user;
+        return null;
     }
 
     public User getUserByEmail(String email) throws Exception {
@@ -235,29 +230,48 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public boolean deleteUser(int subjectId) {
+    public boolean deleteUser(int userId) {
+        boolean success = false;
         String sql = "DELETE FROM Users WHERE UserID = ?";
-        try {
-            ps = connection.prepareStatement(sql);
-            ps.setInt(1, subjectId);
 
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
+        try {
+            // Start transaction
+            connection.setAutoCommit(false);
+
+            try {
+                // Delete user
+                ps = connection.prepareStatement(sql);
+                ps.setInt(1, userId);
+                int rowsAffected = ps.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    success = true;
+                }
+
+                // If everything is successful, commit the transaction
+                connection.commit();
+            } catch (SQLException e) {
+                // If there's an error, rollback the transaction
+                connection.rollback();
+                LOGGER.log(Level.SEVERE, "Error deleting user", e);
+                throw e;
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Database transaction failed", e);
         } finally {
             try {
+                // Reset auto-commit to default state
+                connection.setAutoCommit(true);
+
                 if (ps != null) {
                     ps.close();
                 }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, "Error closing resources", e);
             }
         }
-        return false;
+
+        return success;
     }
 
     public List<User> getAllTeachersAndAdmins() {
@@ -314,6 +328,30 @@ public class UserDAO extends DBContext {
                 }
             }
         } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public boolean updateUser(User user) {
+        String sql = "UPDATE Users SET UserName=?, RoleID=?, Email=?, PhoneNumber=?, "
+                + "FullName=?, DoB=?, StartDate=?, EndDate=?, Status=? "
+                + "WHERE UserID=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, user.getUserName());
+            st.setInt(2, user.getRoleId());
+            st.setString(3, user.getEmail());
+            st.setString(4, user.getPhoneNumber());
+            st.setString(5, user.getFullName());
+            st.setDate(6, user.getDob());
+            st.setDate(7, user.getStartDate());
+            st.setDate(8, user.getEndDate());
+            st.setString(9, user.getStatus());
+            st.setInt(10, user.getUserId());
+
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error in updateUser: " + e.getMessage());
             return false;
         }
     }

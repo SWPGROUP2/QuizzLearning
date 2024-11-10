@@ -67,32 +67,31 @@ public class ClassDAO extends MyDAO {
         }
         return null;
     }
-    
-        public List<Classes> getUniqueClasses(int userId) {
-    List<Classes> uniqueClasses = new ArrayList<>();
-    
-    String sql = "SELECT DISTINCT c.ClassID, c.ClassName " +
-                 "FROM Class c " +
-                 "JOIN Users u ON c.UserID = u.UserID " +
-                 "WHERE u.UserID = ?";
 
-    try (PreparedStatement stmt = con.prepareStatement(sql)) {
-        stmt.setInt(1, userId);
-        ResultSet rs = stmt.executeQuery();
+    public List<Classes> getUniqueClasses(int userId) {
+        List<Classes> uniqueClasses = new ArrayList<>();
 
-        while (rs.next()) {
-            Classes classObj = new Classes();
-            classObj.setClassID(rs.getInt("ClassID"));
-            classObj.setClassName(rs.getString("ClassName"));
-            uniqueClasses.add(classObj);
+        String sql = "SELECT DISTINCT c.ClassID, c.ClassName "
+                + "FROM Class c "
+                + "JOIN Users u ON c.UserID = u.UserID "
+                + "WHERE u.UserID = ?";
+
+        try ( PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Classes classObj = new Classes();
+                classObj.setClassID(rs.getInt("ClassID"));
+                classObj.setClassName(rs.getString("ClassName"));
+                uniqueClasses.add(classObj);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+
+        return uniqueClasses;
     }
-
-    return uniqueClasses;
-}
-
 
     public List<subject> getTeacherSubjects(int userId) {
         List<subject> uniqueSubjects = new ArrayList<>();
@@ -147,8 +146,7 @@ public class ClassDAO extends MyDAO {
                 + "GROUP BY c.ClassName "
                 + "ORDER BY c.ClassName";
 
-        try ( PreparedStatement ps = connection.prepareStatement(query);  
-                ResultSet rs = ps.executeQuery()) {
+        try ( PreparedStatement ps = connection.prepareStatement(query);  ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Classes cls = new Classes();
@@ -161,12 +159,12 @@ public class ClassDAO extends MyDAO {
         }
         return uniqueClassesList;
     }
-    
+
     public boolean addUserToClass(int userID, int classID) {
-        String sql = "INSERT INTO Class (UserID, ClassName) " +
-                    "SELECT ?, ClassName FROM Class WHERE ClassID = ?";
-        
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        String sql = "INSERT INTO Class (UserID, ClassName) "
+                + "SELECT ?, ClassName FROM Class WHERE ClassID = ?";
+
+        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userID);
             stmt.setInt(2, classID);
 
@@ -174,6 +172,18 @@ public class ClassDAO extends MyDAO {
             return affectedRows > 0;
         } catch (SQLException e) {
             return false;
+        }
+    }
+
+    public void updateUserClass(int userId, int classId) {
+        String sql = "UPDATE Class SET ClassID = ? WHERE UserID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, classId);
+            st.setInt(2, userId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error in updateUserClass: " + e.getMessage());
         }
     }
 
