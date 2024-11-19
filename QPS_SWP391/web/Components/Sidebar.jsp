@@ -9,7 +9,7 @@
             .sidebar {
                 height: 100%;
                 min-height: 500px;
-                width: 215px;
+                width: 17%;
                 position: fixed;
                 color: white;
                 display: flex;

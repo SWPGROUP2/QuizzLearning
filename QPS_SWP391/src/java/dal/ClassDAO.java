@@ -71,6 +71,7 @@ public class ClassDAO extends MyDAO {
     public List<Classes> getUniqueClasses(int userId) {
         List<Classes> uniqueClasses = new ArrayList<>();
 
+
         String sql = "SELECT DISTINCT c.ClassID, c.ClassName "
                 + "FROM Class c "
                 + "JOIN Users u ON c.UserID = u.UserID "
@@ -80,13 +81,21 @@ public class ClassDAO extends MyDAO {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) {
-                Classes classObj = new Classes();
-                classObj.setClassID(rs.getInt("ClassID"));
-                classObj.setClassName(rs.getString("ClassName"));
-                uniqueClasses.add(classObj);
+            if (rs != null) {
+                while (rs.next()) {
+                    Integer classID = rs.getInt("ClassID");
+                    String className = rs.getString("ClassName");
+
+                    if (className != null) {
+                        Classes classObj = new Classes();
+                        classObj.setClassID(classID);
+                        classObj.setClassName(className);
+                        uniqueClasses.add(classObj);
+                    }
+                }
             }
         } catch (SQLException e) {
+            System.err.println("Error while fetching unique classes: " + e.getMessage());
             e.printStackTrace();
         }
 

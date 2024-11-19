@@ -77,8 +77,8 @@
                     <label for="searchQuery">Search Test:</label>
                     <input type="text" id="searchQuery" name="searchQuery" value="${searchQuery}" placeholder="Search test by name" class="form-control"/>
 
-                    <label for="classId">Class:</label>
-                    <select id="classId" name="className" class="form-control">
+                    <label for="className">Class:</label>
+                    <select id="className" name="className" class="form-control">
                         <option value="">All Classes</option>
                         <c:forEach var="entry" items="${uniqueClasses}">
                             <option value="${entry.className}" ${entry.className == selectedClassName ? 'selected' : ''}>${entry.className}</option>
@@ -139,7 +139,6 @@
                             </tbody>
                         </table>
 
-                        <!-- Pagination -->
                         <div class="pagination">
                             <c:if test="${currentPage > 1}">
                                 <a href="test-list?page=${currentPage - 1}" class="btn btn-secondary">Previous</a>
