@@ -70,16 +70,10 @@ public class TestList extends HttpServlet {
             List<Integer> subjectIds = testDAO.getSubjectIdsByUserId(userId);
 
             if (className != null && !className.isEmpty()) {
-
-                tests = testDAO.getAllTestsByClassNamesAndSubjectIds(
-                        userId, classNames, subjectIds, searchQuery, currentPage, testsPerPage
-                );
+                tests = testDAO.getAllTestsByClassNamesAndSubjectIds(userId, classNames, subjectIds, searchQuery, currentPage, testsPerPage);
             } else {
                 if (!classNames.isEmpty() && !subjectIds.isEmpty()) {
-
-                    tests = testDAO.getAllTestsByClassNamesAndSubjectIds(
-                            userId, classNames, subjectIds, searchQuery, currentPage, testsPerPage
-                    );
+                    tests = testDAO.getAllTestsByClassNamesAndSubjectIds(userId, classNames, subjectIds, searchQuery, currentPage, testsPerPage);
                 }
             }
         }
