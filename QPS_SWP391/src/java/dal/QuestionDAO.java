@@ -301,19 +301,34 @@ public int getFilteredQuestionCount(String subjectId, String chapterId, String q
 public Map<Integer, String> getUniqueSubjects(int userId) {
     Map<Integer, String> uniqueSubjects = new LinkedHashMap<>();
     
-    String subjectQuery = "SELECT DISTINCT s.SubjectID, s.SubjectName "
-                        + "FROM Subject s "
-                        + "JOIN TeacherSubjects ts ON s.SubjectID = ts.SubjectID "
-                        + "WHERE ts.UserID = ?";
+    String classQuery = "SELECT DISTINCT c.ClassID "
+                      + "FROM Class c "
+                      + "WHERE c.UserID = ?";
     
-    try (PreparedStatement stmt = con.prepareStatement(subjectQuery)) {
+    try (PreparedStatement stmt = con.prepareStatement(classQuery)) {
         stmt.setInt(1, userId); 
         
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                int subjectId = rs.getInt("SubjectID");
-                String subjectName = rs.getString("SubjectName");
-                uniqueSubjects.put(subjectId, subjectName);  
+                int classId = rs.getInt("ClassID");
+                
+                String subjectQuery = "SELECT DISTINCT s.SubjectID, s.SubjectName "
+                                    + "FROM Subject s "
+                                    + "JOIN TeacherSubjects ts ON s.SubjectID = ts.SubjectID "
+                                    + "JOIN Class c ON ts.UserID = c.UserID "
+                                    + "WHERE c.ClassID = ?";
+                
+                try (PreparedStatement subjectStmt = con.prepareStatement(subjectQuery)) {
+                    subjectStmt.setInt(1, classId); 
+                    
+                    try (ResultSet subjectRs = subjectStmt.executeQuery()) {
+                        while (subjectRs.next()) {
+                            int subjectId = subjectRs.getInt("SubjectID");
+                            String subjectName = subjectRs.getString("SubjectName");
+                            uniqueSubjects.put(subjectId, subjectName);  
+                        }
+                    }
+                }
             }
         }
     } catch (SQLException e) {
