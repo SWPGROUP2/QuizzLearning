@@ -31,27 +31,43 @@ public class ClassDAO extends MyDAO {
             while (rs.next()) {
                 int classId = rs.getInt("ClassID");
                 String className = rs.getString("ClassName");
-                int userId = rs.getInt("UserID");
 
-                classList.add(new Classes(classId, className, userId));
+                classList.add(new Classes(classId, className));
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        } 
 
         return classList;
     }
+    
+public List<Classes> getAllClassesList(String searchKeyword) {
+    List<Classes> classList = new ArrayList<>();
+    String query = "SELECT ClassID, ClassName FROM Class";
+
+    if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+        query += " WHERE ClassName LIKE ?";
+    }
+
+    try (PreparedStatement stmt = con.prepareStatement(query)) {
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            stmt.setString(1, "%" + searchKeyword + "%");
+        }
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                int classID = rs.getInt("ClassID");
+                String className = rs.getString("ClassName");
+
+                classList.add(new Classes(classID, className));
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return classList;
+}
+
 
     public String getClassNameById(int classId) {
         String sql = "SELECT ClassName FROM Class WHERE ClassID = ?";
@@ -115,7 +131,7 @@ public class ClassDAO extends MyDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                // Add to unique subjects list
+
                 subject subjectObj = new subject();
                 subjectObj.setSubjectId(rs.getInt("SubjectID"));
                 subjectObj.setSubjectName(rs.getString("SubjectName"));
@@ -130,7 +146,8 @@ public class ClassDAO extends MyDAO {
 
     public List<Classes> getClassesByTeacherId(int userId) {
         List<Classes> classList = new ArrayList<>();
-        String sql = "SELECT * FROM Class WHERE UserID = ?";
+        String sql = "SELECT c.ClassID, c.className FROM Class c JOIN Users u On u.ClassID = c.ClassID WHERE UserID = ?";
+                      
 
         try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);

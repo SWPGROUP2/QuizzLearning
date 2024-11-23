@@ -18,7 +18,6 @@
                 left: 0;
                 top: 0;
             }
-
             .sidebar .nav-item {
                 margin-bottom: 15px;
             }
@@ -95,6 +94,9 @@
                 %>
                 <li class="nav-item">
                     <a class="btn" href="subject-list">Subject List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn" href="classlist">Class List</a>
                 </li>
                 <% 
                         } else if (roleId == 3) {

@@ -88,8 +88,8 @@
                     <label for="subjectId">Subject:</label>
                     <select id="subjectId" name="subjectId" class="form-control">
                         <option value="">All Subjects</option>
-                        <c:forEach var="entry" items="${uniqueSubjects}">
-                            <option value="${entry.key}" ${entry.key == selectedSubjectId ? 'selected' : ''}>${entry.value}</option>
+                        <c:forEach var="entry" items="${teacherSubjects}">
+                            <option value="${entry.subjectId}" ${entry.subjectId == selectedSubjectId ? 'selected' : ''}>${entry.subjectName}</option>
                         </c:forEach>
                     </select>
 
