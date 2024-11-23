@@ -60,6 +60,10 @@
         <servlet-name>UpdateUserController</servlet-name>
         <servlet-class>controllers.UpdateUserController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ClassList</servlet-name>
+        <servlet-class>controllers.ClassList</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DetailTestController</servlet-name>
         <url-pattern>/detailtest</url-pattern>
@@ -127,6 +131,10 @@
     <servlet-mapping>
         <servlet-name>UpdateUserController</servlet-name>
         <url-pattern>/updateuser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ClassList</servlet-name>
+        <url-pattern>/classlist</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>

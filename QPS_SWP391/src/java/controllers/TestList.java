@@ -2,6 +2,8 @@ package controllers;
 
 import dal.ClassDAO;
 import dal.QuestionDAO;
+import dal.SubjectDAO;
+import dal.TeacherSubjectsDAO;
 import dal.TestDAO;
 import java.io.IOException;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import models.Classes;
 import models.Test;
 import models.User;
+import models.subject;
 
 public class TestList extends HttpServlet {
 
@@ -38,17 +41,20 @@ public class TestList extends HttpServlet {
         HttpSession session = request.getSession();
         User loggedInUser = (User) session.getAttribute("account");
 
-        if (loggedInUser == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
         int userId = loggedInUser.getUserId();
-        int roleId = loggedInUser.getRoleId();
 
-        QuestionDAO questionDAO = new QuestionDAO();
-        Map<Integer, String> uniqueSubjects = questionDAO.getUniqueSubjects(userId);
-
+        SubjectDAO subjectDao = new SubjectDAO();
+        TeacherSubjectsDAO teacherSubjectDao = new TeacherSubjectsDAO();
+        
+        List<subject> allSubjects = subjectDao.getAllSubject();
+        List<Integer> assignedSubjectIds = teacherSubjectDao.getAssignedSubjectIdsByTeacherId(userId);
+        List<subject> teacherSubjects = new ArrayList<>();
+        for (subject s : allSubjects) {
+            if (assignedSubjectIds.contains(s.getSubjectId())) {
+                teacherSubjects.add(s);
+            }
+        }
+        
         ClassDAO classDAO = new ClassDAO();
         List<Classes> uniqueClasses = classDAO.getUniqueClasses(userId);
         if (uniqueClasses == null) {
@@ -60,23 +66,7 @@ public class TestList extends HttpServlet {
             parsedSubjectId = Integer.parseInt(subjectIdParam);
         }
 
-        if (roleId == 3) {
-            tests = testDAO.getAllTestsByClassNameAndSubjectId(
-                    userId, className, parsedSubjectId, searchQuery, currentPage, testsPerPage
-            );
-        } else {
-
-            List<String> classNames = testDAO.getClassNamesByUserId(userId);
-            List<Integer> subjectIds = testDAO.getSubjectIdsByUserId(userId);
-
-            if (className != null && !className.isEmpty()) {
-                tests = testDAO.getAllTestsByClassNamesAndSubjectIds(userId, classNames, subjectIds, searchQuery, currentPage, testsPerPage);
-            } else {
-                if (!classNames.isEmpty() && !subjectIds.isEmpty()) {
-                    tests = testDAO.getAllTestsByClassNamesAndSubjectIds(userId, classNames, subjectIds, searchQuery, currentPage, testsPerPage);
-                }
-            }
-        }
+            tests = testDAO.getAllTestsByClassNameAndSubjectId(userId, className, parsedSubjectId, searchQuery, currentPage, testsPerPage);
 
         if (tests != null) {
             for (Test test : tests) {
@@ -89,7 +79,7 @@ public class TestList extends HttpServlet {
         int totalPages = (int) Math.ceil((double) totalTests / testsPerPage);
 
         request.setAttribute("uniqueClasses", uniqueClasses);
-        request.setAttribute("uniqueSubjects", uniqueSubjects);
+        request.setAttribute("teacherSubjects", teacherSubjects);
         request.setAttribute("tests", tests);
         request.setAttribute("searchQuery", searchQuery);
         request.setAttribute("currentPage", currentPage);

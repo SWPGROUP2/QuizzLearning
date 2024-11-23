@@ -77,9 +77,9 @@
                         <label for="subjectFilter">Subject:</label>
                         <select id="subjectFilter" name="subjectId" class="form-control" onchange="autoSubmitForm()">
                             <option value="">All Subjects</option>
-                            <c:forEach var="entry" items="${uniqueSubjects}">
-                                <option value="${entry.key}" <c:if test="${param.subjectId  == entry.key}">selected</c:if>>
-                                    ${entry.value}
+                            <c:forEach var="entry" items="${teacherSubjects}">
+                                <option value="${entry.subjectId}" <c:if test="${param.subjectId  == entry.subjectId}">selected</c:if>>
+                                    ${entry.subjectName}
                                 </option>
                             </c:forEach>
                         </select>

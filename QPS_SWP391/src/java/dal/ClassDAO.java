@@ -115,7 +115,7 @@ public class ClassDAO extends MyDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                // Add to unique subjects list
+
                 subject subjectObj = new subject();
                 subjectObj.setSubjectId(rs.getInt("SubjectID"));
                 subjectObj.setSubjectName(rs.getString("SubjectName"));
@@ -130,7 +130,8 @@ public class ClassDAO extends MyDAO {
 
     public List<Classes> getClassesByTeacherId(int userId) {
         List<Classes> classList = new ArrayList<>();
-        String sql = "SELECT * FROM Class WHERE UserID = ?";
+        String sql = "SELECT c.ClassID, c.className FROM Class c JOIN Users u On u.ClassID = c.ClassID WHERE UserID = ?";
+                      
 
         try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
