@@ -1,10 +1,9 @@
--- Drop the existing database if it exists and create a fresh one
+
 DROP DATABASE IF EXISTS SWPQuiz;
 CREATE DATABASE SWPQuiz;
 
 USE SWPQuiz;
 
--- Create Roles table
 CREATE TABLE Roles (
     RoleID INT AUTO_INCREMENT PRIMARY KEY,
     Role VARCHAR(255) CHARACTER SET utf8mb4
@@ -12,7 +11,6 @@ CREATE TABLE Roles (
 
 INSERT INTO Roles (Role) VALUES ('student'), ('admin'), ('teacher');
 
--- Create Users table with proper data types for users
 CREATE TABLE Users (
     UserID INT AUTO_INCREMENT PRIMARY KEY,
     UserName VARCHAR(255) CHARACTER SET utf8mb4,
@@ -20,29 +18,23 @@ CREATE TABLE Users (
     Email VARCHAR(255) CHARACTER SET utf8mb4 UNIQUE,  -- Ensure email is unique
     Password VARCHAR(255) CHARACTER SET utf8mb4,
     PhoneNumber VARCHAR(15),
-    Avatar VARCHAR(5000) DEFAULT 'https://i.pinimg.com/originals/26/82/bf/2682bf05bc23c0b6a1145ab9c966374b.png',
+    Avatar VARCHAR(5000) DEFAULT 'assets/avatar/default-avatar.png',
     FullName VARCHAR(100) CHARACTER SET utf8mb4,
     DoB DATE,
-    StartDate DATE,  
-    EndDate DATE,    -- New column for contract end date
+    StartDate DATE,
+	ClassID INT,
+    EndDate DATE,    
     Status ENUM('Active', 'Inactive') DEFAULT 'Active',
     FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
 );
 
-INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, FullName, DoB, StartDate, EndDate, Status)
+INSERT INTO Users (UserName, RoleID, ClassID, Email, Password, PhoneNumber, FullName, DoB, StartDate, EndDate, Status)
 VALUES 
-('user1', 1, 'student@example.com', '1', '0123456789', 'Student One', '2000-01-01', '2024-01-01', '2025-01-01', 'Active'),
-('user2', 2, 'admin@example.com', '1', '0987654321', 'Admin One', '1985-05-15', '2024-01-01', '2025-01-01', 'Active'),
-('user3', 3, 'teacher@example.com', '1', '0112233445', 'Teacher One', '1978-08-23', '2024-01-01', '2025-01-01', 'Active'),
-('user4', 1, 'student1@example.com', '1', '0109876543', 'Student Two', '2001-03-12', '2024-01-01', '2025-01-01', 'Active'),
-('user5', 2, 'admin1@example.com', '1', '0192837465', 'Admin Two', '1990-07-30', '2024-01-01', '2025-01-01', 'Active'),
-('user6', 3, 'teacher1@example.com', '1', '0223456789', 'Teacher Two', '1982-02-14', '2024-01-01', '2025-01-01', 'Active'),
-('user7', 1, 'student2@example.com', '1', '0334455667', 'Student Three', '1999-09-09', '2024-11-06', '2023-01-01', 'Active'),
-('user8', 2, 'admin2@example.com', '1', '0445566778', 'Admin Three', '1983-11-11', '2024-01-01', '2025-01-01', 'Active'),
-('user9', 3, 'teacher2@example.com', '1', '0556677889', 'Teacher Three', '1986-04-04', '2024-01-01', '2025-01-01', 'Inactive'),
-('user10', 1, 'student3@example.com', '1', '0667788990', 'Student Four', '2002-12-22', '2024-11-09', '2025-01-01', 'Inactive');
+('user1', 2, null, 'admin@example.com', '1', '0987654321', 'Admin One', '1985-05-15', '2024-01-01', '2025-01-01', 'Active'),
+('user2', 3, 1, 'teacher@example.com', '1', '0987654322', 'Teacher One', '1985-05-15', '2024-01-01', '2025-01-01', 'Active'),
+('user3', 1, 1, 'student@example.com', '1', '0987654323', 'Student One', '1985-05-15', '2024-01-01', '2025-01-01', 'Active'),
+('user4', 1, 2, 'student2@example.com', '1', '0987654323', 'Student Two', '1985-05-15', '2024-01-01', '2025-01-01', 'Active');
 
--- Create Subject table
 CREATE TABLE Subject (
     SubjectID INT AUTO_INCREMENT PRIMARY KEY,
     SubjectName VARCHAR(255) CHARACTER SET utf8mb4,
@@ -50,24 +42,13 @@ CREATE TABLE Subject (
     Thumbnail VARCHAR(255) CHARACTER SET utf8mb4
 );
 
-INSERT INTO Subject (SubjectName, Title, Thumbnail) 
-VALUES 
-('JPT', 'Japanese', 'https://cf.quizizz.com/img/course-assets/title_imgs/2%20-%20Mathematics.png'),
-('IELTS', 'English', 'https://cf.quizizz.com/img/course-assets/title_imgs/1%20-%20English%20and%20Language%20Arts.png'),
-('TOPIK', 'Korean', 'https://cf.quizizz.com/img/course-assets/title_imgs/3%20-%20Social%20Studies.png'),
-('Test', 'World Languages', 'https://cf.quizizz.com/img/course-assets/title_imgs/5-%20World%20Languages.png');
-
--- Create Class table
-CREATE TABLE Class (
+CREATE TABLE Class (	
     ClassID INT auto_increment primary KEY,
-    ClassName VARCHAR(255) CHARACTER SET utf8mb4,
-    UserID INT,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID) 
+    ClassName VARCHAR(255) CHARACTER SET utf8mb4
 );
 
-INSERT INTO Class (ClassName, UserID) VALUES ('Class A', 1), ('Class A', 3), ('Class B', 3),('Class A', 10),('Class A', 4),('Class A', 6),('Class B', 7),('Class A', 9),('Class A', 2),('Class A', 5),('Class A', 8);
+INSERT INTO Class (ClassName) VALUES ('Class A'), ('Class B'), ('Class C');
 
--- Create TeacherSubjects table
 CREATE TABLE TeacherSubjects (
     TeacherSubjectID INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT,
@@ -77,28 +58,6 @@ CREATE TABLE TeacherSubjects (
      
 );
 
-INSERT INTO TeacherSubjects (UserID, SubjectID)
-VALUES 
-(4, 2),
-(1, 2),
-(1, 1),
-(3, 1), -- Teacher with UserID 3 can teach Japanese
-(3, 2), -- Teacher with UserID 3 can also teach English
-(6, 3); -- Teacher with UserID 6 can teach Korean
-select * from Users;
-SELECT t.TestID,
-t.SubjectID,
-t.TestName,
-t.Duration,
-t.ClassID,
-s.SubjectName,
-c.ClassName
-FROM Tests t
-JOIN Class c ON t.ClassID = c.ClassID
-JOIN Subject s ON t.SubjectID = s.SubjectID
-WHERE c.ClassName IN ("Class A");
-
--- Create QuestionType table
 CREATE TABLE QuestionType (
     QuestionTypeID INT AUTO_INCREMENT PRIMARY KEY,	
     QuestionTypeName VARCHAR(255) CHARACTER SET utf8mb4
@@ -106,7 +65,6 @@ CREATE TABLE QuestionType (
 
 INSERT INTO QuestionType (QuestionTypeName) VALUES ('Multiple-choice'), ('Short-answer');
 
--- Create Questions table
 CREATE TABLE Questions (
     QuestionID INT AUTO_INCREMENT PRIMARY KEY,
     SubjectID INT,
@@ -117,7 +75,6 @@ CREATE TABLE Questions (
     FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID) ON DELETE CASCADE
 );
 
--- Create Options table
 CREATE TABLE Options (
     OptionID INT AUTO_INCREMENT PRIMARY KEY,
     QuestionID INT,
@@ -126,7 +83,6 @@ CREATE TABLE Options (
     FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID) ON DELETE CASCADE
 );
 
--- Create Tests table
 CREATE TABLE Tests (
     TestID INT AUTO_INCREMENT PRIMARY KEY,
     SubjectID INT,
@@ -140,7 +96,6 @@ CREATE TABLE Tests (
     FOREIGN KEY (ClassID) REFERENCES Class(ClassID)
 );
 
--- Create Test_Questions table
 CREATE TABLE Test_Questions (
     TestQuestionsID INT AUTO_INCREMENT PRIMARY KEY,
     TestID INT,
@@ -149,7 +104,6 @@ CREATE TABLE Test_Questions (
     FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID) ON DELETE CASCADE
 );
 
--- Create TermSets table
 CREATE TABLE TermSets (
     TermSetID INT AUTO_INCREMENT PRIMARY KEY,
     TermSetName VARCHAR(255) CHARACTER SET utf8mb4,
@@ -158,7 +112,6 @@ CREATE TABLE TermSets (
     FOREIGN KEY (CreatedBy) REFERENCES Users(UserID)
 );
 
--- Create Terms table
 CREATE TABLE Terms (
     TermID INT auto_increment PRIMARY KEY,
     TermSetID INT,
@@ -167,14 +120,13 @@ CREATE TABLE Terms (
     FOREIGN KEY (TermSetID) REFERENCES TermSets(TermSetID)
 );
 
--- Create StudentAnswers table
 CREATE TABLE StudentAnswers (
     answer_id INT PRIMARY KEY AUTO_INCREMENT,
     student_id INT,
     test_id INT,
     question_id INT,
     option_id INT,
-    answer_text TEXT,  -- For short answer type questions
+    answer_text TEXT,
     answered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (student_id) REFERENCES Users(UserID),
     FOREIGN KEY (test_id) REFERENCES Tests(TestID),
@@ -182,7 +134,6 @@ CREATE TABLE StudentAnswers (
     FOREIGN KEY (option_id) REFERENCES Options(OptionID)
 );
 
--- Create TestResults table
 CREATE TABLE TestResults (
     result_id INT PRIMARY KEY AUTO_INCREMENT,
     student_id INT,
@@ -192,97 +143,3 @@ CREATE TABLE TestResults (
     FOREIGN KEY (student_id) REFERENCES Users(UserID),
     FOREIGN KEY (test_id) REFERENCES Tests(TestID)
 );
-
-INSERT INTO Questions (SubjectID, ChapterID, QuestionTypeID, Question) 
-VALUES 
--- Các câu hỏi cho môn Nhật
-(1, 1, 1, 'Tokyo là thủ đô của nước nào?'),  
-(1, 1, 1, 'Osaka là thành phố lớn thứ hai của Nhật Bản?'),  
-(1, 2, 2, 'Hãy viết một đoạn văn ngắn giới thiệu về gia đình bạn.'),  
-(1, 2, 1, 'Kyoto nổi tiếng với gì?'),  
-(1, 2, 2, 'Hãy mô tả một ngày trong cuộc sống của bạn bằng tiếng Nhật.'), 
-
--- Các câu hỏi cho môn Anh
-(2, 1, 1, 'What is the capital of the UK?'),  
-(2, 1, 1, 'What is the largest city in the UK?'),  
-(2, 2, 2, 'Write an essay about your favorite book.'),  	
-(2, 2, 1, 'What is the most famous landmark in London?'),  
-(2, 2, 2, 'Describe your daily routine in English.'), 
-
--- Các câu hỏi cho môn Hàn
-(3, 1, 1, 'What is the capital of South Korea?'),  
-(3, 1, 1, 'What is the official language of South Korea?'),  
-(3, 2, 2, 'Describe your daily routine in Korean.'),  
-(3, 2, 1, 'What is the traditional food of Korea?'),  
-(3, 2, 2, 'Write a short paragraph about your favorite Korean drama.');  
-
-INSERT INTO Options (QuestionID, OptionText, IsCorrect) 
-VALUES 
-(1, 'Paris - France', 0), 
-(1, 'Tokyo', 1),        
-(1, 'HN-HCM', 0), 
-(1, 'Kyoto', 1),    
-(2, 'Yes', 1),
-(2, 'No', 0),
-(2, 'Maybe', 1),
-(2, 'Perhap', 0),
-(3, 'This is my family.', 1),
-(3, 'I live alone.', 0),
-(3, 'This is not my family.', 1),
-(3, 'I live.', 0),
-(4, 'Famous gardens.', 1),
-(4, 'Modern buildings.', 0),
-(4, 'Famous temples.', 1),
-(4, 'Modern chicks.', 0),
-(5, 'I wake up at...', 1),
-
-(6, 'London', 1),
-(6, 'Birmingham', 0),
-(7, 'Yes', 1),
-(7, 'No', 0),
-(8, 'Big Ben.', 1),
-(8, 'The Eiffel Tower.', 0),
-(9, 'I love eating Kimbap.', 1),
-(9, 'I don’t like spicy food.', 0),
-(10, 'I like playing soccer.', 1);
-
-INSERT INTO Tests (SubjectID, TestName, Duration, ClassID, test_startTime, test_endTime, test_status) 
-VALUES 
-(1, 'English Midterm Test', 90, 1, '2024-11-15 09:00:00', '2024-11-15 10:30:00', 0),
-(1, 'English Final Exam', 120, 2, '2024-12-20 09:00:00', '2024-12-20 11:00:00', 0),
-(2, 'Japanese Language Test N5', 102, 3, '2024-11-16 10:00:00', '2024-11-16 11:00:00', 0),
-(2, 'Japanese Final Exam', 120, 1, '2024-12-22 13:00:00', '2024-12-22 15:00:00', 0),
-(3, 'Korean Proficiency Test', 100, 2, '2024-11-18 14:00:00', '2024-11-18 15:15:00', 0),
-(3, 'Korean Final Exam', 120, 3, '2024-12-23 08:30:00', '2024-12-23 10:30:00', 0);
-
-
-INSERT INTO Test_Questions (TestID, QuestionID) 
-VALUES 
-(1, 1), (1, 2), (1, 3), (1, 4), (1, 5),  -- Câu hỏi cho bài kiểm tra Nhật Bản 1
-(2, 6), (2, 7), (2, 8), (2, 9), (2, 10),  -- Câu hỏi cho bài kiểm tra tiếng Anh 1
-(3, 11), (3, 12), (3, 13), (3, 14), (3, 15);  -- Câu hỏi cho bài kiểm tra tiếng Hàn 1
-
-INSERT INTO TermSets (TermSetName, TermSetDescription, CreatedBy) VALUES
-('Chào hỏi trong tiếng Nhật', 'Một số câu chào hỏi cơ bản thường ngày trong tiếng Nhật', 1);
-
-INSERT INTO Terms (TermSetID, Term, Definition)
-VALUES 
-(1, 'おはようございます', 'Chào buổi sáng!'),
-(1, 'こんにちは', 'Chào buổi trưa!'),
-(1, 'こんばんは', 'Chào buổi tối!'),
-(1, 'すみません', 'Xin lỗi'),
-(1, 'どうも', 'Rất, xin chào, cảm ơn,...'),
-(1, 'ありがとう', 'Cảm ơn'),
-(1, 'どうもありがとうございます', 'Cảm ơn rất nhiều.'),
-(1, 'おやすみなさい', 'Chúc ngủ ngon.'),
-(1, 'さようなら', 'Tạm biệt.'),
-(1, 'わかりますか', 'Có hiểu không?'),
-(1, 'はい、わかりました', 'Vâng, tôi hiểu rồi'),
-(1, 'いただきます', 'Lời mời trước khi ăn, uống.'),
-(1, 'ごちそうさまでした', 'Cảm ơn sau khi ăn uống.');
-
-SELECT qt.QuestionTypeName FROM Questions q
-JOIN QuestionType qt ON q.QuestionTypeID = qt.QuestionTypeID
-WHERE q.QuestionID = 5;
-SELECT OptionText FROM Options WHERE QuestionID = 5
-select * from Options
