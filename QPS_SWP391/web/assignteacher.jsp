@@ -31,7 +31,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Assign Teacher to Subject</title>
         <style>
-            /* Bố cục chính */
             body {
                 font-family: Arial, sans-serif;
                 display: flex;
@@ -49,21 +48,38 @@
                 border-radius: 8px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
-
+            
             .form-container h1 {
                 font-size: 24px;
                 margin-bottom: 20px;
             }
-
-            .form-container div {
-                margin-bottom: 10px;
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                background-color: white;
+                margin-top: 20px;
             }
-
-            .form-container label {
-                margin-left: 10px;
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
             }
-
-            .form-container button {
+            th {
+                background-color: #007bff;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+            tr:hover {
+                background-color: #ddd;
+            }
+            .btn-container {
+                margin-top: 20px; /* Khoảng cách giữa bảng và nút */
+                display: flex;
+                gap: 10px; /* Khoảng cách giữa các nút */
+            }
+            .btn-primary {
                 background-color: #007bff;
                 color: white;
                 border: none;
@@ -72,11 +88,9 @@
                 cursor: pointer;
                 font-size: 16px;
             }
-
-            .form-container button:hover {
+            .btn-primary:hover {
                 background-color: #0056b3;
             }
-
             .btn-secondary {
                 background-color: #6c757d;
                 color: white;
@@ -84,19 +98,15 @@
                 border-radius: 4px;
                 text-decoration: none;
             }
-
             .btn-secondary:hover {
                 background-color: #5a6268;
             }
         </style>
     </head>
     <body>
-
-        <!-- Sidebar -->
         <div class="col-md-2 p-0"">
             <%@include file="Components/Sidebar.jsp" %>
         </div>
-
         <!-- Content -->
         <div class="content">
             <div class="form-container">
@@ -104,18 +114,47 @@
                 <form action="assign-teacher" method="POST">
                     <input type="hidden" name="subjectId" value="${subject.getSubjectId()}" />
 
-                    <c:forEach var="teacher" items="${teachers}">
-                        <div>
-                            <input type="checkbox" name="teacherIds" value="${teacher.getUserId()}"
-                                   <c:if test="${assignedTeacherIds.contains(teacher.getUserId())}">checked</c:if> />
-                            <label>${teacher.getFullName()}</label>
-                        </div>
-                    </c:forEach>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>FULL NAME</th>
+                                <th>ASSIGNED SUBJECTS</th>
+                                <th>ASSIGN</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="teacher" items="${teachers}">
+                                <tr>
+                                    <td>${teacher.getFullName()}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${not empty assignedSubjectsMap[teacher.userId]}">
+                                                <ul>
+                                                    <c:forEach var="subject" items="${assignedSubjectsMap[teacher.userId]}">
+                                                        <li>${subject.getSubjectName()}</li>
+                                                        </c:forEach>
+                                                </ul>
+                                            </c:when>
+                                            <c:otherwise>
+                                                No subjects assigned
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="teacherIds" value="${teacher.getUserId()}"
+                                               <c:if test="${assignedTeacherIds.contains(teacher.getUserId())}">checked</c:if> />
+                                        </td>
+                                    </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
 
-                    <button type="submit" class="btn btn-primary">Assign Users</button>
+                    <!-- Nút hành động -->
+                    <div class="btn-container">
+                        <button type="submit" class="btn-primary">Assign Selected Teachers</button>
+                        <a href="subject-list" class="btn-secondary">Back to Subject List</a>
+                    </div>
                 </form>
-
-                <a href="subject-list" class="btn btn-secondary">Back to Subject List</a>
             </div>
         </div>
         <script>

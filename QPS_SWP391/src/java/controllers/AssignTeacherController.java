@@ -11,7 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AssignTeacherController extends HttpServlet {
 
@@ -28,6 +30,13 @@ public class AssignTeacherController extends HttpServlet {
 
         List<Integer> assignedTeacherIds = subjectDAO.getAssignedTeacherIds(subjectId);
 
+        Map<Integer, List<subject>> assignedSubjectsMap = new HashMap<>();
+        
+        for (User teacher : teachers) {
+            List<subject> assignedSubjects = subjectDAO.getAssignedSubjects(teacher.getUserId());
+            assignedSubjectsMap.put(teacher.getUserId(), assignedSubjects);
+        }
+        request.setAttribute("assignedSubjectsMap", assignedSubjectsMap);
         if (subject != null) {
             request.setAttribute("subject", subject);
             request.setAttribute("assignedTeacherIds", assignedTeacherIds);

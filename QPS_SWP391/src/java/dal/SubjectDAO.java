@@ -340,4 +340,30 @@ public class SubjectDAO extends MyDAO {
         }
         return assignedTeacherIds;
     }
+
+    public List<subject> getAssignedSubjects(int userId) {
+        List<subject> subjects = new ArrayList<>();
+        String query = "SELECT s.SubjectID AS SubjectID, s.SubjectName AS SubjectName "
+                + "FROM TeacherSubjects ts "
+                + "JOIN Subject s ON ts.SubjectID = s.SubjectID "
+                + "WHERE ts.UserID = ?";
+
+        try ( PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, userId);
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    subject subject = new subject();
+                    subject.setSubjectId(rs.getInt("SubjectID"));
+                    subject.setSubjectName(rs.getString("SubjectName"));
+                    // Set thêm các thông tin khác của subject nếu cần
+                    subjects.add(subject);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return subjects;
+    }
 }
