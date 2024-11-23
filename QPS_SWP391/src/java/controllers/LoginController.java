@@ -38,13 +38,10 @@ public class LoginController extends HttpServlet {
         session.setMaxInactiveInterval(1800);
 
         try {
-            // Use getUserWithStatus method to fetch user with dynamic status
             User user = userDao.getUserWithStatus(email, password);
             if (user != null) {
-                // Retrieve the status directly from the user object
                 String status = user.getStatus();
 
-                // Check if the account is inactive
                 if ("Inactive".equals(status)) {
                     String error = "Your account is currently inactive.";
                     request.setAttribute("email", email);
@@ -53,19 +50,17 @@ public class LoginController extends HttpServlet {
                     return;
                 }
 
-                // Proceed with login if user is active
                 int roleId = user.getRoleId();
                 int id = user.getUserId();
                 session.setAttribute("account", user);
                 session.setAttribute("user_id", id);
                 session.setAttribute("role_id", roleId);
 
-                // Redirect based on roleId
-                if (roleId == 3) { // Teacher
+                if (roleId == 3) { 
                     response.sendRedirect("teacherhome");
-                } else if (roleId == 2) { // Admin
+                } else if (roleId == 2) {
                     response.sendRedirect("adminhome");
-                } else { // Assume Student or other roles
+                } else { 
                     response.sendRedirect("studenthome");
                 }
             } else {

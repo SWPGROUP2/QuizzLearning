@@ -59,28 +59,6 @@ public class QuestionDAO extends MyDAO {
         return questionTypeList;
     }
 
-    public List<subject> getAllSubjects() {
-        List<subject> subjectList = new ArrayList<>();
-        String query = "SELECT SubjectID, SubjectName FROM Subjects"; // Replace with your actual table name and column names
-
-        try (
-                 Statement statement = con.createStatement();  ResultSet resultSet = statement.executeQuery(query)) {
-
-            while (resultSet.next()) {
-                int subjectId = resultSet.getInt("SubjectID");
-                String subjectName = resultSet.getString("SubjectName");
-
-                // Create a new Subject object and add it to the list
-                subject subject = new subject(subjectId, subjectName);
-                subjectList.add(subject);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();  // Handle exceptions as necessary
-        }
-
-        return subjectList;
-    }
 
 public List<Question> getFilteredQuestions(String subjectId, String chapterId, String questionTypeId, int currentPage, int questionsPerPage, int roleId, int userId, String questionSearch, String sortOrder) {
     List<Question> questionList = new ArrayList<>();
@@ -297,47 +275,6 @@ public int getFilteredQuestionCount(String subjectId, String chapterId, String q
         }
         return 0;
     }
-
-public Map<Integer, String> getUniqueSubjects(int userId) {
-    Map<Integer, String> uniqueSubjects = new LinkedHashMap<>();
-    
-    String classQuery = "SELECT DISTINCT c.ClassID "
-                      + "FROM Class c "
-                      + "WHERE c.UserID = ?";
-    
-    try (PreparedStatement stmt = con.prepareStatement(classQuery)) {
-        stmt.setInt(1, userId); 
-        
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                int classId = rs.getInt("ClassID");
-                
-                String subjectQuery = "SELECT DISTINCT s.SubjectID, s.SubjectName "
-                                    + "FROM Subject s "
-                                    + "JOIN TeacherSubjects ts ON s.SubjectID = ts.SubjectID "
-                                    + "JOIN Class c ON ts.UserID = c.UserID "
-                                    + "WHERE c.ClassID = ?";
-                
-                try (PreparedStatement subjectStmt = con.prepareStatement(subjectQuery)) {
-                    subjectStmt.setInt(1, classId); 
-                    
-                    try (ResultSet subjectRs = subjectStmt.executeQuery()) {
-                        while (subjectRs.next()) {
-                            int subjectId = subjectRs.getInt("SubjectID");
-                            String subjectName = subjectRs.getString("SubjectName");
-                            uniqueSubjects.put(subjectId, subjectName);  
-                        }
-                    }
-                }
-            }
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    
-    return uniqueSubjects;
-}
-
 
 public Set<Integer> getUniqueChapters() {
     Set<Integer> uniqueChapters = new HashSet<>();

@@ -27,11 +27,10 @@ public List<User> getFilteredUsers(String roleId, String status, String classNam
             + "u.FullName, u.DoB, u.StartDate, u.EndDate, u.Status, c.ClassID, c.ClassName "
             + "FROM Users u "
             + "JOIN Roles r ON u.RoleID = r.RoleID "
-            + "LEFT JOIN Class c ON u.UserID = c.UserID "
+            + "LEFT JOIN Class c ON u.ClassID = c.ClassID "
             + "WHERE 1=1 "
             + "AND (u.RoleID = 1 OR u.RoleID = 3) ");
 
-    // Apply filters
     if (roleId != null && !roleId.isEmpty()) {
         query.append(" AND u.RoleID = ? ");
     }

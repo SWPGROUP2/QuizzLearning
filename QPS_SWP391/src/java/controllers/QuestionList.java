@@ -1,6 +1,8 @@
 package controllers;
 
 import dal.QuestionDAO;
+import dal.SubjectDAO;
+import dal.TeacherSubjectsDAO;
 import dal.UserDAO;
 import models.Question;
 import models.QuestionType;
@@ -10,15 +12,16 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import models.User;
+import models.subject;
 
 public class QuestionList extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get filter parameters from the request
         String subjectId = request.getParameter("subjectId");
         String chapterId = request.getParameter("chapterId");
         String questionTypeId = request.getParameter("questionTypeId");
@@ -31,20 +34,23 @@ public class QuestionList extends HttpServlet {
         HttpSession session = request.getSession();
         User loggedInUser = (User) session.getAttribute("account");
 
-        // If the user is not logged in, redirect to login page
-        if (loggedInUser == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        // Retrieve the userId and roleId from the logged-in user
-        int userId = loggedInUser.getUserId();  // Assuming `User` has `getUserId()` method
-        int roleId = loggedInUser.getRoleId();  // Assuming `User` has `getRoleId()` method
+        int userId = loggedInUser.getUserId();  
+        int roleId = loggedInUser.getRoleId();  
         QuestionDAO questionDAO = new QuestionDAO();
-
+        SubjectDAO subjectDao = new SubjectDAO();
+        TeacherSubjectsDAO teacherSubjectDao = new TeacherSubjectsDAO();
+        
+        List<subject> allSubjects = subjectDao.getAllSubject();
+        List<Integer> assignedSubjectIds = teacherSubjectDao.getAssignedSubjectIdsByTeacherId(userId);
+        List<subject> teacherSubjects = new ArrayList<>();
+        for (subject s : allSubjects) {
+            if (assignedSubjectIds.contains(s.getSubjectId())) {
+                teacherSubjects.add(s);
+            }
+        }
         List<Question> questionList = questionDAO.getFilteredQuestions(subjectId, chapterId, questionTypeId, currentPage, questionsPerPage, roleId, userId, questionSearch, sortOrder);
 
-        Map<Integer, String> uniqueSubjects = questionDAO.getUniqueSubjects(userId);
+
         Set<Integer> uniqueChapters = questionDAO.getUniqueChapters();
         List<QuestionType> questionTypeList = questionDAO.getAllQuestionTypes();
         Map<Integer, String> uniqueQuestionTypes = questionDAO.getUniqueQuestionTypes();
@@ -54,7 +60,7 @@ public class QuestionList extends HttpServlet {
         request.setAttribute("questionList", questionList);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
-        request.setAttribute("uniqueSubjects", uniqueSubjects);
+        request.setAttribute("teacherSubjects", teacherSubjects);
         request.setAttribute("uniqueChapters", uniqueChapters);
         request.setAttribute("uniqueQuestionTypes", uniqueQuestionTypes);
         request.setAttribute("questionTypeList", questionTypeList);

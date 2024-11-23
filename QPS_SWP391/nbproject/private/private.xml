@@ -33,10 +33,12 @@
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/web/detailtest.jsp</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/controllers/AddSubject.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/models/Option.java</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/controllers/UpdateUserController.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/models/subject.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/dal/TermDAO.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/dal/QuestionDAO.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/web/editsubject.jsp</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/web/classlist.jsp</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/web/user-profile.jsp</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/controllers/AssignTeacherController.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/dal/TestQuestionDAO.java</file>
@@ -64,6 +66,8 @@
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/controllers/TermSetController.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/dal/UserDAO.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/web/assignteacher.jsp</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/controllers/ChangePasswordController.java</file>
+            <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/src/java/controllers/ClassList.java</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/web/WEB-INF/web.xml</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/web/edittest.jsp</file>
             <file>file:/C:/Users/LENOVO/Desktop/Github/QuizzLearning/QuizzLearning/QPS_SWP391/web/termlist.jsp</file>

@@ -84,7 +84,7 @@ public class TestDAO extends MyDAO {
                 + "FROM Tests t "
                 + "JOIN TeacherSubjects ts ON t.SubjectID = ts.SubjectID "
                 + "JOIN Subject s ON t.SubjectID = s.SubjectID "
-                + "JOIN Class c ON t.ClassID = c.ClassID "
+                + "JOIN Class c ON u.ClassID = c.ClassID "
                 + "WHERE ts.UserID = ?");
 
         if (subjectId != null && !subjectId.isEmpty()) {
@@ -140,9 +140,8 @@ public class TestDAO extends MyDAO {
         List<String> classNames = new ArrayList<>();
 
         String query = "SELECT c.ClassName "
-                + "FROM TeacherSubjects ts "
-                + "JOIN Class c ON ts.UserID = c.UserID "
-                + "JOIN Users u ON u.UserID = c.UserID "
+                + "FROM Users u   "
+                + "JOIN Class c ON u.ClassID = c.ClassID "
                 + "WHERE u.UserID = ?";
 
         try ( PreparedStatement stmt = con.prepareStatement(query)) {
@@ -243,9 +242,6 @@ public List<Test> getAllTestsByClassNameAndSubjectId(int userId, String classNam
 
 public List<Test> getAllTestsByClassNamesAndSubjectIds(int userId, List<String> classNames, List<Integer> subjectIds, String searchQuery, int currentPage, int testsPerPage) {
     List<Test> tests = new ArrayList<>();
-    if (classNames.isEmpty() || subjectIds.isEmpty()) {
-        return tests;
-    }
     try {
         String query = "SELECT t.TestID, t.SubjectID, t.TestName, t.Duration, t.ClassID, "
                      + "s.SubjectName, c.ClassName "
@@ -254,9 +250,7 @@ public List<Test> getAllTestsByClassNamesAndSubjectIds(int userId, List<String> 
                      + "JOIN Subject s ON t.SubjectID = s.SubjectID "
                      + "JOIN TeacherSubjects ts ON ts.SubjectID = t.SubjectID "
                      + "WHERE ts.UserID = ? "
-                     + "AND c.ClassName IN (" + String.join(",", Collections.nCopies(classNames.size(), "?")) + ") "
-                     + "AND t.SubjectID IN (" + String.join(",", Collections.nCopies(subjectIds.size(), "?")) + ") "
-                     + (searchQuery != null && !searchQuery.isEmpty() ? "AND t.TestName LIKE ? " : "")
+                    
                      + "LIMIT ? OFFSET ?";
 
         try (PreparedStatement ps = con.prepareStatement(query)) {
