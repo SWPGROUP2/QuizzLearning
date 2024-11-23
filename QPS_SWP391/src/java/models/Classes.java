@@ -9,17 +9,17 @@ import java.util.Objects;
 public class Classes {
     private int classID;
     private String className;
-    private int userId;
      private subject subject;
 
     public Classes() {
     }
 
-    public Classes(int classID, String className, int userId) {
+    public Classes(int classID, String className) {
         this.classID = classID;
         this.className = className;
-        this.userId = userId;
     }  
+
+
     
     public int getClassID() {
         return classID;
@@ -37,13 +37,6 @@ public class Classes {
         this.className = className;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
         public subject getSubject() {
         return subject;
     }

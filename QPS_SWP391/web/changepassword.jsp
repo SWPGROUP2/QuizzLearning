@@ -55,7 +55,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-2" ">
-                    <%@include file="Components/Sidebar.jsp" %> <!-- Include Sidebar -->
+                    <%@include file="Components/Sidebar.jsp" %> 
                 </div>
 
                 <div class="col-md-10 d-flex justify-content-center align-items-center" style="min-height: 100vh;">
