@@ -57,7 +57,6 @@ public class AddQuestionServlet extends HttpServlet {
 
         boolean hasError = false;
 
-        // Validate basic fields
         if (subjectIdStr == null || subjectIdStr.trim().isEmpty()) {
             request.setAttribute("errorMessage", "Vui lòng chọn môn học");
             hasError = true;

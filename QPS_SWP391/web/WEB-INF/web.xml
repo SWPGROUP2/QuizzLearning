@@ -64,6 +64,18 @@
         <servlet-name>ClassList</servlet-name>
         <servlet-class>controllers.ClassList</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddClassController</servlet-name>
+        <servlet-class>controllers.AddClassController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditClassController</servlet-name>
+        <servlet-class>controllers.EditClassController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteClassController</servlet-name>
+        <servlet-class>controllers.DeleteClassController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DetailTestController</servlet-name>
         <url-pattern>/detailtest</url-pattern>
@@ -135,6 +147,18 @@
     <servlet-mapping>
         <servlet-name>ClassList</servlet-name>
         <url-pattern>/classlist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddClassController</servlet-name>
+        <url-pattern>/addclass</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditClassController</servlet-name>
+        <url-pattern>/editclass</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteClassController</servlet-name>
+        <url-pattern>/deleteclass</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>

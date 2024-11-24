@@ -55,7 +55,6 @@
                         <h1 class="flex-grow-1 text-center mb-0">Class List</h1>
                     </div>
 
-                    <!-- Search Form -->
                     <form action="classlist" method="GET" class="mb-3">
                         <label for="classSearch">Search Class:</label>
                         <input type="text" id="classSearch" name="searchKeyword" value="${param.searchKeyword}" class="form-control d-inline-block" style="width: auto; min-width: 200px;" placeholder="Enter keyword">
@@ -88,8 +87,11 @@
                                             <td class="table-actions">
                                                 <a href="editclass?classId=${classObj.classID}" class="btn btn-primary btn-sm">Edit</a>
                                                 <form action="deleteclass" method="POST" style="display:inline;">
-                                                    <input type="hidden" name="classId" value="${classObj.classID}">
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this class?');">Delete</button>
+                                                    <input type="hidden" name="ClassID" value="${classObj.classID}">
+                                                    <button type="submit" class="btn btn-danger btn-sm" 
+                                                            onclick="return confirm('Are you sure you want to delete this class?If you do all the class member will be deleted also');">
+                                                        Delete
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>

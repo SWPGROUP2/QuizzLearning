@@ -110,7 +110,7 @@
         <!-- Content -->
         <div class="content">
             <div class="form-container">
-                <h1>Assign Teacher to Subject: ${subject.getSubjectName()}</h1>
+                <h1>Assign Users to Subject: ${subject.getSubjectName()}</h1>
                 <form action="assign-teacher" method="POST">
                     <input type="hidden" name="subjectId" value="${subject.getSubjectId()}" />
 
@@ -151,7 +151,7 @@
 
                     <!-- Nút hành động -->
                     <div class="btn-container">
-                        <button type="submit" class="btn-primary">Assign Selected Teachers</button>
+                        <button type="submit" class="btn-primary">Assign Selected Users</button>
                         <a href="subject-list" class="btn-secondary">Back to Subject List</a>
                     </div>
                 </form>

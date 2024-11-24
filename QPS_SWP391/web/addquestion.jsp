@@ -23,6 +23,14 @@
             .form-control {
                 border-radius: 20px;
             }
+            .alert-warning {
+                color: #856404;
+                background-color: #fff3cd;
+                border-color: #ffeeba;
+                padding: 15px;
+                margin-bottom: 20px;
+                border-radius: 4px;
+            }
         </style>
         <script>
             function showOptions() {
@@ -43,19 +51,28 @@
             </div>
             <div class="col-md-10 px-4 py-4" style="margin-top: 20px">
                 <h2 class="text-center mb-4">Add New Question</h2>
-                <div class="card">
-                    <div class="card-body">
-                        <c:if test="${not empty successMessage}">
-                            <div class="alert alert-success">
-                                <p>${successMessage}</p>
-                            </div>
-                        </c:if>
+                
+                <c:choose>
+                    <c:when test="${empty teacherSubjects}">
+                        <div class="alert alert-warning">
+                            <strong>Notice:</strong> You haven't been assigned to any subjects yet. 
+                            Please contact the administrator to assign you to subjects before creating questions.
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="card">
+                            <div class="card-body">
+                                <c:if test="${not empty successMessage}">
+                                    <div class="alert alert-success">
+                                        <p>${successMessage}</p>
+                                    </div>
+                                </c:if>
 
-                        <c:if test="${not empty errorMessage}">
-                            <div class="alert alert-danger">
-                                <p>${errorMessage}</p>
-                            </div>
-                        </c:if>
+                                <c:if test="${not empty errorMessage}">
+                                    <div class="alert alert-danger">
+                                        <p>${errorMessage}</p>
+                                    </div>
+                                </c:if>
 
                         <form action="addquestion" method="post">
                             <div class="form-group">
@@ -149,11 +166,13 @@
                             </div>
 
                             <div class="text-center">
-                                <button type="submit" class="btn btn-success">Add New Question</button>
+                                        <button type="submit" class="btn btn-success">Add New Question</button>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
-                    </div>
-                </div>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
     </body>
