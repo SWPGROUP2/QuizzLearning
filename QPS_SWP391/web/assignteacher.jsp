@@ -102,6 +102,11 @@
                 background-color: #5a6268;
             }
         </style>
+        <script>
+            function autoSubmitForm() {
+                document.getElementById("filterForm").submit();
+            }
+        </script>
     </head>
     <body>
         <div class="col-md-2 p-0"">
@@ -111,6 +116,23 @@
         <div class="content">
             <div class="form-container">
                 <h1>Assign Users to Subject: ${subject.getSubjectName()}</h1>
+                <form id="filterForm" action="assign-teacher" method="GET" class="filter-form mb-3">
+                    <input type="hidden" name="subjectId" value="${subject.getSubjectId()}" />
+                    <label for="classFilter">Class:</label>
+                    <select id="classFilter" name="classname" class="form-control" onchange="autoSubmitForm()">
+                        <option value="">All Classes</option>
+                        <c:forEach items="${uniqueClassesMap}" var="entry">
+                            <option value="${entry.key}" ${param.classname == entry.key ? "selected" : ""}>${entry.key}</option>
+                        </c:forEach>
+                    </select>
+
+                    <label for="roleFilter">Role:</label>
+                    <select id="roleFilter" name="roleId" class="form-control" onchange="autoSubmitForm()">
+                        <option value="">All Roles</option>
+                        <option value="1" ${param.roleId == '1' ? "selected" : ""}>Student</option>
+                        <option value="3" ${param.roleId == '3' ? "selected" : ""}>Teacher</option>
+                    </select>
+                </form>
                 <form action="assign-teacher" method="POST">
                     <input type="hidden" name="subjectId" value="${subject.getSubjectId()}" />
 
@@ -119,6 +141,7 @@
                             <tr>
                                 <th>FULL NAME</th>
                                 <th>ASSIGNED SUBJECTS</th>
+                                <th>ClASS</th>
                                 <th>ASSIGN</th>
                             </tr>
                         </thead>
@@ -140,6 +163,7 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
+                                    <td>${teacher.className}</td>
                                     <td>
                                         <input type="checkbox" name="teacherIds" value="${teacher.getUserId()}"
                                                <c:if test="${assignedTeacherIds.contains(teacher.getUserId())}">checked</c:if> />

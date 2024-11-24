@@ -1,5 +1,6 @@
 package controllers;
 
+import dal.AdminDAO;
 import dal.SubjectDAO;
 import dal.UserDAO;
 import models.User;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,16 +24,32 @@ public class AssignTeacherController extends HttpServlet {
             throws ServletException, IOException {
         String subjectIdParam = request.getParameter("subjectId");
         UserDAO userDAO = new UserDAO();
+        AdminDAO adminDAO = new AdminDAO();
+
         SubjectDAO subjectDAO = new SubjectDAO();
         int subjectId = Integer.parseInt(subjectIdParam);
+        String roleId = request.getParameter("roleId");
+        String className = request.getParameter("classname");
 
         subject subject = subjectDAO.getSubjectById(subjectId);
-        List<User> teachers = userDAO.getAllTeachersAndAdmins();
+        List<User> teachers = adminDAO.getFilteredUsers2(roleId, className);
 
         List<Integer> assignedTeacherIds = subjectDAO.getAssignedTeacherIds(subjectId);
 
         Map<Integer, List<subject>> assignedSubjectsMap = new HashMap<>();
-        
+
+        Map<String, Integer> uniqueClassesMap = new LinkedHashMap<>();
+
+        for (User teacher : teachers) {
+            String userClassName = teacher.getClassName();
+            Integer userClassId = teacher.getClassId();
+            if (userClassName != null && !userClassName.trim().isEmpty()) {
+                uniqueClassesMap.put(userClassName, userClassId);
+            }
+        }
+
+        request.setAttribute("uniqueClassesMap", uniqueClassesMap);
+
         for (User teacher : teachers) {
             List<subject> assignedSubjects = subjectDAO.getAssignedSubjects(teacher.getUserId());
             assignedSubjectsMap.put(teacher.getUserId(), assignedSubjects);
