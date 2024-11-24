@@ -39,8 +39,8 @@ public class UpdateUserProfile extends HttpServlet {
         String userName = request.getParameter("userName");
         String phoneNumber = request.getParameter("phoneNumber");
         String dob = request.getParameter("dob");
-        String startDate = request.getParameter("startDate");  // Added startDate
-        String endDate = request.getParameter("endDate");      // Added endDate
+        String startDate = request.getParameter("startDate");  
+        String endDate = request.getParameter("endDate");      
         String id = request.getParameter("userId");
         String placeWork = request.getParameter("placeWork");
         String schoolId = request.getParameter("schoolId");
@@ -66,18 +66,14 @@ public class UpdateUserProfile extends HttpServlet {
                 return;
             }
 
-            // Parse startDate and endDate if they are not empty or null
             Date start = parseDate(startDate);
             Date end = parseDate(endDate);
-            
-            // Convert java.util.Date to java.sql.Date for database update
+
             java.sql.Date sqlStartDate = (start != null) ? new java.sql.Date(start.getTime()) : null;
             java.sql.Date sqlEndDate = (end != null) ? new java.sql.Date(end.getTime()) : null;
 
-            // Update the user profile including the startDate and endDate
             userDAO.updateUserById(fullName, userName, phoneNumber, dob, Integer.parseInt(id), placeWork, schoolId, sqlStartDate, sqlEndDate);              
 
-            // Redirect based on user role
             if (userDAO.getUserById(Integer.parseInt(id)).getRoleId() == 1) {
                 response.sendRedirect("studenthome");
             } else if (userDAO.getUserById(Integer.parseInt(id)).getRoleId() == 3) {
@@ -96,10 +92,10 @@ public class UpdateUserProfile extends HttpServlet {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 return dateFormat.parse(dateString);
             } catch (ParseException e) {
-                return null; // Return null if the date is invalid
+                return null; 
             }
         }
-        return null; // Return null if the date string is empty or null
+        return null; 
     }
 
     private boolean isValidPhoneNumber(String phoneNumber) {
@@ -115,7 +111,7 @@ public class UpdateUserProfile extends HttpServlet {
             long ageMilli = currentDate.getTime() - dob.getTime();
             long ageYear = ageMilli / (1000 * 60 * 60 * 24 * 365L);
 
-            return ageYear >= 15;
+            return ageYear >= 5;
         } catch (ParseException e) {
             return false;
         }
