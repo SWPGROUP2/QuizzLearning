@@ -52,8 +52,12 @@
                 height: 70px;
                 border-radius: 50%;
             }
-
-
+            .user-greeting {
+                text-align: center;
+                margin-top: 10px;
+                font-size: 14px;
+                color: #ddd;
+            }
         </style>
     </head>
     <body>
@@ -63,10 +67,16 @@
                 <% 
                     User account = (User) session.getAttribute("account");
                     String avatarUrl = (account != null && account.getAvatar() != null) ? account.getAvatar() : "assets/avatar/default-image.png";
+                    String userName = (account != null && account.getUserName() != null) ? account.getUserName() : "User";
+                    String className = (account != null && account.getClassName() != null) ? account.getClassName() : "No Class Assigned";
                 %>
                 <a href="user-profile.jsp" class="avatar-container">
                     <img src="<%= avatarUrl %>" >
                 </a>
+                <div class="user-greeting">
+                    Hello, <strong><%= userName %></strong><br>
+                    Class: <strong><%= className %></strong>
+                </div>
             </div>
             <ul class="list-unstyled">
                 <li class="nav-item">

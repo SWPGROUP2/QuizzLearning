@@ -19,12 +19,11 @@ public class User {
     private String status;
     private int classId;
     private String className;
-    private String userCode;
 
     public User() {
     }
 
-    public User(int userId, String userName, int roleId, String email, String password, String role, String phoneNumber, String avatar, String fullName, Date Dob, Date startDate, Date endDate, String status, int classId, String className, String userCode) {
+    public User(int userId, String userName, int roleId, String email, String password, String role, String phoneNumber, String avatar, String fullName, Date Dob, Date startDate, Date endDate, String status, int classId, String className) {
         this.userId = userId;
         this.userName = userName;
         this.roleId = roleId;
@@ -40,15 +39,6 @@ public class User {
         this.status = status;
         this.classId = classId;
         this.className = className;
-        this.userCode = userCode;
-    }
-
-    public String getUserCode() {
-        return userCode;
-    }
-
-    public void setUserCode(String userCode) {
-        this.userCode = userCode;
     }
     
     
@@ -69,7 +59,7 @@ public class User {
         this.role = role;
     }
 
-    public User(int userId, String userName, int roleId, String email, String password, String role, String phoneNumber, String avatar, String fullName, Date Dob, Date startDate, Date endDate) {
+    public User(int userId, String userName, int roleId, String email, String password, String role, String phoneNumber, String avatar, String fullName, Date Dob, Date startDate, Date endDate, String className) {
         this.userId = userId;
         this.userName = userName;
         this.roleId = roleId;

@@ -21,21 +21,7 @@ public class UserDAO extends DBContext {
 
     public User getUserWithStatus(String email, String password) {
         User user = null;
-        String query = "SELECT u.UserID, "
-                + "u.UserName, "
-                + "u.RoleID, "
-                + "u.Email, "
-                + "u.Password, "
-                + "r.Role, "
-                + "u.StartDate, "
-                + "u.EndDate, "
-                + "CASE "
-                + "WHEN u.StartDate > CURDATE() OR (u.EndDate IS NOT NULL AND u.EndDate < CURDATE()) THEN 'Inactive' "
-                + "ELSE u.Status "
-                + "END AS Status "
-                + "FROM Users u "
-                + "JOIN Roles r ON u.RoleID = r.RoleID "
-                + "WHERE u.Email = ? AND u.Password = ?";
+        String query = "SELECT u.*, c.className FROM Users u LEFT JOIN Class c ON u.classId = c.classId WHERE u.email = ? AND u.password = ?";
 
         try ( PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, email);
@@ -53,6 +39,7 @@ public class UserDAO extends DBContext {
                     user.setStartDate(rs.getDate("StartDate"));
                     user.setEndDate(rs.getDate("EndDate"));
                     user.setStatus(rs.getString("Status"));
+                    user.setClassName(rs.getString("className"));
                 }
             }
         } catch (SQLException ex) {
@@ -60,6 +47,25 @@ public class UserDAO extends DBContext {
         }
         return user;
     }
+    
+    public String getClassNameByClassId(int classId) throws SQLException {
+    String className = "No Class Assigned";
+
+    String sql = "SELECT className FROM Class WHERE classId = ?";
+    PreparedStatement ps = connection.prepareStatement(sql);
+    ps.setInt(1, classId);
+    ResultSet rs = ps.executeQuery();
+
+    if (rs.next()) {
+        className = rs.getString("className");
+    }
+
+    rs.close();
+    ps.close();
+    connection.close();
+    return className;
+}
+
 
     public void updateUserStatus(int userId, String status) {
         String query = "UPDATE Users SET Status = ? WHERE UserID = ?";
