@@ -1,5 +1,6 @@
 package controllers;
 
+import dal.ClassDAO;
 import dal.UserDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -49,6 +50,9 @@ public class LoginController extends HttpServlet {
                     request.getRequestDispatcher("login.jsp").forward(request, response);
                     return;
                 }
+                ClassDAO classDAO = new ClassDAO();
+                String className = classDAO.getClassNameById(user.getClassId());
+                user.setClassName(className); 
 
                 int roleId = user.getRoleId();
                 int id = user.getUserId();
@@ -77,5 +81,6 @@ public class LoginController extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Login Controller";
+        
     }
 }

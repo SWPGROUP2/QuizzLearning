@@ -76,6 +76,10 @@
         <servlet-name>DeleteClassController</servlet-name>
         <servlet-class>controllers.DeleteClassController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SidebarController</servlet-name>
+        <servlet-class>controllers.SidebarController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DetailTestController</servlet-name>
         <url-pattern>/detailtest</url-pattern>
@@ -159,6 +163,10 @@
     <servlet-mapping>
         <servlet-name>DeleteClassController</servlet-name>
         <url-pattern>/deleteclass</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SidebarController</servlet-name>
+        <url-pattern>/Sidebar</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
