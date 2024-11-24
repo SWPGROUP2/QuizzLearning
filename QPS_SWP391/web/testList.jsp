@@ -73,29 +73,26 @@
                     </c:if>
                 </div>
 
-                <form class="filter-form mb-3" action="test-list" method="GET">
-                    <label for="searchQuery">Search Test:</label>
-                    <input type="text" id="searchQuery" name="searchQuery" value="${searchQuery}" placeholder="Search test by name" class="form-control"/>
+<form id="filterForm" action="test-list" method="GET" class="filter-form mb-3"> 
 
-                    <label for="className">Class:</label>
-                    <select id="className" name="className" class="form-control">
-                        <option value="">All Classes</option>
-                        <c:forEach var="entry" items="${uniqueClasses}">
-                            <option value="${entry.className}" ${entry.className == selectedClassName ? 'selected' : ''}>${entry.className}</option>
-                        </c:forEach>
-                    </select>
+    <label for="subjectId">Subject:</label>
+    <select id="subjectId" name="subjectId" class="form-control d-inline-block" style="width: auto; min-width: 150px;">
+        <option value="">All Subjects</option>
+        <c:forEach var="entry" items="${teacherSubjects}">
+            <option value="${entry.subjectId}" ${entry.subjectId == selectedSubjectId ? 'selected' : ''}>${entry.subjectName}</option>
+        </c:forEach>
+    </select>
 
-                    <label for="subjectId">Subject:</label>
-                    <select id="subjectId" name="subjectId" class="form-control">
-                        <option value="">All Subjects</option>
-                        <c:forEach var="entry" items="${teacherSubjects}">
-                            <option value="${entry.subjectId}" ${entry.subjectId == selectedSubjectId ? 'selected' : ''}>${entry.subjectName}</option>
-                        </c:forEach>
-                    </select>
+    <button class="btn btn-primary" type="submit">Filter</button>
+    <a href="testHistory" class="btn btn-primary">Test History</a>
+</form>
 
-                    <button class="btn btn-primary" type="submit">Filter</button>
-                    <a href="testHistory" class="btn btn-primary">Test History</a>
-                </form>
+<!-- Separate Search Form -->
+<form action="test-list" method="GET" class="mb-3">
+    <label for="testSearch">Search Test:</label>
+    <input type="text" id="testSearch" name="testSearch" value="${param.testSearch}" class="form-control d-inline-block" style="width: auto; min-width: 200px;" placeholder="Enter keyword"/>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
 
                 <c:choose>
                     <c:when test="${not empty tests}">

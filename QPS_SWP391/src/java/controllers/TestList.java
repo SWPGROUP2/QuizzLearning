@@ -56,6 +56,7 @@ public class TestList extends HttpServlet {
         }
         
         ClassDAO classDAO = new ClassDAO();
+        List<Classes> teacherClasses = classDAO.getClassesByTeacherId(userId);
         List<Classes> uniqueClasses = classDAO.getUniqueClasses(userId);
         if (uniqueClasses == null) {
             uniqueClasses = new ArrayList<>();
@@ -78,7 +79,7 @@ public class TestList extends HttpServlet {
         int totalTests = testDAO.countTotalTests(userId, subjectIdParam, className, searchQuery);
         int totalPages = (int) Math.ceil((double) totalTests / testsPerPage);
 
-        request.setAttribute("uniqueClasses", uniqueClasses);
+        request.setAttribute("teacherClasses", teacherClasses);
         request.setAttribute("teacherSubjects", teacherSubjects);
         request.setAttribute("tests", tests);
         request.setAttribute("searchQuery", searchQuery);

@@ -95,8 +95,8 @@ public class AddUserController extends HttpServlet {
                 try {
                     java.util.Date utilDate = sdf.parse(dateString);
                     int age = new java.util.Date().getYear() - utilDate.getYear();
-                    if (age < 10) {
-                        request.setAttribute("dateError", "Tuổi phải lớn hơn 10");
+                    if (age <= 5) {
+                        request.setAttribute("dateError", "Tuổi phải lớn hơn 5");
                         hasError = true;
                     }
                 } catch (ParseException e) {
