@@ -104,9 +104,11 @@ public class UserDAO extends DBContext {
                 user.setStartDate(rs.getDate("StartDate"));
                 user.setEndDate(rs.getDate("EndDate"));
                 user.setStatus(rs.getString("Status"));
+                user.setClassId(rs.getInt("ClassID"));
                 return user;
             }
         } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -231,47 +233,15 @@ public class UserDAO extends DBContext {
     }
 
     public boolean deleteUser(int userId) {
-        boolean success = false;
         String sql = "DELETE FROM Users WHERE UserID = ?";
-
-        try {
-            // Start transaction
-            connection.setAutoCommit(false);
-
-            try {
-                // Delete user
-                ps = connection.prepareStatement(sql);
-                ps.setInt(1, userId);
-                int rowsAffected = ps.executeUpdate();
-
-                if (rowsAffected > 0) {
-                    success = true;
-                }
-
-                // If everything is successful, commit the transaction
-                connection.commit();
-            } catch (SQLException e) {
-                // If there's an error, rollback the transaction
-                connection.rollback();
-                LOGGER.log(Level.SEVERE, "Error deleting user", e);
-                throw e;
-            }
+        try ( PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, userId);
+            int rowsAffected = st.executeUpdate();
+            return rowsAffected > 0;
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Database transaction failed", e);
-        } finally {
-            try {
-                // Reset auto-commit to default state
-                connection.setAutoCommit(true);
-
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (SQLException e) {
-                LOGGER.log(Level.SEVERE, "Error closing resources", e);
-            }
+            LOGGER.log(Level.SEVERE, "Error deleting user", e);
+            return false;
         }
-
-        return success;
     }
 
     public List<User> getAllTeachersAndAdmins() {
@@ -298,8 +268,8 @@ public class UserDAO extends DBContext {
 
     public boolean addUser(User user) {
         String sql = "INSERT INTO Users (UserName, RoleID, Email, Password, PhoneNumber, "
-                + "FullName, DoB, StartDate, EndDate, Status) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "FullName, DoB, StartDate, EndDate,ClassID, Status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?)";
 
         try ( PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, user.getUserName());
@@ -311,7 +281,8 @@ public class UserDAO extends DBContext {
             stmt.setDate(7, user.getDob());
             stmt.setDate(8, user.getStartDate());
             stmt.setDate(9, user.getEndDate());
-            stmt.setString(10, user.getStatus());
+            stmt.setInt(10, user.getClassId());
+            stmt.setString(11, user.getStatus());
 
             int affectedRows = stmt.executeUpdate();
 
@@ -333,25 +304,26 @@ public class UserDAO extends DBContext {
     }
 
     public boolean updateUser(User user) {
-        String sql = "UPDATE Users SET UserName=?, RoleID=?, Email=?, PhoneNumber=?, "
-                + "FullName=?, DoB=?, StartDate=?, EndDate=?, Status=? "
+        String sql = "UPDATE Users SET FullName=?, Email=?, PhoneNumber=?, DoB=?, "
+                + "ClassID=?, UserName=?, StartDate=?, EndDate=?, Status=?, RoleID=? "
                 + "WHERE UserID=?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, user.getUserName());
-            st.setInt(2, user.getRoleId());
-            st.setString(3, user.getEmail());
-            st.setString(4, user.getPhoneNumber());
-            st.setString(5, user.getFullName());
-            st.setDate(6, user.getDob());
+            st.setString(1, user.getFullName());
+            st.setString(2, user.getEmail());
+            st.setString(3, user.getPhoneNumber());
+            st.setDate(4, user.getDob());
+            st.setInt(5, user.getClassId());
+            st.setString(6, user.getUserName());
             st.setDate(7, user.getStartDate());
             st.setDate(8, user.getEndDate());
             st.setString(9, user.getStatus());
-            st.setInt(10, user.getUserId());
+            st.setInt(10, user.getRoleId());
+            st.setInt(11, user.getUserId());
 
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Error in updateUser: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }

@@ -55,12 +55,17 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="class">Select Class:</label>
                             <select class="form-control" id="class" name="classId" required>
                                 <c:forEach var="classItem" items="${allclass}">
-                                    <option value="${classItem.classID}" ${user.classId == classItem.classID ? 'selected' : ''}>${classItem.className}</option>
+                                    <option value="${classItem.classID}" 
+                                            ${classItem.classID == user.classId ? 'selected="selected"' : ''}>
+                                        ${classItem.className}
+                                    </option>
                                 </c:forEach>
                             </select>
                         </div>
+
 
                         <div class="form-group">
                             <input type="text" class="form-control ${not empty param.action && not empty fullNameError ? 'is-invalid' : ''}" 

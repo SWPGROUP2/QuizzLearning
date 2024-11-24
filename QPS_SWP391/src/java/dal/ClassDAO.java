@@ -36,38 +36,37 @@ public class ClassDAO extends MyDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } 
+        }
 
         return classList;
     }
-    
-public List<Classes> getAllClassesList(String searchKeyword) {
-    List<Classes> classList = new ArrayList<>();
-    String query = "SELECT ClassID, ClassName FROM Class";
 
-    if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-        query += " WHERE ClassName LIKE ?";
-    }
+    public List<Classes> getAllClassesList(String searchKeyword) {
+        List<Classes> classList = new ArrayList<>();
+        String query = "SELECT ClassID, ClassName FROM Class";
 
-    try (PreparedStatement stmt = con.prepareStatement(query)) {
         if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-            stmt.setString(1, "%" + searchKeyword + "%");
+            query += " WHERE ClassName LIKE ?";
         }
 
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                int classID = rs.getInt("ClassID");
-                String className = rs.getString("ClassName");
-
-                classList.add(new Classes(classID, className));
+        try ( PreparedStatement stmt = con.prepareStatement(query)) {
+            if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+                stmt.setString(1, "%" + searchKeyword + "%");
             }
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return classList;
-}
 
+            try ( ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int classID = rs.getInt("ClassID");
+                    String className = rs.getString("ClassName");
+
+                    classList.add(new Classes(classID, className));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return classList;
+    }
 
     public String getClassNameById(int classId) {
         String sql = "SELECT ClassName FROM Class WHERE ClassID = ?";
@@ -86,7 +85,6 @@ public List<Classes> getAllClassesList(String searchKeyword) {
 
     public List<Classes> getUniqueClasses(int userId) {
         List<Classes> uniqueClasses = new ArrayList<>();
-
 
         String sql = "SELECT DISTINCT c.ClassID, c.ClassName "
                 + "FROM Class c "
@@ -147,7 +145,6 @@ public List<Classes> getAllClassesList(String searchKeyword) {
     public List<Classes> getClassesByTeacherId(int userId) {
         List<Classes> classList = new ArrayList<>();
         String sql = "SELECT c.ClassID, c.className FROM Class c JOIN Users u On u.ClassID = c.ClassID WHERE UserID = ?";
-                      
 
         try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
@@ -165,40 +162,18 @@ public List<Classes> getAllClassesList(String searchKeyword) {
         return classList;
     }
 
-    public List<Classes> getUniqueClasses() {
-        List<Classes> uniqueClassesList = new ArrayList<>();
-        String query = "SELECT MIN(c.ClassID) as ClassID, c.ClassName "
-                + "FROM Class c "
-                + "GROUP BY c.ClassName "
-                + "ORDER BY c.ClassName";
-
-        try ( PreparedStatement ps = connection.prepareStatement(query);  ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                Classes cls = new Classes();
-                cls.setClassID(rs.getInt("ClassID"));
-                cls.setClassName(rs.getString("ClassName"));
-                uniqueClassesList.add(cls);
+    public Classes getClassById(int classId) {
+        String query = "SELECT * FROM Class WHERE ClassID = ?";
+        try ( PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, classId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Classes(rs.getInt("ClassID"), rs.getString("ClassName"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return uniqueClassesList;
-    }
-
-    public boolean addUserToClass(int userID, int classID) {
-        String sql = "INSERT INTO Class (UserID, ClassName) "
-                + "SELECT ?, ClassName FROM Class WHERE ClassID = ?";
-
-        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, userID);
-            stmt.setInt(2, classID);
-
-            int affectedRows = stmt.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException e) {
-            return false;
-        }
+        return null;
     }
 
     public void updateUserClass(int userId, int classId) {
