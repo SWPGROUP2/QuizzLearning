@@ -188,4 +188,41 @@ public class ClassDAO extends MyDAO {
         }
     }
 
+    public boolean addClass(String className) {
+        String query = "INSERT INTO Class (ClassName) VALUES (?)";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, className);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateClassName(Classes cls) {
+        String query = "UPDATE Class SET ClassName = ? WHERE ClassID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, cls.getClassName());
+            ps.setInt(2, cls.getClassID());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean deleteClass(int classId) {
+        String query = "DELETE FROM Class WHERE ClassID = ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, classId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

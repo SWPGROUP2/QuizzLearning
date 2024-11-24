@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>src/java/dal/ClassDAO.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>164</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/SWP/hoclai/Help/QuizzLearning/QPS_SWP391/src/java/dal/DBContext.java</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/web/updateuser.jsp</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/src/java/controllers/AddUserController.java</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/src/java/models/User.java</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/src/java/controllers/DeleteUser.java</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/src/java/controllers/UpdateUserController.java</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/src/java/dal/UserDAO.java</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/src/java/dal/ClassDAO.java</file>
+            <file>file:/D:/24_Fall_SWP391/SWPUpdate4.0/QuizzLearning/QPS_SWP391/web/adminhome.jsp</file>
         </group>
     </open-files>
 </project-private>

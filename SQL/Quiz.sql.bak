@@ -11,11 +11,18 @@ CREATE TABLE Roles (
 
 INSERT INTO Roles (Role) VALUES ('student'), ('admin'), ('teacher');
 
+CREATE TABLE Class (	
+    ClassID INT auto_increment primary KEY,
+    ClassName VARCHAR(255) CHARACTER SET utf8mb4
+);
+
+INSERT INTO Class (ClassName) VALUES ('Class A'), ('Class B'), ('Class C');
+
 CREATE TABLE Users (
     UserID INT AUTO_INCREMENT PRIMARY KEY,
     UserName VARCHAR(255) CHARACTER SET utf8mb4,
     RoleID INT,
-    Email VARCHAR(255) CHARACTER SET utf8mb4 UNIQUE,  -- Ensure email is unique
+    Email VARCHAR(255) CHARACTER SET utf8mb4 UNIQUE, 
     Password VARCHAR(255) CHARACTER SET utf8mb4,
     PhoneNumber VARCHAR(15),
     Avatar VARCHAR(5000) DEFAULT 'assets/avatar/default-avatar.png',
@@ -25,7 +32,10 @@ CREATE TABLE Users (
 	ClassID INT,
     EndDate DATE,    
     Status ENUM('Active', 'Inactive') DEFAULT 'Active',
-    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
+    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID),
+    FOREIGN KEY (ClassID) REFERENCES Class(ClassID)
+
+    
 );
 
 INSERT INTO Users (UserName, RoleID, ClassID, Email, Password, PhoneNumber, FullName, DoB, StartDate, EndDate, Status)
@@ -42,20 +52,14 @@ CREATE TABLE Subject (
     Thumbnail VARCHAR(255) CHARACTER SET utf8mb4
 );
 
-CREATE TABLE Class (	
-    ClassID INT auto_increment primary KEY,
-    ClassName VARCHAR(255) CHARACTER SET utf8mb4
-);
 
-INSERT INTO Class (ClassName) VALUES ('Class A'), ('Class B'), ('Class C');
 
 CREATE TABLE TeacherSubjects (
     TeacherSubjectID INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT,
     SubjectID INT,
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID)
-     
+    FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE
 );
 
 CREATE TABLE QuestionType (
@@ -128,7 +132,7 @@ CREATE TABLE StudentAnswers (
     option_id INT,
     answer_text TEXT,
     answered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES Users(UserID),
+    FOREIGN KEY (student_id) REFERENCES Users(UserID) ON DELETE CASCADE,
     FOREIGN KEY (test_id) REFERENCES Tests(TestID),
     FOREIGN KEY (question_id) REFERENCES Questions(QuestionID),
     FOREIGN KEY (option_id) REFERENCES Options(OptionID)
@@ -140,6 +144,7 @@ CREATE TABLE TestResults (
     test_id INT,
     score DECIMAL(5, 2),
     completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES Users(UserID),
+    FOREIGN KEY (student_id) REFERENCES Users(UserID) ON DELETE CASCADE,
     FOREIGN KEY (test_id) REFERENCES Tests(TestID)
 );
+

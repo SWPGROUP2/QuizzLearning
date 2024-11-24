@@ -1,4 +1,3 @@
-
 DROP DATABASE IF EXISTS SWPQuiz;
 CREATE DATABASE SWPQuiz;
 
@@ -11,12 +10,10 @@ CREATE TABLE Roles (
 
 INSERT INTO Roles (Role) VALUES ('student'), ('admin'), ('teacher');
 
-CREATE TABLE Class (	
-    ClassID INT auto_increment primary KEY,
+CREATE TABLE Class (
+    ClassID INT AUTO_INCREMENT PRIMARY KEY,
     ClassName VARCHAR(255) CHARACTER SET utf8mb4
 );
-
-INSERT INTO Class (ClassName) VALUES ('Class A'), ('Class B'), ('Class C');
 
 CREATE TABLE Users (
     UserID INT AUTO_INCREMENT PRIMARY KEY,
@@ -29,21 +26,16 @@ CREATE TABLE Users (
     FullName VARCHAR(100) CHARACTER SET utf8mb4,
     DoB DATE,
     StartDate DATE,
-	ClassID INT,
+    ClassID INT,
     EndDate DATE,    
     Status ENUM('Active', 'Inactive') DEFAULT 'Active',
     FOREIGN KEY (RoleID) REFERENCES Roles(RoleID),
-    FOREIGN KEY (ClassID) REFERENCES Class(ClassID)
-
-    
+    FOREIGN KEY (ClassID) REFERENCES Class(ClassID) ON DELETE CASCADE
 );
 
 INSERT INTO Users (UserName, RoleID, ClassID, Email, Password, PhoneNumber, FullName, DoB, StartDate, EndDate, Status)
 VALUES 
-('user1', 2, null, 'admin@example.com', '1', '0987654321', 'Admin One', '1985-05-15', '2024-01-01', '2025-01-01', 'Active'),
-('user2', 3, 1, 'teacher@example.com', '1', '0987654322', 'Teacher One', '1985-05-15', '2024-01-01', '2025-01-01', 'Active'),
-('user3', 1, 1, 'student@example.com', '1', '0987654323', 'Student One', '1985-05-15', '2024-01-01', '2025-01-01', 'Active'),
-('user4', 1, 2, 'student2@example.com', '1', '0987654323', 'Student Two', '1985-05-15', '2024-01-01', '2025-01-01', 'Active');
+('user1', 2, null, 'admin@example.com', '1', '0987654321', 'Admin One', '1985-05-15', '2024-01-01', '2025-01-01', 'Active');
 
 CREATE TABLE Subject (
     SubjectID INT AUTO_INCREMENT PRIMARY KEY,
@@ -52,14 +44,12 @@ CREATE TABLE Subject (
     Thumbnail VARCHAR(255) CHARACTER SET utf8mb4
 );
 
-
-
 CREATE TABLE TeacherSubjects (
     TeacherSubjectID INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT,
     SubjectID INT,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE
+    FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE,
+    FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID)
 );
 
 CREATE TABLE QuestionType (
@@ -97,7 +87,7 @@ CREATE TABLE Tests (
     test_endTime TIMESTAMP,
     test_status INT DEFAULT 0,
     FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID),
-    FOREIGN KEY (ClassID) REFERENCES Class(ClassID)
+    FOREIGN KEY (ClassID) REFERENCES Class(ClassID) ON DELETE CASCADE
 );
 
 CREATE TABLE Test_Questions (
@@ -117,7 +107,7 @@ CREATE TABLE TermSets (
 );
 
 CREATE TABLE Terms (
-    TermID INT auto_increment PRIMARY KEY,
+    TermID INT AUTO_INCREMENT PRIMARY KEY,
     TermSetID INT,
     Term VARCHAR(1000) CHARACTER SET utf8mb4, 
     Definition VARCHAR(1000) CHARACTER SET utf8mb4,
@@ -125,7 +115,7 @@ CREATE TABLE Terms (
 );
 
 CREATE TABLE StudentAnswers (
-    answer_id INT PRIMARY KEY AUTO_INCREMENT,
+    answer_id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT,
     test_id INT,
     question_id INT,
@@ -139,7 +129,7 @@ CREATE TABLE StudentAnswers (
 );
 
 CREATE TABLE TestResults (
-    result_id INT PRIMARY KEY AUTO_INCREMENT,
+    result_id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT,
     test_id INT,
     score DECIMAL(5, 2),
@@ -147,4 +137,3 @@ CREATE TABLE TestResults (
     FOREIGN KEY (student_id) REFERENCES Users(UserID) ON DELETE CASCADE,
     FOREIGN KEY (test_id) REFERENCES Tests(TestID)
 );
-

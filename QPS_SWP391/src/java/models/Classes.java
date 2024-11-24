@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Classes {
     private int classID;
     private String className;
-     private subject subject;
+    private subject subject;
 
     public Classes() {
     }

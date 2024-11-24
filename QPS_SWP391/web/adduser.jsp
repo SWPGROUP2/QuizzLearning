@@ -52,11 +52,18 @@
                         </div>
 
                         <div class="form-group">
-                            <select class="form-control" id="class" name="classId" required>
-                                <c:forEach var="classItem" items="${allclass}">
-                                    <option value="${classItem.classID}" ${classId == classItem.classID ? 'selected' : ''}>${classItem.className}</option>
-                                </c:forEach>
-                            </select>
+                            <c:if test="${empty allclass}">
+                                <div class="alert alert-warning">
+                                    No classes have been created yet. Please create a class first before adding users.
+                                </div>
+                            </c:if>
+                            <c:if test="${not empty allclass}">
+                                <select class="form-control" id="class" name="classId" required>
+                                    <c:forEach var="classItem" items="${allclass}">
+                                        <option value="${classItem.classID}" ${classId == classItem.classID ? 'selected' : ''}>${classItem.className}</option>
+                                    </c:forEach>
+                                </select>
+                            </c:if>
                         </div>
 
                         <div class="form-group">
@@ -135,7 +142,14 @@
                         </div>
 
                         <div class="text-center">
-                            <button type="submit" class="btn btn-success">Add User</button>
+                            <c:choose>
+                                <c:when test="${empty allclass}">
+                                    <button type="submit" class="btn btn-success" disabled>Add User</button>                                   
+                                </c:when>
+                                <c:otherwise>
+                                    <button type="submit" class="btn btn-success">Add User</button>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
 
                         <div class="text-center mt-3">
