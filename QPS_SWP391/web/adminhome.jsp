@@ -130,7 +130,7 @@
                                             <input type="hidden" name="userId" value="${user.userId}"/>
                                             <button type="submit" class="btn btn-primary btn-sm">Edit</button>
                                         </form>
-                                        <form action="delete-user" method="POST" style="display:inline;">
+                                        <form action="delete-user" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?')">
                                             <input type="hidden" name="userId" value="${user.userId}"/>
                                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                         </form>

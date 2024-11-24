@@ -24,14 +24,16 @@ public class UpdateUserController extends HttpServlet {
             throws ServletException, IOException {
         String userIdStr = request.getParameter("userId");
         int userId = Integer.parseInt(userIdStr);
+
         UserDAO userdao = new UserDAO();
         ClassDAO classdao = new ClassDAO();
 
         User user = userdao.getUserById(userId);
-        List<Classes> allClasses = classdao.getUniqueClasses();
+        List<Classes> allClasses = classdao.getAllClasses();
 
         request.setAttribute("user", user);
         request.setAttribute("allclass", allClasses);
+
         request.getRequestDispatcher("updateuser.jsp").forward(request, response);
     }
 
@@ -60,8 +62,6 @@ public class UpdateUserController extends HttpServlet {
                 request.setAttribute("fullNameError", "Họ và tên không được để trống");
                 hasError = true;
             }
-
-           
 
             if (isBlank(phoneNumber) || !phoneNumber.matches("\\d{10}")) {
                 request.setAttribute("phoneError", "Số điện thoại phải có 10 chữ số");
@@ -100,7 +100,7 @@ public class UpdateUserController extends HttpServlet {
 
             if (hasError) {
                 User user = dao.getUserById(userId);
-                List<Classes> allClasses = classdao.getUniqueClasses();
+                List<Classes> allClasses = classdao.getAllClasses();
 
                 request.setAttribute("user", user);
                 request.setAttribute("allclass", allClasses);
@@ -120,20 +120,13 @@ public class UpdateUserController extends HttpServlet {
             updatedUser.setStartDate(startDate);
             updatedUser.setEndDate(endDate);
             updatedUser.setStatus(status);
-            updatedUser.setRoleId(role.equals("student") ? 1 : 3); 
+            updatedUser.setRoleId(role.equals("student") ? 1 : 3);
 
-            if (dao.updateUser(updatedUser)) {
-                classdao.updateUserClass(userId, Integer.parseInt(classIdStr));
-                response.sendRedirect("adminhome");
-            } else {
-                request.setAttribute("errorMessage", "Cập nhật không thành công");
-                request.getRequestDispatcher("updateuser.jsp").forward(request, response);
-            }
+            dao.updateUser(updatedUser);
+            response.sendRedirect("adminhome");
 
         } catch (Exception ex) {
-            Logger.getLogger(UpdateUserController.class.getName()).log(Level.SEVERE, null, ex);
-            request.setAttribute("errorMessage", "Đã xảy ra lỗi: " + ex.getMessage());
-            request.getRequestDispatcher("updateuser.jsp").forward(request, response);
+
         }
     }
 

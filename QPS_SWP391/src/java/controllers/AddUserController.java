@@ -24,7 +24,7 @@ public class AddUserController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ClassDAO classdao = new ClassDAO();
-        List<Classes> allclass = classdao.getUniqueClasses();
+        List<Classes> allclass = classdao.getAllClasses();
 
         request.setAttribute("allclass", allclass);
         request.getRequestDispatcher("adduser.jsp").forward(request, response);
@@ -89,7 +89,6 @@ public class AddUserController extends HttpServlet {
                 request.setAttribute("phoneError", "Số điện thoại đã được sử dụng");
                 hasError = true;
             }
-            
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             if (!isBlank(dateString)) {
@@ -110,7 +109,7 @@ public class AddUserController extends HttpServlet {
             }
 
             if (hasError) {
-                List<Classes> allclass = classdao.getUniqueClasses();
+                List<Classes> allclass = classdao.getAllClasses();
                 request.setAttribute("allclass", allclass);
                 request.setAttribute("password", password);
                 request.getRequestDispatcher("adduser").forward(request, response);
@@ -133,6 +132,7 @@ public class AddUserController extends HttpServlet {
             int classId = Integer.parseInt(classIdStr);
 
             User newUser = new User();
+            newUser.setClassId(classId);
             newUser.setFullName(fullName);
             newUser.setEmail(email);
             newUser.setPassword(password);
@@ -144,16 +144,11 @@ public class AddUserController extends HttpServlet {
             newUser.setRoleId(roleId);
             newUser.setStatus("Active");
 
-            if (dao.addUser(newUser)) {
-                classdao.addUserToClass(newUser.getUserId(), classId);
-                response.sendRedirect("adminhome");
-            } else {
-                request.setAttribute("errorMessage", "Thêm người dùng thất bại. Vui lòng thử lại.");
-                request.getRequestDispatcher("adduser.jsp").forward(request, response);
-            }
+            dao.addUser(newUser);
+            response.sendRedirect("adminhome");
 
         } catch (Exception ex) {
-            request.getRequestDispatcher("adduser.jsp").forward(request, response);
+            
         }
     }
 
