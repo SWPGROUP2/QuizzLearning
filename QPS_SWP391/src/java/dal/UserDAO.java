@@ -21,7 +21,7 @@ public class UserDAO extends DBContext {
 
     public User getUserWithStatus(String email, String password) {
         User user = null;
-        String query = "SELECT u.*, c.className FROM Users u LEFT JOIN Class c ON u.classId = c.classId WHERE u.email = ? AND u.password = ?";
+        String query = "SELECT u.*, CASE WHEN u.StartDate > CURDATE() OR (u.EndDate IS NOT NULL AND u.EndDate < CURDATE()) THEN 'Inactive' ELSE u.Status END AS Status FROM Users u WHERE u.email = ? AND u.password = ?";
 
         try ( PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, email);
@@ -39,7 +39,6 @@ public class UserDAO extends DBContext {
                     user.setStartDate(rs.getDate("StartDate"));
                     user.setEndDate(rs.getDate("EndDate"));
                     user.setStatus(rs.getString("Status"));
-                    user.setClassName(rs.getString("className"));
                 }
             }
         } catch (SQLException ex) {
@@ -75,7 +74,7 @@ public class UserDAO extends DBContext {
             ps.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
-            // Handle exception
+
         }
     }
 
